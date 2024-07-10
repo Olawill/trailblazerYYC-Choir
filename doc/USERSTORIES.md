@@ -1,0 +1,9 @@
+- Users:
+  - can view songs
+  - filter songs by category
+  - search songs by title and content
+- Admin:
+  - can add new members
+  - can remove members
+- Super-admin
+  - can add monthly dues

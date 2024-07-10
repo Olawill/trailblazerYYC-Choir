@@ -1,0 +1,28 @@
+type LoginButtonProp = {
+  children: React.ReactNode;
+  mode?: "modal" | "redirect";
+  asChild?: boolean;
+};
+
+type CardWrapperProp = {
+  children: React.ReactNode;
+  headerLabel: string;
+  backButtonLabel: string;
+  backButtonHref: string;
+  showSocial?: boolean;
+};
+
+type HeaderProp = {
+  label?: string;
+};
+
+type BackButtonProp = {
+  label: string;
+  href: string;
+};
+
+type FormErrorProp = {
+  message?: string;
+};
+
+type FormSuccessProp = FormErrorProp;
