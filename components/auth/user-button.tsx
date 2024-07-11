@@ -29,7 +29,7 @@ const UserButton = () => {
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-40 bg-blue-400" align="end">
+      <DropdownMenuContent className="w-40 bg-blue-400 border-px" align="end">
         <DropdownMenuItem
           className="font-semibold cursor-pointer"
           onClick={() => router.push("/settings")}

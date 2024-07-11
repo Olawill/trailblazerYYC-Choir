@@ -31,8 +31,13 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { useSearchParams } from "next/navigation";
 
 export const LoginForm = () => {
+  const searchParams = useSearchParams();
+
+  const callbackUrl = searchParams.get("callbackUrl");
+
   const [isPending, startTransition] = useTransition();
 
   const [error, setError] = useState<string | undefined>("");
@@ -56,7 +61,7 @@ export const LoginForm = () => {
     setSuccess("");
 
     startTransition(async () => {
-      const data = await login(values);
+      const data = await login(values, callbackUrl);
 
       try {
         if (data?.error) {
@@ -74,7 +79,8 @@ export const LoginForm = () => {
         }
 
         if (!data) {
-          window.location.reload();
+          // window.location.reload();
+          window.location.href = callbackUrl!;
         }
       } catch {
         setError("Something went wrong!");

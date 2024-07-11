@@ -23,7 +23,7 @@ model User {
   hashedPassword        String?
   emailVerified         DateTime?
   image                 String?
-  role                  String                 @default("USER")
+  role                  UserRole               @default(USER)
   accounts              Account[]
   isTwoFactorEnabled    Boolean                @default(false)
   twoFactorConfirmation TwoFactorConfirmation?

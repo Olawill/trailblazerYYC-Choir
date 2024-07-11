@@ -6,7 +6,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     <div className="h-full w-full flex flex-col items-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-sky-400 to-blue-800">
       <MobileNavbar />
       <DesktopNavbar />
-      <div>{children}</div>
+      <div className="px-4 py-6 w-full">{children}</div>
     </div>
   );
 };
