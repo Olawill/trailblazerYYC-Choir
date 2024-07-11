@@ -17,7 +17,7 @@ export const NewVerificationForm = () => {
   const token = searchParams.get("token");
 
   const onSubmit = useCallback(() => {
-    if (success || token) return;
+    // if (success || token) return;
 
     if (!token) {
       setError("Missing token!");
@@ -41,7 +41,7 @@ export const NewVerificationForm = () => {
     <CardWrapper
       backButtonLabel="Back to login"
       backButtonHref="/auth/login"
-      headerLabel="Confirm your verification"
+      headerLabel="Confirming your verification"
     >
       <div className="flex items-center justify-center w-full">
         {!success && !error && <BeatLoader />}

@@ -70,7 +70,7 @@ const DesktopNavbar = () => {
               <Button
                 size="sm"
                 onClick={async () => await signOut()}
-                className="text-xl font-semibold hover:font-bold hover:text-white hover:bg-destructive py-4"
+                className="text-xl text-white font-semibold hover:font-bold hover:bg-destructive py-4"
               >
                 <LogOut className="w-4 h-4 mr-2" /> Logout
               </Button>
@@ -89,7 +89,7 @@ const DesktopNavbar = () => {
             <Button
               size="sm"
               onClick={async () => await signIn()}
-              className="text-xl font-semibold hover:font-bold hover:text-white hover:bg-blue-400 py-4"
+              className="text-xl text-white font-semibold hover:font-bold hover:bg-blue-400 py-4"
             >
               <LogIn className="w-4 h-4 mr-2" /> Login
             </Button>
