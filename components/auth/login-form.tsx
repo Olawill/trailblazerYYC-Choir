@@ -13,6 +13,7 @@ import {
   FormItem,
   FormMessage,
   FormControl,
+  FormDescription,
 } from "@/components/ui/form";
 
 import { CardWrapper } from "@/components/auth/card-wrapper";
@@ -24,6 +25,12 @@ import { login } from "@/actions/login";
 import { useTransition, useState } from "react";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
 
 export const LoginForm = () => {
   const [isPending, startTransition] = useTransition();
@@ -33,11 +40,14 @@ export const LoginForm = () => {
 
   const [showTwoFactor, setShowTwoFactor] = useState(false);
 
+  const [codeValue, setCodeValue] = useState("");
+
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
       email: "",
       password: "",
+      code: "",
     },
   });
 
@@ -90,12 +100,24 @@ export const LoginForm = () => {
                   <FormItem>
                     <FormLabel>Two Factor Code</FormLabel>
                     <FormControl>
-                      <Input
-                        disabled={isPending}
-                        {...field}
-                        placeholder="123456"
-                      />
+                      <InputOTP {...field} maxLength={6}>
+                        <InputOTPGroup className="flex-1 w-[300px]">
+                          <InputOTPSlot className="w-1/6" index={0} />
+                          <InputOTPSlot className="w-1/6" index={1} />
+                          <InputOTPSlot className="w-1/6" index={2} />
+                          <InputOTPSlot className="w-1/6" index={3} />
+                          <InputOTPSlot className="w-1/6" index={4} />
+                          <InputOTPSlot className="w-1/6" index={5} />
+                        </InputOTPGroup>
+                      </InputOTP>
                     </FormControl>
+                    <FormDescription>
+                      {codeValue === "" ? (
+                        <>Enter your one-time code.</>
+                      ) : (
+                        <>You entered: {codeValue}</>
+                      )}
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}

@@ -17,7 +17,7 @@ const LoginButton = ({
     return <span>TODO: Implement modal</span>;
   }
   return (
-    <span className="cursor-pointer" onClick={onClick}>
+    <span className="w-full cursor-pointer" onClick={onClick}>
       {children}
     </span>
   );

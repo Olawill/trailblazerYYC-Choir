@@ -7,11 +7,13 @@ import { Poppins } from "next/font/google";
 import Link from "next/link";
 import { useState } from "react";
 import { menus } from "@/data/menus";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
-import { publicRoutes } from "../../routes";
-import Image from "next/image";
+import { publicRoutes } from "@/routes";
 import { usePathname } from "next/navigation";
+import UserButton from "@/components/auth/user-button";
+import LoginButton from "../auth/login-button";
+import { LogoutButton } from "../auth/logout-button";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -26,7 +28,7 @@ const MobileNavbar = () => {
   const session = useSession();
 
   return (
-    <div className="sticky top-0 bg-slate-200 p-4 space-y-1 md:hidden">
+    <div className="w-full sticky top-0 bg-blue-300 p-4 space-y-1 md:hidden rounded-b-md shadow-md">
       <div className="flex items-center justify-between">
         <div className="w-full flex flex-col gap-y-4 items-start justify-center">
           <h1 className={cn("text-2xl font-semibold", poppins.className)}>
@@ -35,17 +37,7 @@ const MobileNavbar = () => {
         </div>
 
         <div className="flex items-center justify-center gap-2">
-          {session.status === "authenticated" && (
-            <Link href="/settings" className="w-8 h-8">
-              <Image
-                src={session.data.user.image || "/noAvatar.jpg"}
-                alt="avatar"
-                width={32}
-                height={32}
-                className="w-8 h-8 rounded-full"
-              />
-            </Link>
-          )}
+          {session.status === "authenticated" && <UserButton />}
           {open ? (
             <X
               className={`w-6 h-6 transition-opacity duration-300 ${
@@ -65,7 +57,7 @@ const MobileNavbar = () => {
       </div>
 
       {open && (
-        <div className="fixed bg-slate-100 top-[72px] left-0 right-0 bottom-0 z-10 flex flex-col items-center justify-center">
+        <div className="fixed bg-blue-200 top-[72px] left-0 right-0 bottom-0 z-10 flex flex-col items-center justify-center">
           <div className="w-[90%] flex flex-col gap-2 items-center justify-center">
             {menus.map((menu, i) =>
               publicRoutes.includes(menu.url) ? (
@@ -98,21 +90,23 @@ const MobileNavbar = () => {
             )}
 
             {session.status === "authenticated" ? (
-              <Button
-                variant="ghost"
-                onClick={async () => await signOut()}
-                className="w-full text-center text-2xl no-underline font-semibold text-slate-600 hover:font-bold hover:text-slate-500 hover:bg-slate-200 py-8 rounded-md"
-              >
-                Logout
-              </Button>
+              <LogoutButton>
+                <Button
+                  variant="ghost"
+                  className="w-full text-center text-2xl no-underline font-semibold text-slate-600 hover:font-bold hover:text-slate-500 hover:bg-slate-200 py-8 rounded-md"
+                >
+                  Logout
+                </Button>
+              </LogoutButton>
             ) : (
-              <Button
-                variant="ghost"
-                onClick={async () => await signIn()}
-                className="w-full text-center text-2xl no-underline font-semibold text-slate-600 hover:font-bold hover:text-slate-500 hover:bg-slate-200 py-8 rounded-md"
-              >
-                Login
-              </Button>
+              <LoginButton>
+                <Button
+                  variant="ghost"
+                  className="w-full text-center text-2xl no-underline font-semibold text-slate-600 hover:font-bold hover:text-slate-500 hover:bg-slate-200 py-8 rounded-md"
+                >
+                  Login
+                </Button>
+              </LoginButton>
             )}
           </div>
         </div>
