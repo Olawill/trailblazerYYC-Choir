@@ -55,7 +55,7 @@ const DesktopNavbar = () => {
                     menu.url === pathName ? "bg-slate-600" : "bg-transparent"
                   } hover:font-bold py-4 flex items-center`}
                 >
-                  {menu.icon} {menu.label}
+                  <menu.icon className="mr-2 w-4 h-4" /> {menu.label}
                 </Link>
               </Button>
             ) : (
@@ -73,7 +73,7 @@ const DesktopNavbar = () => {
                       menu.url === pathName ? "bg-slate-600" : "bg-transparent"
                     } hover:font-bold py-4 flex items-center`}
                   >
-                    {menu.icon} {menu.label}
+                    <menu.icon className="mr-2 w-4 h-4" /> {menu.label}
                   </Link>
                 </Button>
               )

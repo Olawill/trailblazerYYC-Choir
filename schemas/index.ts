@@ -70,3 +70,15 @@ export const SettingsSchema = z
       path: ["newPassword"],
     }
   );
+
+export const MemberSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  email: z.string().optional(),
+  joined_since: z.date(),
+  amount_paid: z.number(),
+  amount_owing: z.number(),
+  status: z.string(),
+});
+
+export type Member = z.infer<typeof MemberSchema>;
