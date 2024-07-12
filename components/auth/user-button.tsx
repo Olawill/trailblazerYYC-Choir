@@ -13,14 +13,24 @@ import { CircleUserRound, LogOut, Wrench } from "lucide-react";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { LogoutButton } from "./logout-button";
 import { useRouter } from "next/navigation";
+import { Dispatch, SetStateAction } from "react";
 
-const UserButton = () => {
+type UserButtonProp = {
+  setMenuOpen?: Dispatch<SetStateAction<boolean>>;
+};
+
+const UserButton = ({ setMenuOpen }: UserButtonProp) => {
   const router = useRouter();
 
   const user = useCurrentUser();
 
+  // Close the menu if it is open
+  const handleClick = () => {
+    if (setMenuOpen) setMenuOpen(false);
+  };
+
   return (
-    <DropdownMenu>
+    <DropdownMenu onOpenChange={handleClick}>
       <DropdownMenuTrigger className="border-px outline-none">
         <Avatar className="relative">
           <AvatarImage src={user?.image || ""} alt="avatar" />

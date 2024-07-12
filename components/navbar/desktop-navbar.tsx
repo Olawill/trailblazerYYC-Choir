@@ -10,9 +10,10 @@ import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { publicRoutes } from "@/routes";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import UserButton from "@/components/auth/user-button";
 import LoginButton from "../auth/login-button";
+import { Skeleton } from "../ui/skeleton";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -21,6 +22,7 @@ const poppins = Poppins({
 
 const DesktopNavbar = () => {
   const pathName = usePathname();
+  const router = useRouter();
 
   const session = useSession();
 
@@ -29,7 +31,10 @@ const DesktopNavbar = () => {
       className={`hidden w-full sticky top-0 bg-blue-300 p-4 space-y-1 md:flex items-center justify-between rounded-b-md shadow-md`}
     >
       <div className="w-full flex items-center justify-between">
-        <div className="flex flex-col gap-y-4 items-start justify-center">
+        <div
+          className="flex flex-col gap-y-4 items-start justify-center cursor-pointer"
+          onClick={() => router.push("/")}
+        >
           <h1 className={cn("text-3xl font-semibold", poppins.className)}>
             TrailBlazer YYC 🎶
           </h1>
@@ -81,6 +86,8 @@ const DesktopNavbar = () => {
             <div className="flex items-center justify-center gap-2">
               <UserButton />
             </div>
+          ) : session.status === "loading" ? (
+            <Skeleton className="py-4 w-32 bg-slate-500" />
           ) : (
             <LoginButton>
               <Button
