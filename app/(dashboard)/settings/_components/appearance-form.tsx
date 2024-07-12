@@ -16,6 +16,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronDownIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useTheme } from "next-themes";
 
 const appearanceFormSchema = z.object({
   theme: z.enum(["light", "dark"], {
@@ -35,6 +36,8 @@ const defaultValues: Partial<AppearanceFormValues> = {
 };
 
 export function AppearanceForm() {
+  const { setTheme } = useTheme();
+
   const form = useForm<AppearanceFormValues>({
     resolver: zodResolver(appearanceFormSchema),
     defaultValues,
@@ -99,7 +102,7 @@ export function AppearanceForm() {
                 defaultValue={field.value}
                 className="grid max-w-md grid-cols-2 gap-8 pt-2"
               >
-                <FormItem>
+                <FormItem onClick={() => setTheme("light")}>
                   <FormLabel className="[&:has([data-state=checked])>div]:border-primary">
                     <FormControl>
                       <RadioGroupItem value="light" className="sr-only" />
@@ -125,7 +128,7 @@ export function AppearanceForm() {
                     </span>
                   </FormLabel>
                 </FormItem>
-                <FormItem>
+                <FormItem onClick={() => setTheme("dark")}>
                   <FormLabel className="[&:has([data-state=checked])>div]:border-primary">
                     <FormControl>
                       <RadioGroupItem value="dark" className="sr-only" />

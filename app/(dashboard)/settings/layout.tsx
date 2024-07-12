@@ -4,8 +4,8 @@ import { Separator } from "@/components/ui/separator";
 import { SidebarNav } from "./_components/sidebar-nav";
 
 export const metadata: Metadata = {
-  title: "Forms",
-  description: "Advanced form example using react-hook-form and Zod.",
+  title: "Settings Page",
+  description: "Users manage their account setting here.",
 };
 
 const sidebarNavItems = [
@@ -28,7 +28,7 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
     <div className="space-y-6 p-10 pb-16 md:block">
       <div className="space-y-0.5">
         <h2 className="text-2xl font-bold tracking-tight">Settings</h2>
-        <p className="text-slate-400">
+        <p className="text-gray-300">
           Manage your account settings and set preferences.
         </p>
       </div>
@@ -37,7 +37,9 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
         <aside className="lg:w-1/5">
           <SidebarNav items={sidebarNavItems} />
         </aside>
-        <div className="flex-1 lg:max-w-6xl bg-blue-300 py-4 px-12 rounded-md">
+        <div
+          className={`flex-1 lg:max-w-6xl dark:bg-gray-700 bg-blue-300 py-4 px-12 rounded-md`}
+        >
           {children}
         </div>
       </div>

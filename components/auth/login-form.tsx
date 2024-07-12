@@ -32,11 +32,14 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { useSearchParams } from "next/navigation";
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 export const LoginForm = () => {
   const searchParams = useSearchParams();
 
   const callbackUrl = searchParams.get("callbackUrl");
+
+  console.log(callbackUrl);
 
   const [isPending, startTransition] = useTransition();
 
@@ -80,7 +83,7 @@ export const LoginForm = () => {
 
         if (!data) {
           // window.location.reload();
-          window.location.href = callbackUrl!;
+          window.location.href = callbackUrl || DEFAULT_LOGIN_REDIRECT;
         }
       } catch {
         setError("Something went wrong!");

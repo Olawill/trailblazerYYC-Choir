@@ -1,3 +1,10 @@
+import { Header } from "@/components/music/header";
+
 export default function Home() {
-  return <main className="">Home</main>;
+  return (
+    <div className="">
+      <Header label="Music" action="Add" />
+      Home
+    </div>
+  );
 }
