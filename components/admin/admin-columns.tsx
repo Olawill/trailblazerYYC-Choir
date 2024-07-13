@@ -16,7 +16,7 @@ const formatted = new Intl.NumberFormat("en-CA", {
   currency: "CAD",
 });
 
-export const columns: ColumnDef<Member>[] = [
+export const admincolumns: ColumnDef<Member>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -175,5 +175,15 @@ export const columns: ColumnDef<Member>[] = [
         </div>
       );
     },
+  },
+
+  {
+    id: "actions",
+    cell: ({ row }) => (
+      <RoleGate allowedRole={UserRole.ADMIN} showMessage={false}>
+        {" "}
+        <DataTableRowActions row={row} />
+      </RoleGate>
+    ),
   },
 ];

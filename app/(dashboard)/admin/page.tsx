@@ -1,22 +1,39 @@
 "use client";
 
+import { admincolumns } from "@/components/admin/admin-columns";
 import { RoleGate } from "@/components/auth/role-gate";
-import { FormSuccess } from "@/components/form-success";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { FormError } from "@/components/form-error";
+import { DataTable } from "@/components/members/data-table";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { fakeData } from "@/data/members/data";
 import { useCurrentRole } from "@/hooks/use-current-role";
 import { UserRole } from "@prisma/client";
 
 const AdminPage = () => {
   const role = useCurrentRole();
 
+  if (role !== UserRole.ADMIN) {
+    return (
+      <FormError message="You do not have permission to view this page." />
+    );
+  }
+
   return (
-    <Card className="w-full bg-blue-300 border-px">
+    <Card className="w-full">
       <CardHeader>
-        <p className="text-2xl font-semibold text-center">🔑 Admin</p>
+        <p className="text-2xl font-semibold">Manage</p>
+        <CardDescription>Manage members status and role here.</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-4 bg-transparent border-none">
+        <Separator className="mb-2" />
         <RoleGate allowedRole={UserRole.ADMIN}>
-          <FormSuccess message="You are allowed to see this content!" />
+          <DataTable data={fakeData} columns={admincolumns} />
         </RoleGate>
       </CardContent>
     </Card>

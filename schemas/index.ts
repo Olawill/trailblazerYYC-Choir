@@ -1,4 +1,3 @@
-import { UserRole } from "@prisma/client";
 import { z } from "zod";
 
 export const LoginSchema = z.object({
@@ -82,3 +81,23 @@ export const MemberSchema = z.object({
 });
 
 export type Member = z.infer<typeof MemberSchema>;
+
+export const PaymentSchema = z.object({
+  amount: z.coerce.number().min(1, {
+    message: "Amount must be greater than $1",
+  }),
+  name: z.string(),
+});
+
+export const ExpenseSchema = z.object({
+  amount: z.coerce.number().min(0.01, {
+    message: "Amount must be greater than $0",
+  }),
+  description: z.string(),
+  category: z.string(),
+  expenseDate: z.date(),
+});
+
+export const CategoryModalSchema = z.object({
+  newCategory: z.string(),
+});

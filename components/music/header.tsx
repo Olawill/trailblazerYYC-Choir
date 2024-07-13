@@ -12,7 +12,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { LoginForm } from "../auth/login-form";
+import { LoginForm } from "@/components/auth/login-form";
 
 type HeaderProps = {
   label: string;
