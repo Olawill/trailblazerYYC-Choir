@@ -66,14 +66,10 @@ export const admincolumns: ColumnDef<Member>[] = [
       <DataTableColumnHeader column={column} title="Email" />
     ),
     cell: ({ row }) => {
-      const label = labels.find((label) => label.value === row.original.email);
-
+      const email = row.original.email || "";
       return (
         <div className="flex space-x-2">
-          {label && <Badge variant="outline">{label.label}</Badge>}
-          <span className="max-w-[500px] truncate font-medium">
-            {row.getValue("email")}
-          </span>
+          <span className="max-w-[500px] truncate font-medium">{email}</span>
         </div>
       );
     },
@@ -86,7 +82,8 @@ export const admincolumns: ColumnDef<Member>[] = [
     ),
     cell: ({ row }) => {
       const status = statuses.find(
-        (status) => status.value === row.getValue("status")
+        (status) =>
+          status.value.toLowerCase() === row.original.status.toLowerCase()
       );
 
       if (!status) {
@@ -132,6 +129,9 @@ export const admincolumns: ColumnDef<Member>[] = [
           </span>
         </div>
       );
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
     },
   },
 

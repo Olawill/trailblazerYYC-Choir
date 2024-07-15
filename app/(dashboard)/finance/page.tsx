@@ -14,7 +14,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { fakeData } from "@/data/members/data";
+import { faked as fakeData } from "@/data/members/fakeData";
 import { useMemo, useState } from "react";
 import { Bar, BarChart, CartesianGrid, Line, LineChart, XAxis } from "recharts";
 import { config } from "../../../middleware";
@@ -44,20 +44,16 @@ const FinancePage = () => {
   const [activeChart, setActiveChart] =
     useState<keyof typeof chartConfig>("balance");
 
-  const cleanData = fakeData.reduce((acc, curr) => {
-    const day = fakeData.indexOf(curr) + 1; // Assuming you want to increment the day for each item
-
-    return [
-      ...acc,
-      {
-        ...curr,
-        balance: curr.amount_paid,
-        outstanding: curr.amount_owing,
-        expense: Math.floor(Math.random() * 100) + 10,
-        date: day < 10 ? `2024-04-0${day}` : `2024-04-${day}`,
-      },
-    ];
-  }, []);
+  const cleanData = fakeData.map((item, index) => {
+    const day = Math.floor(Math.random() * 10) + 1;
+    return {
+      ...item,
+      // Include additional fields if needed
+      expense: Math.floor(Math.random() * 100) + 10,
+      date:
+        day < 10 ? `2024-04-0${day.toString()}` : `2024-04-${day.toString()}`,
+    };
+  });
 
   const total = useMemo(
     () => ({

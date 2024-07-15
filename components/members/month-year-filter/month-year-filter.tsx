@@ -29,13 +29,62 @@ interface DataTableFacetedFilterProps<TData, TValue> {
   }[];
 }
 
-export function DataTableFacetedFilter<TData, TValue>({
+export function MonthYearFilter<TData, TValue>({
   column,
   title,
   options,
 }: DataTableFacetedFilterProps<TData, TValue>) {
   const facets = column?.getFacetedUniqueValues();
-  const selectedValues = new Set(column?.getFilterValue() as string[]);
+  const selectedValues = new Set(column?.getFilterValue() as Date[]);
+
+  function hasDateWithSameMonth(
+    selectedValues: Set<Date>,
+    monthLabel: string
+  ): boolean {
+    return Array.from(selectedValues).some((date) =>
+      isSameMonth(date, monthLabel)
+    );
+  }
+
+  // Custom comparison function to check if a date has the same month as a given label
+  function isSameMonth(date: Date, monthLabel: string): boolean {
+    const month = date.toLocaleString("default", { month: "short" });
+    return month === monthLabel;
+  }
+
+  const getUniqueSelectedValues = (selectedValues: Set<Date>): Set<string> => {
+    const selectedValuesArray = Array.from(selectedValues);
+    const uniqueArray: string[] = [];
+
+    selectedValuesArray.forEach((item) => {
+      const itemMonth = new Date(item).toLocaleString("default", {
+        month: "short",
+      });
+      if (!uniqueArray.includes(itemMonth)) {
+        uniqueArray.push(itemMonth);
+      }
+    });
+
+    return new Set(uniqueArray);
+  };
+
+  const getOptionLabel = (
+    facets: Map<any, number> | undefined,
+    label: string
+  ) => {
+    let count = 0;
+
+    // console.log(facets.);
+    facets?.forEach((value, key) => {
+      if (
+        new Date(key).toLocaleString("default", { month: "short" }) === label
+      ) {
+        count += 1;
+      }
+    });
+
+    return count;
+  };
 
   return (
     <Popover>
@@ -43,26 +92,28 @@ export function DataTableFacetedFilter<TData, TValue>({
         <Button variant="outline" size="sm" className="h-8 border-dashed">
           <PlusCircle className="mr-2 h-4 w-4" />
           {title}
-          {selectedValues?.size > 0 && (
+          {getUniqueSelectedValues(selectedValues)?.size > 0 && (
             <>
               <Separator orientation="vertical" className="mx-2 h-4" />
               <Badge
                 variant="secondary"
                 className="rounded-sm px-1 font-normal lg:hidden"
               >
-                {selectedValues.size}
+                {getUniqueSelectedValues(selectedValues).size}
               </Badge>
               <div className="hidden space-x-1 lg:flex">
-                {selectedValues.size > 2 ? (
+                {getUniqueSelectedValues(selectedValues).size > 2 ? (
                   <Badge
                     variant="secondary"
                     className="rounded-sm px-1 font-normal"
                   >
-                    {selectedValues.size} selected
+                    {getUniqueSelectedValues(selectedValues).size} selected
                   </Badge>
                 ) : (
                   options
-                    .filter((option) => selectedValues.has(option.label))
+                    .filter((option) =>
+                      hasDateWithSameMonth(selectedValues, option.label)
+                    )
                     .map((option) => (
                       <Badge
                         variant="secondary"
@@ -85,17 +136,36 @@ export function DataTableFacetedFilter<TData, TValue>({
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup>
               {options.map((option) => {
-                const isSelected = selectedValues.has(option.label);
+                const isSelected = hasDateWithSameMonth(
+                  selectedValues,
+                  option.label
+                );
 
                 return (
                   <CommandItem
                     key={option.value}
                     onSelect={() => {
                       if (isSelected) {
-                        selectedValues.delete(option.label);
+                        const datesToRemove: Date[] = [];
+                        selectedValues.forEach((date) => {
+                          if (isSameMonth(date, option.label)) {
+                            datesToRemove.push(date);
+                          }
+                        });
+
+                        datesToRemove.forEach((date) =>
+                          selectedValues.delete(date)
+                        );
                       } else {
-                        selectedValues.add(option.label);
+                        const datesToAdd: Date[] = [];
+                        facets?.forEach((value, key) => {
+                          if (isSameMonth(key, option.label)) {
+                            datesToAdd.push(key);
+                          }
+                        });
+                        datesToAdd.forEach((date) => selectedValues.add(date));
                       }
+
                       const filterValues = Array.from(selectedValues);
                       column?.setFilterValue(
                         filterValues.length ? filterValues : undefined
@@ -116,9 +186,9 @@ export function DataTableFacetedFilter<TData, TValue>({
                       <option.icon className="mr-2 h-4 w-4 text-muted-foreground" />
                     )}
                     <span>{option.label}</span>
-                    {facets?.get(option.label) && (
+                    {getOptionLabel(facets, option.label) > 0 && (
                       <span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs">
-                        {facets.get(option.label)}
+                        {getOptionLabel(facets, option.label)}
                       </span>
                     )}
                   </CommandItem>

@@ -32,144 +32,6 @@ export const labels = [
   },
 ];
 
-export const fakeData = [
-  {
-    id: "PA1MfICcRB5oWB1TBI",
-    name: "Jayden Foster",
-    email: "giviva@ce.vu",
-    joined_since: new Date(),
-    amount_paid: 227,
-    amount_owing: 43,
-    status: "active",
-  },
-  {
-    id: "EsFtyv6rrX6x",
-    name: "Joel Edwards",
-    email: "punot@fohzu.ukgiviva@ce.vu",
-    joined_since: new Date(),
-    amount_paid: 179,
-    amount_owing: 9,
-    status: "inactive",
-  },
-  {
-    id: "RVpmAWTc7Riq",
-    name: "Olive Reyes",
-    email: "zu@pef.lk",
-    joined_since: new Date(),
-    amount_paid: 116,
-    amount_owing: 447,
-    status: "active",
-  },
-  {
-    id: "PA1MfICcRB5oWB1TBI",
-    name: "Jayden Foster",
-    email: "giviva@ce.vu",
-    joined_since: new Date(),
-    amount_paid: 227,
-    amount_owing: 43,
-    status: "active",
-  },
-  {
-    id: "EsFtyv6rrX6x",
-    name: "Joel Edwards",
-    email: "punot@fohzu.ukgiviva@ce.vu",
-    joined_since: new Date(),
-    amount_paid: 179,
-    amount_owing: 9,
-    status: "inactive",
-  },
-  {
-    id: "RVpmAWTc7Riq",
-    name: "Olive Reyes",
-    email: "zu@pef.lk",
-    joined_since: new Date(),
-    amount_paid: 116,
-    amount_owing: 447,
-    status: "active",
-  },
-  {
-    id: "PA1MfICcRB5oWB1TBI",
-    name: "Jayden Foster",
-    email: "giviva@ce.vu",
-    joined_since: new Date(),
-    amount_paid: 227,
-    amount_owing: 43,
-    status: "active",
-  },
-  {
-    id: "EsFtyv6rrX6x",
-    name: "Joel Edwards",
-    email: "punot@fohzu.ukgiviva@ce.vu",
-    joined_since: new Date(),
-    amount_paid: 179,
-    amount_owing: 9,
-    status: "inactive",
-  },
-  {
-    id: "RVpmAWTc7Riq",
-    name: "Olive Reyes",
-    email: "zu@pef.lk",
-    joined_since: new Date(),
-    amount_paid: 116,
-    amount_owing: 447,
-    status: "active",
-  },
-  {
-    id: "PA1MfICcRB5oWB1TBI",
-    name: "Jayden Foster",
-    email: "giviva@ce.vu",
-    joined_since: new Date(),
-    amount_paid: 227,
-    amount_owing: 43,
-    status: "active",
-  },
-  {
-    id: "EsFtyv6rrX6x",
-    name: "Joel Edwards",
-    email: "punot@fohzu.ukgiviva@ce.vu",
-    joined_since: new Date(),
-    amount_paid: 179,
-    amount_owing: 9,
-    status: "inactive",
-  },
-  {
-    id: "RVpmAWTc7Riq",
-    name: "Olive Reyes",
-    email: "zu@pef.lk",
-    joined_since: new Date(),
-    amount_paid: 116,
-    amount_owing: 447,
-    status: "active",
-  },
-  {
-    id: "PA1MfICcRB5oWB1TBI",
-    name: "Jayden Foster",
-    email: "giviva@ce.vu",
-    joined_since: new Date(),
-    amount_paid: 227,
-    amount_owing: 43,
-    status: "active",
-  },
-  {
-    id: "EsFtyv6rrX6x",
-    name: "Joel Edwards",
-    email: "punot@fohzu.ukgiviva@ce.vu",
-    joined_since: new Date(),
-    amount_paid: 179,
-    amount_owing: 9,
-    status: "inactive",
-  },
-  {
-    id: "RVpmAWTc7Riq",
-    name: "Olive Reyes",
-    email: "zu@pef.lk",
-    joined_since: new Date(),
-    amount_paid: 116,
-    amount_owing: 447,
-    status: "active",
-  },
-];
-
 export const statuses = [
   {
     value: "active",
@@ -180,5 +42,56 @@ export const statuses = [
     value: "inactive",
     label: "Inactive",
     icon: CircleX,
+  },
+];
+
+export const months = [
+  {
+    value: "jan",
+    label: "Jan",
+  },
+  {
+    value: "feb",
+    label: "Feb",
+  },
+  {
+    value: "mar",
+    label: "Mar",
+  },
+  {
+    value: "apr",
+    label: "Apr",
+  },
+  {
+    value: "may",
+    label: "May",
+  },
+  {
+    value: "jun",
+    label: "Jun",
+  },
+  {
+    value: "jul",
+    label: "Jul",
+  },
+  {
+    value: "aug",
+    label: "Aug",
+  },
+  {
+    value: "sep",
+    label: "Sep",
+  },
+  {
+    value: "oct",
+    label: "Oct",
+  },
+  {
+    value: "nov",
+    label: "Nov",
+  },
+  {
+    value: "dec",
+    label: "Dec",
   },
 ];

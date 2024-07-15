@@ -11,12 +11,18 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { fakeData } from "@/data/members/data";
+import { faked } from "@/data/members/fakeData";
 import { useCurrentRole } from "@/hooks/use-current-role";
 import { UserRole } from "@prisma/client";
 
 const AdminPage = () => {
   const role = useCurrentRole();
+
+  const fakeData = faked.map((item) => ({
+    ...item,
+    joined_since: new Date(item.joined_since),
+    email: item.email !== null ? item.email : undefined,
+  }));
 
   if (role !== UserRole.ADMIN) {
     return (

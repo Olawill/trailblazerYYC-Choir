@@ -1,9 +1,15 @@
 import { columns } from "@/components/members/columns";
 import { DataTable } from "@/components/members/data-table";
 import { Header } from "@/components/music/header";
-import { fakeData } from "@/data/members/data";
+import { faked } from "@/data/members/fakeData";
 
 const MembersPage = () => {
+  const fakeData = faked.map((item) => ({
+    ...item,
+    joined_since: new Date(item.joined_since),
+    email: item.email !== null ? item.email : undefined,
+  }));
+
   return (
     <div className="h-full">
       <Header label="Members" />

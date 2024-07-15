@@ -4,6 +4,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
@@ -39,13 +40,29 @@ const UserButton = ({ setMenuOpen }: UserButtonProp) => {
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-40 bg-blue-400 border-px" align="end">
+      <DropdownMenuContent className="w-72 bg-blue-400 border-px" align="end">
+        <DropdownMenuItem className="font-semibold flex gap-2">
+          <Avatar className="relative">
+            <AvatarImage src={user?.image || ""} alt="avatar" />
+            <AvatarFallback className="bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-sky-400 to-blue-800">
+              <CircleUserRound className="text-white" />
+            </AvatarFallback>
+          </Avatar>
+          <div className="flex flex-col gap-1 items-start">
+            <span className="text-gray-700">{user?.name}</span>
+            <span className="text-gray-500 text-xs truncate">
+              {user?.email}
+            </span>
+          </div>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
         <DropdownMenuItem
           className="font-semibold cursor-pointer"
           onClick={() => router.push("/settings")}
         >
           <Wrench className="w-4 h-4 mr-2" /> Settings
         </DropdownMenuItem>
+        <DropdownMenuSeparator />
         <LogoutButton>
           <DropdownMenuItem className="font-semibold cursor-pointer hover:text-white hover:bg-destructive">
             <LogOut className="w-4 h-4 mr-2" /> Logout

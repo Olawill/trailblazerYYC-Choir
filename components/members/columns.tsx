@@ -85,8 +85,9 @@ export const columns: ColumnDef<Member>[] = [
       <DataTableColumnHeader column={column} title="Status" />
     ),
     cell: ({ row }) => {
+      const rowValue = row.getValue("status") as string;
       const status = statuses.find(
-        (status) => status.value === row.getValue("status")
+        (status) => status.value.toLowerCase() === rowValue?.toLowerCase()
       );
 
       if (!status) {
@@ -132,6 +133,9 @@ export const columns: ColumnDef<Member>[] = [
           </span>
         </div>
       );
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
     },
   },
 
