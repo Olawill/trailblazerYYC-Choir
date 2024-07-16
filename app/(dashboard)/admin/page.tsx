@@ -38,7 +38,7 @@ const AdminPage = () => {
       </CardHeader>
       <CardContent className="space-y-4 bg-transparent border-none">
         <Separator className="mb-2" />
-        <RoleGate allowedRole={UserRole.ADMIN}>
+        <RoleGate allowedRole={[UserRole.ADMIN]} onPage>
           <DataTable data={fakeData} columns={admincolumns} />
         </RoleGate>
       </CardContent>

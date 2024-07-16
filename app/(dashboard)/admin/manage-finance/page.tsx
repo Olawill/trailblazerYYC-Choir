@@ -38,7 +38,7 @@ const MemberDues = () => {
       </CardHeader>
       <CardContent className="space-y-4">
         <Separator className="mb-2" />
-        <RoleGate allowedRole={UserRole.ADMIN}>
+        <RoleGate allowedRole={[UserRole.ADMIN]} onPage>
           <Tabs defaultValue={types[0].value}>
             <TabsList className="grid w-full grid-cols-2 bg-gray-500 text-white">
               <TabsTrigger value={types[0].value} className="font-bold">

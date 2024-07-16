@@ -21,6 +21,7 @@ type HeaderProps = {
 
 export const Header = ({ label, action }: HeaderProps) => {
   const user = useCurrentUser();
+
   return (
     <div className="">
       <div className="flex items-center justify-between">

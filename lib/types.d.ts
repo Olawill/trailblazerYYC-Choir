@@ -23,6 +23,7 @@ type BackButtonProp = {
 
 type FormErrorProp = {
   message?: string;
+  forPage?: boolean;
 };
 
 type FormSuccessProp = FormErrorProp;
