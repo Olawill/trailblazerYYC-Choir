@@ -101,3 +101,13 @@ export const ExpenseSchema = z.object({
 export const CategoryModalSchema = z.object({
   newCategory: z.string(),
 });
+
+export const NewMemberSchema = z.object({
+  name: z.string().min(4, {
+    message: "Name must contain at least 4 character(s)",
+  }),
+  email: z.string().optional(),
+  joined_since: z.date(),
+  status: z.enum(["Active", "Inactive"]),
+  amount_paid: z.coerce.number().min(0),
+});

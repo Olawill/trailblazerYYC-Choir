@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { LoginForm } from "@/components/auth/login-form";
+import NewMemberForm from "@/components/members/new-member/new-member-form";
 
 type HeaderProps = {
   label: string;
@@ -44,6 +45,7 @@ export const Header = ({ label, action }: HeaderProps) => {
                   </DialogDescription>
                 </DialogHeader>
                 <Separator className="my-2" />
+                {label === "Members" ? <NewMemberForm /> : ""}
               </DialogContent>
             ) : (
               <DialogContent className="p-0 w-auto bg-transparent border-none">

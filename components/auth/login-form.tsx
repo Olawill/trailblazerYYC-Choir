@@ -39,8 +39,6 @@ export const LoginForm = () => {
 
   const callbackUrl = searchParams.get("callbackUrl");
 
-  console.log(callbackUrl);
-
   const [isPending, startTransition] = useTransition();
 
   const [error, setError] = useState<string | undefined>("");
