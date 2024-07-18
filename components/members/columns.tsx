@@ -6,9 +6,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { DataTableColumnHeader } from "@/components/members/data-table-column-header";
 import { Badge } from "@/components/ui/badge";
 import { labels, statuses } from "@/data/members/data";
-import { DataTableRowActions } from "@/components/members/data-table-row-actions";
-import { RoleGate } from "../auth/role-gate";
-import { UserRole } from "@prisma/client";
 
 // Format the amount as a dollar amount
 const formatted = new Intl.NumberFormat("en-CA", {

@@ -73,7 +73,7 @@ export const SettingsSchema = z
 export const MemberSchema = z.object({
   id: z.string(),
   name: z.string(),
-  email: z.string().optional(),
+  email: z.string().optional().nullable(),
   joined_since: z.date(),
   amount_paid: z.number(),
   amount_owing: z.number(),
@@ -93,8 +93,8 @@ export const ExpenseSchema = z.object({
   amount: z.coerce.number().min(0.01, {
     message: "Amount must be greater than $0",
   }),
-  description: z.string(),
-  category: z.string(),
+  description: z.string().min(4),
+  category: z.string().min(4),
   expenseDate: z.date(),
 });
 
@@ -108,6 +108,6 @@ export const NewMemberSchema = z.object({
   }),
   email: z.string().optional(),
   joined_since: z.date(),
-  status: z.enum(["Active", "Inactive"]),
+  status: z.enum(["active", "inactive"]),
   amount_paid: z.coerce.number().min(0),
 });

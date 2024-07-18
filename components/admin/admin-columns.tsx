@@ -180,7 +180,7 @@ export const admincolumns: ColumnDef<Member>[] = [
   {
     id: "actions",
     cell: ({ row }) => (
-      <RoleGate allowedRole={UserRole.ADMIN} showMessage={false}>
+      <RoleGate allowedRole={[UserRole.ADMIN]} showMessage={false}>
         {" "}
         <DataTableRowActions row={row} />
       </RoleGate>

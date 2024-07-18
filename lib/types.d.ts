@@ -27,3 +27,13 @@ type FormErrorProp = {
 };
 
 type FormSuccessProp = FormErrorProp;
+
+type MemberData = {
+  id: string;
+  name: string;
+  email: string | undefined;
+  status: string;
+  amount_paid: number;
+  amount_owing: number;
+  joined_since: Date;
+};

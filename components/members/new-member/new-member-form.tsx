@@ -27,6 +27,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useCurrentUser } from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils";
 import { NewMemberSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -51,9 +52,11 @@ const NewMemberForm = () => {
       email: "",
       joined_since: new Date(),
       amount_paid: 0,
-      status: "Active",
+      status: "active",
     },
   });
+
+  const user = useCurrentUser();
 
   const onSubmit = (values: z.infer<typeof NewMemberSchema>) => {
     setError("");
@@ -64,7 +67,7 @@ const NewMemberForm = () => {
 
       try {
         if (data?.error) {
-          form.reset();
+          // form.reset();
           setError(data?.error);
         }
 
@@ -72,10 +75,6 @@ const NewMemberForm = () => {
           form.reset();
           setSuccess(data?.success);
         }
-
-        // if (!data) {
-        //   // window.location.reload();
-        // }
       } catch {
         setError("Something went wrong!");
       }

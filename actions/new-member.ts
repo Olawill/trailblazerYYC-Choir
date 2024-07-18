@@ -1,74 +1,75 @@
+"use server";
+
 import { currentUser } from "@/lib/auth";
 import { prisma } from "@/lib/client";
 import { NewMemberSchema } from "@/schemas";
-import { User, UserRole } from "@prisma/client";
 import { z } from "zod";
 
-type newMemberUser = User & {
-  role: UserRole;
-  isTwoFactorEnabled: boolean;
-  isOAuth: boolean;
-};
+export const newMember = async (values: z.infer<typeof NewMemberSchema>) => {
+  const validatedFields = NewMemberSchema.safeParse(values);
 
-export const newMember = async (
-  values: z.infer<typeof NewMemberSchema>,
-  user: newMemberUser
-) => {
-  if (!user) {
-    return { error: "Unauthorized" };
+  if (!validatedFields.success) {
+    return { error: "Invalid data!" };
   }
 
-  const hasPermission = user.role === "USER";
+  const { name, email, joined_since, amount_paid, status } =
+    validatedFields.data;
+
+  const user = await currentUser();
+
+  if (!user) {
+    return { error: "You are not authorized to perform this action" };
+  }
+
+  const hasPermission = user.role !== "USER";
 
   if (!hasPermission) {
     return { error: "Unauthorized" };
   }
 
-  if (values.email) {
-    const exisitingMemberEmail = await prisma.member.findUnique({
-      where: {
-        email: values.email,
-      },
-    });
-
-    if (exisitingMemberEmail) {
-      return { error: "Email already in use." };
-    }
-  }
-
   try {
-    // Assuming this is within an asynchronous function
+    if (email) {
+      // Check if a member with the same email exists
+      const existingMember = await prisma.member.findUnique({
+        where: {
+          email,
+        },
+      });
 
-    // Initialize memberData with basic properties
-    let memberData = {
-      name: values.name,
-      email: values.email,
-      isActive: values.status === "Active",
-      dateJoined: new Date(values.joined_since),
-      amountPaid: values.amount_paid,
-      userId: "",
-    };
+      if (existingMember) {
+        return {
+          error: "Email already in use!",
+        };
+      }
 
-    // Check if the user already exists in the database
-    const existingUser = await prisma.user.findUnique({
-      where: {
-        email: values.email,
-      },
-    });
-
-    // Conditionally add userId to memberData if existingUser is found
-    if (existingUser) {
-      memberData.userId = existingUser.id;
+      await prisma.member.create({
+        data: {
+          name,
+          email,
+          isActive: status === "active",
+          dateJoined: new Date(joined_since),
+          amountPaid: amount_paid,
+        },
+      });
+    } else {
+      await prisma.member.create({
+        data: {
+          name,
+          email: `${name
+            .split(" ")
+            .pop()
+            ?.toLowerCase()}@trailblazerchoristers.com`,
+          isActive: status === "active",
+          dateJoined: new Date(joined_since),
+          amountPaid: amount_paid,
+        },
+      });
     }
 
-    // Create the member using Prisma's create method
-    await prisma.member.create({
-      data: memberData,
-    });
-
-    return { success: "Profile Updated!" };
-  } catch {
+    return { success: "Member created!" };
+  } catch (err) {
     // Handle errors appropriately
+    console.log("error", err);
     return { error: "Something went wrong. Please try again!" };
   }
 };

@@ -21,7 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
-import { useTransition, useState } from "react";
+import { useTransition, useState, useEffect } from "react";
 import {
   CalendarDays,
   CheckIcon,
@@ -58,6 +58,8 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "../ui/label";
 import { useFormStatus } from "react-dom";
+import { getExpenseCategories } from "@/data/members";
+import { expense } from "@/actions/expense";
 
 const fakeData = [
   {
@@ -102,6 +104,11 @@ const fakeData = [
   },
 ];
 
+interface CategoryProp {
+  id: string;
+  category: string | null;
+}
+
 export const ExpenseForm = () => {
   const [isPending, startTransition] = useTransition();
   const { pending } = useFormStatus();
@@ -115,6 +122,7 @@ export const ExpenseForm = () => {
   const [showNewCategoryModal, setShowNewCategoryModal] = useState(false);
   const [modalError, setModalError] = useState<string | undefined>("");
   const [modalCategory, setModalCategory] = useState<string | undefined>("");
+  const [allCategories, setAllCategories] = useState<CategoryProp[] | null>();
 
   const form = useForm<z.infer<typeof ExpenseSchema>>({
     resolver: zodResolver(ExpenseSchema),
@@ -126,12 +134,45 @@ export const ExpenseForm = () => {
     },
   });
 
+  useEffect(() => {
+    const getCategories = async () => {
+      const categories = await getExpenseCategories();
+
+      setAllCategories(categories);
+    };
+
+    getCategories();
+  }, []);
+
   const handleModalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setModalCategory(e.target.value);
   };
 
   const onSubmit = (values: z.infer<typeof ExpenseSchema>) => {
-    console.log(values);
+    setError("");
+    setSuccess("");
+
+    startTransition(async () => {
+      const data = await expense(values);
+
+      try {
+        if (data?.error) {
+          // form.reset();
+          setError(data?.error);
+        }
+
+        if (data?.success) {
+          form.reset();
+          setSuccess(data?.success);
+        }
+
+        if (!data) {
+          window.location.reload();
+        }
+      } catch {
+        setError("Something went wrong!");
+      }
+    });
   };
 
   return (
@@ -202,26 +243,31 @@ export const ExpenseForm = () => {
                           <CommandList>
                             <CommandEmpty>No category found.</CommandEmpty>
                             <CommandGroup>
-                              {fakeData.map((d) => (
-                                <CommandItem
-                                  value={d.name}
-                                  key={d.id}
-                                  onSelect={() => {
-                                    form.setValue("category", d.name);
-                                    setOpen(false);
-                                  }}
-                                >
-                                  {d.name}
-                                  <CheckIcon
-                                    className={cn(
-                                      "ml-auto h-4 w-4",
-                                      d.name === field.value
-                                        ? "opacity-100"
-                                        : "opacity-0"
-                                    )}
-                                  />
-                                </CommandItem>
-                              ))}
+                              {allCategories &&
+                                allCategories?.length > 0 &&
+                                allCategories?.map((d) => (
+                                  <CommandItem
+                                    value={d.category as string}
+                                    key={d.id}
+                                    onSelect={() => {
+                                      form.setValue(
+                                        "category",
+                                        d.category as string
+                                      );
+                                      setOpen(false);
+                                    }}
+                                  >
+                                    {d.category}
+                                    <CheckIcon
+                                      className={cn(
+                                        "ml-auto h-4 w-4",
+                                        d.category === field.value
+                                          ? "opacity-100"
+                                          : "opacity-0"
+                                      )}
+                                    />
+                                  </CommandItem>
+                                ))}
                             </CommandGroup>
                           </CommandList>
                           <CommandSeparator />
@@ -310,7 +356,7 @@ export const ExpenseForm = () => {
                     <Input
                       disabled={isPending}
                       {...field}
-                      step={0.1}
+                      step={0.01}
                       min={0}
                       type="number"
                     />

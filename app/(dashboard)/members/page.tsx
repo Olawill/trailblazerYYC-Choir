@@ -2,15 +2,31 @@ import { RoleGate } from "@/components/auth/role-gate";
 import { columns } from "@/components/members/columns";
 import { DataTable } from "@/components/members/data-table";
 import { Header } from "@/components/music/header";
-import { faked } from "@/data/members/fakeData";
+import { getMemberDue, getMembers } from "@/data/members";
+import { amountOwing } from "@/utils/helper";
 import { UserRole } from "@prisma/client";
 
-const MembersPage = () => {
-  const fakeData = faked.map((item) => ({
-    ...item,
-    joined_since: new Date(item.joined_since),
-    email: item.email !== null ? item.email : undefined,
-  }));
+const MembersPage = async () => {
+  const members = await getMembers();
+  const due = await getMemberDue();
+
+  const memberData =
+    members?.map(({ id, name, email, isActive, amountPaid, dateJoined }) => {
+      return {
+        id,
+        name,
+        email,
+        status: isActive ? "Active" : "Inactive",
+        amount_paid: amountPaid,
+        amount_owing: amountOwing(
+          dateJoined,
+          new Date(),
+          amountPaid,
+          due?.amount!
+        ),
+        joined_since: dateJoined,
+      };
+    }) ?? [];
 
   return (
     <RoleGate allowedRole={[UserRole.SUPERUSER, UserRole.ADMIN]} onPage>
@@ -28,7 +44,7 @@ const MembersPage = () => {
               </p>
             </div>
           </div>
-          <DataTable data={fakeData} columns={columns} />
+          <DataTable data={memberData as MemberData[]} columns={columns} />
         </div>
       </div>
     </RoleGate>
