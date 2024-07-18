@@ -38,6 +38,9 @@ import {
   Command,
 } from "@/components/ui/command";
 import { faked as fakeData } from "@/data/members/fakeData";
+import { getMembers } from "@/data/members";
+import { Member } from "@prisma/client";
+import { payment } from "@/actions/expense";
 
 export const PaymentForm = () => {
   const [isPending, startTransition] = useTransition();
@@ -47,6 +50,8 @@ export const PaymentForm = () => {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
 
+  const [allMembers, setAllMembers] = useState<Member[] | null>();
+
   const form = useForm<z.infer<typeof PaymentSchema>>({
     resolver: zodResolver(PaymentSchema),
     defaultValues: {
@@ -55,8 +60,40 @@ export const PaymentForm = () => {
     },
   });
 
+  useEffect(() => {
+    const getAllMembers = async () => {
+      const members = await getMembers();
+
+      setAllMembers(members);
+    };
+
+    getAllMembers();
+  }, []);
+
   const onSubmit = (values: z.infer<typeof PaymentSchema>) => {
-    console.log(values);
+    setError("");
+    setSuccess("");
+
+    startTransition(async () => {
+      const data = await payment(values);
+
+      try {
+        if (data?.error) {
+          setError(data?.error);
+        }
+
+        if (data?.success) {
+          form.reset();
+          setSuccess(data?.success);
+        }
+
+        if (!data) {
+          window.location.reload();
+        }
+      } catch {
+        setError("Something went wrong!");
+      }
+    });
   };
 
   return (
@@ -99,26 +136,28 @@ export const PaymentForm = () => {
                         <CommandList>
                           <CommandEmpty>No member found.</CommandEmpty>
                           <CommandGroup>
-                            {fakeData.map((d) => (
-                              <CommandItem
-                                value={d.name}
-                                key={d.id}
-                                onSelect={() => {
-                                  form.setValue("name", d.name);
-                                  setOpen(false);
-                                }}
-                              >
-                                {d.name}
-                                <CheckIcon
-                                  className={cn(
-                                    "ml-auto h-4 w-4",
-                                    d.name === field.value
-                                      ? "opacity-100"
-                                      : "opacity-0"
-                                  )}
-                                />
-                              </CommandItem>
-                            ))}
+                            {allMembers &&
+                              allMembers.length > 0 &&
+                              allMembers.map((d) => (
+                                <CommandItem
+                                  value={d.name}
+                                  key={d.id}
+                                  onSelect={() => {
+                                    form.setValue("name", d.name);
+                                    setOpen(false);
+                                  }}
+                                >
+                                  {d.name}
+                                  <CheckIcon
+                                    className={cn(
+                                      "ml-auto h-4 w-4",
+                                      d.name === field.value
+                                        ? "opacity-100"
+                                        : "opacity-0"
+                                    )}
+                                  />
+                                </CommandItem>
+                              ))}
                           </CommandGroup>
                         </CommandList>
                       </Command>

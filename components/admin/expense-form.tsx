@@ -4,7 +4,7 @@ import * as z from "zod";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CategoryModalSchema, ExpenseSchema } from "@/schemas";
+import { ExpenseSchema } from "@/schemas";
 
 import {
   Form,
@@ -60,49 +60,6 @@ import { Label } from "../ui/label";
 import { useFormStatus } from "react-dom";
 import { getExpenseCategories } from "@/data/members";
 import { expense } from "@/actions/expense";
-
-const fakeData = [
-  {
-    id: "4d458f5b-d298-48d9-a361-dbafd91192c5",
-    name: "Music",
-  },
-  {
-    id: "f9a5f900-3f49-487a-ba95-5970679a2fa8",
-    name: "Tools",
-  },
-  {
-    id: "b89a697c-2fb3-47b3-9066-8f6bf58ee821",
-    name: "Industrial",
-  },
-  {
-    id: "b507b859-fe4f-40dd-a46d-c507f685c457",
-    name: "Tools",
-  },
-  {
-    id: "5785f3c6-af8a-4f7e-88f0-39a449623907",
-    name: "Jewelry",
-  },
-  {
-    id: "533886a6-944b-46f0-90dc-13a0dfac676a",
-    name: "Garden",
-  },
-  {
-    id: "660ce1f3-0254-4066-b5c5-9e5d295d6c68",
-    name: "Outdoors",
-  },
-  {
-    id: "7856ca7e-7b60-487f-b87e-e09271787449",
-    name: "Tools",
-  },
-  {
-    id: "fc64d076-5cfd-4d60-bfb0-85c674805bb2",
-    name: "Toys",
-  },
-  {
-    id: "bebd23d4-ed74-422d-9be7-a0578a4f6be5",
-    name: "Movies",
-  },
-];
 
 interface CategoryProp {
   id: string;

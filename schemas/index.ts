@@ -86,7 +86,7 @@ export const PaymentSchema = z.object({
   amount: z.coerce.number().min(1, {
     message: "Amount must be greater than $1",
   }),
-  name: z.string(),
+  name: z.string().min(4),
 });
 
 export const ExpenseSchema = z.object({

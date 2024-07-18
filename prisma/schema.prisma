@@ -28,8 +28,6 @@ model User {
   isTwoFactorEnabled    Boolean                @default(false)
   twoFactorConfirmation TwoFactorConfirmation?
 
-  // member Member?
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -94,10 +92,8 @@ model TwoFactorConfirmation {
 
 model Member {
   id String @id @default(auto()) @map("_id") @db.ObjectId
-  // memberId  String   @db.ObjectId
-  // userId String? @unique @db.ObjectId
 
-  // user User? @relation(fields: [userId], references: [id])
+  payments Payment[]
 
   name       String
   email      String?  @unique
@@ -122,4 +118,16 @@ model Expense {
   category    String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model Payment {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  amount   Float
+  memberId String @db.ObjectId
+  member   Member @relation(fields: [memberId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@unique([id, memberId])
 }
