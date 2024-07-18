@@ -3,6 +3,7 @@
 import { currentUser } from "@/lib/auth";
 import { prisma } from "@/lib/client";
 import { NewMemberSchema } from "@/schemas";
+import { Member } from "@prisma/client";
 import { z } from "zod";
 
 export const newMember = async (values: z.infer<typeof NewMemberSchema>) => {
@@ -27,6 +28,8 @@ export const newMember = async (values: z.infer<typeof NewMemberSchema>) => {
     return { error: "Unauthorized" };
   }
 
+  let newMember: Member;
+
   try {
     if (email) {
       // Check if a member with the same email exists
@@ -42,17 +45,16 @@ export const newMember = async (values: z.infer<typeof NewMemberSchema>) => {
         };
       }
 
-      await prisma.member.create({
+      newMember = await prisma.member.create({
         data: {
           name,
           email,
           isActive: status === "active",
           dateJoined: new Date(joined_since),
-          amountPaid: amount_paid,
         },
       });
     } else {
-      await prisma.member.create({
+      newMember = await prisma.member.create({
         data: {
           name,
           email: `${name
@@ -61,7 +63,15 @@ export const newMember = async (values: z.infer<typeof NewMemberSchema>) => {
             ?.toLowerCase()}@trailblazerchoristers.com`,
           isActive: status === "active",
           dateJoined: new Date(joined_since),
-          amountPaid: amount_paid,
+        },
+      });
+    }
+
+    if (amount_paid > 0) {
+      await prisma.payment.create({
+        data: {
+          memberId: newMember.id,
+          amount: amount_paid,
         },
       });
     }

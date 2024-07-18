@@ -98,7 +98,6 @@ model Member {
   name       String
   email      String?  @unique
   isActive   Boolean
-  amountPaid Int
   dateJoined DateTime
   updatedAt  DateTime @updatedAt
 }

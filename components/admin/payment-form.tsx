@@ -37,7 +37,6 @@ import {
   CommandList,
   Command,
 } from "@/components/ui/command";
-import { faked as fakeData } from "@/data/members/fakeData";
 import { getMembers } from "@/data/members";
 import { Member } from "@prisma/client";
 import { payment } from "@/actions/expense";

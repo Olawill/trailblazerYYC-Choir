@@ -4,9 +4,36 @@ import { prisma } from "@/lib/client";
 
 export const getMembers = async () => {
   try {
-    const members = await prisma.member.findMany();
+    const members = await prisma.member.findMany({
+      include: {
+        payments: {
+          select: {
+            amount: true,
+          },
+        },
+      },
+    });
 
-    return members;
+    const membersWithTotalPayments = members.map(
+      ({ id, name, email, isActive, dateJoined, updatedAt, payments }) => {
+        const totalPayments = payments.reduce(
+          (acc, payment) => acc + payment.amount,
+          0
+        );
+
+        return {
+          id,
+          name,
+          email,
+          isActive,
+          dateJoined,
+          updatedAt,
+          amountPaid: totalPayments,
+        };
+      }
+    );
+
+    return membersWithTotalPayments;
   } catch {
     return null;
   }
