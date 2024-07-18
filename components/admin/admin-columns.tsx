@@ -147,7 +147,11 @@ export const admincolumns: ColumnDef<Member>[] = [
 
       return (
         <div className="flex space-x-2">
-          {label && <Badge variant="success">{label.label}</Badge>}
+          {label && (
+            <Badge variant={amount > 0 ? "success" : "default"}>
+              {label.label}
+            </Badge>
+          )}
           <span className="max-w-[500px] truncate font-medium">
             {formatted.format(amount)}
           </span>
@@ -168,7 +172,11 @@ export const admincolumns: ColumnDef<Member>[] = [
 
       return (
         <div className="flex space-x-2">
-          {label && <Badge variant="destructive">{label.label}</Badge>}
+          {label && (
+            <Badge variant={amount > 0 ? "destructive" : "outline"}>
+              {label.label}
+            </Badge>
+          )}
           <span className="max-w-[500px] truncate font-medium">
             {formatted.format(amount)}
           </span>
@@ -182,7 +190,7 @@ export const admincolumns: ColumnDef<Member>[] = [
     cell: ({ row }) => (
       <RoleGate allowedRole={[UserRole.ADMIN]} showMessage={false}>
         {" "}
-        <DataTableRowActions row={row} />
+        <DataTableRowActions key={row.original.id} row={row} />
       </RoleGate>
     ),
   },

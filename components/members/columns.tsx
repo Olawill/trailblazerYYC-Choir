@@ -63,11 +63,8 @@ export const columns: ColumnDef<Member>[] = [
       <DataTableColumnHeader column={column} title="Email" />
     ),
     cell: ({ row }) => {
-      const label = labels.find((label) => label.value === row.original.email);
-
       return (
         <div className="flex space-x-2">
-          {label && <Badge variant="outline">{label.label}</Badge>}
           <span className="max-w-[500px] truncate font-medium">
             {row.getValue("email")}
           </span>
@@ -148,7 +145,11 @@ export const columns: ColumnDef<Member>[] = [
 
       return (
         <div className="flex space-x-2">
-          {label && <Badge variant="success">{label.label}</Badge>}
+          {label && (
+            <Badge variant={amount > 0 ? "success" : "default"}>
+              {label.label}
+            </Badge>
+          )}
           <span className="max-w-[500px] truncate font-medium">
             {formatted.format(amount)}
           </span>
@@ -169,7 +170,11 @@ export const columns: ColumnDef<Member>[] = [
 
       return (
         <div className="flex space-x-2">
-          {label && <Badge variant="destructive">{label.label}</Badge>}
+          {label && (
+            <Badge variant={amount > 0 ? "destructive" : "outline"}>
+              {label.label}
+            </Badge>
+          )}
           <span className="max-w-[500px] truncate font-medium">
             {formatted.format(amount)}
           </span>

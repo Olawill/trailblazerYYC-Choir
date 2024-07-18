@@ -18,6 +18,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { statuses } from "@/data/members/data";
 import { MoreHorizontal } from "lucide-react";
+import { useState } from "react";
+import { changeMemberStatus } from "@/actions/memberUpdate";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -27,6 +30,24 @@ export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
   const status = MemberSchema.parse(row.original);
+
+  const queryClient = useQueryClient();
+
+  const [memberStatus, setMemberStatus] = useState(status.status);
+
+  const { data, mutateAsync: changeStatus } = useMutation({
+    mutationFn: (params: { id: string; val: string }) =>
+      changeMemberStatus(params.id, params.val),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["members"] });
+    },
+  });
+
+  const handleClick = (id: string, val: string) => {
+    changeStatus({ id, val }).then((d) => {
+      // console.log(d);
+    });
+  };
 
   return (
     <DropdownMenu>
@@ -45,9 +66,16 @@ export function DataTableRowActions<TData>({
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>Status</DropdownMenuSubTrigger>
           <DropdownMenuSubContent>
-            <DropdownMenuRadioGroup value={status.status}>
+            <DropdownMenuRadioGroup
+              value={memberStatus.toLowerCase()}
+              onValueChange={setMemberStatus}
+            >
               {statuses.map((label) => (
-                <DropdownMenuRadioItem key={label.value} value={label.value}>
+                <DropdownMenuRadioItem
+                  key={label.value}
+                  value={label.value}
+                  onClick={() => handleClick(status.id, label.value)}
+                >
                   {label.label}
                 </DropdownMenuRadioItem>
               ))}
