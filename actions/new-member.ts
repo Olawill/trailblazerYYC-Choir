@@ -83,3 +83,65 @@ export const newMember = async (values: z.infer<typeof NewMemberSchema>) => {
     return { error: "Something went wrong. Please try again!" };
   }
 };
+
+export const editMemberDetails = async (
+  values: z.infer<typeof NewMemberSchema>,
+  id: string
+) => {
+  const validatedFields = NewMemberSchema.safeParse(values);
+
+  if (!validatedFields.success) {
+    return { error: "Invalid data!" };
+  }
+
+  const { name, email, joined_since, amount_paid, status } =
+    validatedFields.data;
+
+  const user = await currentUser();
+
+  if (!user) {
+    return { error: "You are not authorized to perform this action" };
+  }
+
+  const hasPermission = user.role !== "USER";
+
+  if (!hasPermission) {
+    return { error: "Unauthorized" };
+  }
+
+  const existingMember = await prisma.member.findFirst({
+    where: {
+      id,
+    },
+  });
+
+  if (!existingMember) {
+    return { error: "No member found!" };
+  }
+
+  try {
+    await prisma.member.update({
+      where: { id: existingMember.id },
+      data: {
+        name,
+        email,
+        isActive: status === "active",
+        dateJoined: new Date(joined_since),
+      },
+    });
+
+    if (amount_paid > 0) {
+      await prisma.payment.create({
+        data: {
+          memberId: existingMember.id,
+          amount: amount_paid,
+        },
+      });
+    }
+
+    return { success: "Member details updated!" };
+  } catch (err) {
+    console.log("error", err);
+    return { error: "Something went wrong. Please try again!" };
+  }
+};

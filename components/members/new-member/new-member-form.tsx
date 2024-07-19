@@ -1,6 +1,6 @@
 "use client";
 
-import { newMember } from "@/actions/new-member";
+import { editMemberDetails, newMember } from "@/actions/new-member";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { Button } from "@/components/ui/button";
@@ -31,28 +31,50 @@ import { useCurrentUser } from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils";
 import { NewMemberSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { CalendarDays, Loader2 } from "lucide-react";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-const NewMemberForm = () => {
+interface InitialDataProp {
+  id: string;
+  name: string;
+  joined_since: Date;
+  amount_paid: number;
+  amount_owing: number;
+  status: string;
+  email?: string | null | undefined;
+}
+
+const NewMemberForm = ({ member }: { member?: InitialDataProp }) => {
   const [isPending, startTransition] = useTransition();
+  const queryClient = useQueryClient();
 
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
 
   const [openCalendar, setOpenCalendar] = useState(false);
 
+  if (member) {
+    member = {
+      ...member,
+      status: member.status.toLowerCase(),
+    };
+  }
+
   const form = useForm<z.infer<typeof NewMemberSchema>>({
     resolver: zodResolver(NewMemberSchema),
     defaultValues: {
-      name: "",
-      email: "",
-      joined_since: new Date(),
+      name: member?.name || "",
+      email: member?.email || "",
+      joined_since: member?.joined_since || new Date(),
       amount_paid: 0,
-      status: "active",
+      status:
+        member?.status === "active" || member?.status === "inactive"
+          ? member?.status
+          : "active",
     },
   });
 
@@ -63,7 +85,9 @@ const NewMemberForm = () => {
     setSuccess("");
 
     startTransition(async () => {
-      const data = await newMember(values);
+      const data = member
+        ? await editMemberDetails(values, member.id)
+        : await newMember(values);
 
       try {
         if (data?.error) {
@@ -72,8 +96,15 @@ const NewMemberForm = () => {
         }
 
         if (data?.success) {
-          form.reset();
           setSuccess(data?.success);
+          queryClient.invalidateQueries({ queryKey: ["members"] });
+          form.reset({
+            name: "",
+            email: "",
+            amount_paid: 0,
+            joined_since: new Date(),
+            status: "active",
+          });
         }
       } catch {
         setError("Something went wrong!");
@@ -202,7 +233,15 @@ const NewMemberForm = () => {
               <FormItem>
                 <FormLabel>Member Status</FormLabel>
                 <FormControl>
-                  <Select onValueChange={field.onChange} defaultValue="active">
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={
+                      member?.status === "active" ||
+                      member?.status === "inactive"
+                        ? member?.status
+                        : "active"
+                    }
+                  >
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select a member activity status" />
@@ -227,6 +266,8 @@ const NewMemberForm = () => {
         <Button disabled={isPending} type="submit" className="w-full">
           {isPending ? (
             <Loader2 className="animate-spin h-4 w-4" />
+          ) : member ? (
+            "Edit Member Details"
           ) : (
             "Add New Member"
           )}

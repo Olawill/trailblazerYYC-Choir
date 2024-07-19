@@ -3,7 +3,33 @@
 import { currentUser } from "@/lib/auth";
 import { prisma } from "@/lib/client";
 
-export const deleteMember = async () => {};
+export const deleteMember = async (id: string) => {
+  const user = await currentUser();
+
+  if (!user) {
+    return { error: "You are not authorized to perform this action" };
+  }
+
+  const hasPermission = user.role !== "USER";
+
+  if (!hasPermission) {
+    return { error: "Unauthorized" };
+  }
+
+  try {
+    const member = await prisma.member.delete({
+      where: {
+        id,
+      },
+    });
+
+    return { success: "Member deleted successfully!" };
+  } catch (err) {
+    // Handle errors appropriately
+    console.log("error", err);
+    return { error: "Something went wrong. Please try again!" };
+  }
+};
 
 export const editMember = async () => {};
 
