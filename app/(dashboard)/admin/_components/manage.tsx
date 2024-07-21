@@ -23,16 +23,10 @@ const DUE = 10;
 const ManagePage = () => {
   const role = useCurrentRole();
 
-  const {
-    data: members,
-    isLoading,
-    error,
-    refetch,
-  } = useQuery({ queryKey: ["members"], queryFn: () => getMembers() });
-  // const { data: due } = useQuery({
-  //   queryKey: ["due"],
-  //   queryFn: () => getMemberDue(),
-  // });
+  const { data: members, isLoading } = useQuery({
+    queryKey: ["members"],
+    queryFn: () => getMembers(),
+  });
 
   const memberData =
     members?.map(({ id, name, email, isActive, amountPaid, dateJoined }) => ({
@@ -60,7 +54,7 @@ const ManagePage = () => {
   }
 
   return (
-    <Card className="w-fit bg-transparent">
+    <Card className="w-[350px] bg-transparent sm:w-[550px] md:w-[650px] lg:w-[700px] xl:w-[900px] 2xl:w-[1250px]">
       <CardHeader>
         <p className="text-2xl font-semibold">Manage</p>
         <CardDescription className="text-gray-300">

@@ -72,7 +72,7 @@ const FinancePage = () => {
 
   return (
     <RoleGate allowedRole={[UserRole.SUPERUSER, UserRole.ADMIN]} onPage>
-      <div className="h-full">
+      <div className="h-full w-[450px] sm:w-[600px] md:w-[650px] lg:w-[700px] xl:w-[900px] 2xl:w-[1250px]">
         <Header label="Financial Summary" />
 
         <Tabs defaultValue={tabLabels[0]}>

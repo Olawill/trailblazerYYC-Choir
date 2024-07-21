@@ -30,7 +30,7 @@ const MembersPage = async () => {
 
   return (
     <RoleGate allowedRole={[UserRole.SUPERUSER, UserRole.ADMIN]} onPage>
-      <div className="h-full">
+      <div className="h-full w-[450px] sm:w-[600px] md:w-[650px] lg:w-[700px] xl:w-[900px] 2xl:w-[1250px]">
         <Header label="Members" action="Add" />
 
         <div className="h-full flex-1 flex-col space-y-8 p-8 md:flex">

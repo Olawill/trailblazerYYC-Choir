@@ -18,6 +18,8 @@ import {
 } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
 import { CheckIcon, PlusCircle } from "lucide-react";
+import { months } from "@/data/members/data";
+import { unwatchFile } from "fs";
 
 interface DataTableFacetedFilterProps<TData, TValue> {
   column?: Column<TData, TValue>;
@@ -36,6 +38,20 @@ export function MonthYearFilter<TData, TValue>({
 }: DataTableFacetedFilterProps<TData, TValue>) {
   const facets = column?.getFacetedUniqueValues();
   const selectedValues = new Set(column?.getFilterValue() as Date[]);
+
+  const getMonthsInTable = (mappedData: Map<any, number>, label: string) => {
+    let monthsInTable: string[] = [];
+    if (mappedData) {
+      const obj = Object.fromEntries(mappedData);
+      monthsInTable = Object.keys(obj).map((key) =>
+        new Date(key).toLocaleString("default", { month: "short" })
+      );
+    }
+
+    const uniqueMonths = Array.from(new Set(monthsInTable));
+
+    return uniqueMonths.includes(label);
+  };
 
   function hasDateWithSameMonth(
     selectedValues: Set<Date>,
@@ -140,6 +156,15 @@ export function MonthYearFilter<TData, TValue>({
                   selectedValues,
                   option.label
                 );
+
+                const monthsIntable = getMonthsInTable(
+                  facets as Map<any, number>,
+                  option.label
+                );
+
+                if (!monthsIntable) {
+                  return null;
+                }
 
                 return (
                   <CommandItem

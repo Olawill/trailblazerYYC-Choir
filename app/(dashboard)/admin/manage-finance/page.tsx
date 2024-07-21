@@ -36,7 +36,7 @@ const MemberDues = () => {
         <p className="text-2xl font-semibold">Manage Finances</p>
         <CardDescription>Manage the team finance here.</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-4 w-full md:w-[650px] lg:w-[700px] xl:w-[900px] 2xl:w-[1122px]">
         <Separator className="mb-2" />
         <RoleGate allowedRole={[UserRole.ADMIN]} onPage>
           <Tabs defaultValue={types[0].value}>

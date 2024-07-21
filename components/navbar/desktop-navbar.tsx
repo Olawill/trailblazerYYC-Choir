@@ -28,7 +28,7 @@ const DesktopNavbar = () => {
 
   return (
     <div
-      className={`hidden w-full sticky top-0 bg-blue-300 p-4 space-y-1 md:flex items-center justify-between rounded-b-md shadow-md`}
+      className={`hidden w-full sticky top-0 z-50 bg-blue-300 p-4 space-y-1 lg:flex items-center justify-between rounded-b-md shadow-md`}
     >
       <div className="w-full flex items-center justify-between">
         <div

@@ -32,7 +32,7 @@ const MobileNavbar = () => {
   const session = useSession();
 
   return (
-    <div className="w-full sticky top-0 bg-blue-300 p-4 space-y-1 md:hidden rounded-b-md shadow-md">
+    <div className="w-full sticky top-0 z-50 bg-blue-300 p-4 space-y-1 lg:hidden rounded-b-md shadow-md">
       <div className="flex items-center justify-between">
         <div
           className="w-full flex flex-col gap-y-4 items-start justify-center cursor-pointer"
