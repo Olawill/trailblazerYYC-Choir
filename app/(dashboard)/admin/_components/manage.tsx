@@ -16,7 +16,7 @@ import { useCurrentRole } from "@/hooks/use-current-role";
 import { amountOwing } from "@/utils/helper";
 import { UserRole } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
-import { PuffLoader } from "react-spinners";
+import { BeatLoader, PuffLoader } from "react-spinners";
 
 const DUE = 10;
 
@@ -42,7 +42,7 @@ const ManagePage = () => {
   if (isLoading) {
     return (
       <Card className="h-full flex items-center justify-center my-auto bg-transparent border-none shadow-none">
-        <PuffLoader size={250} />
+        <BeatLoader size={250} />
       </Card>
     );
   }

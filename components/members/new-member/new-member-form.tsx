@@ -50,6 +50,7 @@ interface InitialDataProp {
 
 const NewMemberForm = ({ member }: { member?: InitialDataProp }) => {
   const [isPending, startTransition] = useTransition();
+
   const queryClient = useQueryClient();
 
   const [error, setError] = useState<string | undefined>("");
@@ -91,7 +92,6 @@ const NewMemberForm = ({ member }: { member?: InitialDataProp }) => {
 
       try {
         if (data?.error) {
-          // form.reset();
           setError(data?.error);
         }
 

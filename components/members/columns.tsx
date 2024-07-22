@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { labels, statuses } from "@/data/members/data";
 
 // Format the amount as a dollar amount
-const formatted = new Intl.NumberFormat("en-CA", {
+export const formatted = new Intl.NumberFormat("en-CA", {
   style: "currency",
   currency: "CAD",
 });

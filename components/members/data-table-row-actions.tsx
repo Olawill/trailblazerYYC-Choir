@@ -43,6 +43,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import NewMemberForm from "@/components/members/new-member/new-member-form";
+import { allQuery } from "@/utils/allQuery";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -64,7 +65,9 @@ export function DataTableRowActions<TData>({
     mutationFn: (params: { id: string; val: string }) =>
       changeMemberStatus(params.id, params.val),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["members"] });
+      queryClient.invalidateQueries({
+        predicate: (query) => allQuery.includes(query.queryKey[0] as string),
+      });
     },
   });
 
@@ -72,7 +75,9 @@ export function DataTableRowActions<TData>({
   const { mutateAsync: DeleteMember } = useMutation({
     mutationFn: (params: { id: string }) => deleteMember(params.id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["members"] });
+      queryClient.invalidateQueries({
+        predicate: (query) => allQuery.includes(query.queryKey[0] as string),
+      });
     },
   });
 
