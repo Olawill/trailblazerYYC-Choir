@@ -87,6 +87,7 @@ export const PaymentSchema = z.object({
     message: "Amount must be greater than $1",
   }),
   name: z.string().min(4),
+  paymentDate: z.date(),
 });
 
 export const ExpenseSchema = z.object({

@@ -21,7 +21,7 @@ import { Button } from "@/components/ui/button";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { useTransition, useState, useEffect } from "react";
-import { CheckIcon, ChevronsUpDown, Loader2 } from "lucide-react";
+import { CalendarDays, CheckIcon, ChevronsUpDown, Loader2 } from "lucide-react";
 
 import {
   Popover,
@@ -40,11 +40,14 @@ import {
 import { getMembers } from "@/data/members";
 import { Member } from "@prisma/client";
 import { payment } from "@/actions/expense";
+import { format } from "date-fns";
+import { Calendar } from "@/components/ui/calendar";
 
 export const PaymentForm = () => {
   const [isPending, startTransition] = useTransition();
 
   const [open, setOpen] = useState(false);
+  const [openCalendar, setOpenCalendar] = useState(false);
 
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
@@ -54,8 +57,9 @@ export const PaymentForm = () => {
   const form = useForm<z.infer<typeof PaymentSchema>>({
     resolver: zodResolver(PaymentSchema),
     defaultValues: {
-      amount: 1,
+      amount: 0,
       name: "",
+      paymentDate: new Date(),
     },
   });
 
@@ -172,22 +176,71 @@ export const PaymentForm = () => {
             />
           </div>
 
-          <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
             <FormField
               control={form.control}
               name="amount"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="col-span-1">
                   <FormLabel>Amount ($)</FormLabel>
                   <FormControl>
                     <Input
                       disabled={isPending}
                       {...field}
-                      min={1}
+                      min={0}
+                      step={0.01}
                       type="number"
                     />
                   </FormControl>
                   <FormDescription>Enter payment amount.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="paymentDate"
+              render={({ field }) => (
+                <FormItem className="col-span-1">
+                  <FormLabel>Payment Date</FormLabel>
+                  <Popover open={openCalendar} onOpenChange={setOpenCalendar}>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "w-full pl-3 text-left font-normal",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                          <CalendarDays className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={(e) => {
+                          field.onChange(e);
+                          setOpenCalendar(false);
+                        }}
+                        disabled={(date) =>
+                          date > new Date() || date < new Date("1900-01-01")
+                        }
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormDescription>
+                    Select the date payment was made.
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

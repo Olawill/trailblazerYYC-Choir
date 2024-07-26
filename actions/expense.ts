@@ -51,7 +51,7 @@ export const payment = async (values: z.infer<typeof PaymentSchema>) => {
     return { error: "Invalid data!" };
   }
 
-  const { amount, name } = validatedFields.data;
+  const { amount, name, paymentDate } = validatedFields.data;
 
   const user = await currentUser();
 
@@ -80,6 +80,7 @@ export const payment = async (values: z.infer<typeof PaymentSchema>) => {
       data: {
         memberId: member.id,
         amount,
+        paymentDate: new Date(paymentDate),
       },
     });
 
