@@ -14,7 +14,13 @@ import { usePathname, useRouter } from "next/navigation";
 import UserButton from "@/components/auth/user-button";
 import LoginButton from "@/components/auth/login-button";
 import { LogoutButton } from "@/components/auth/logout-button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { Separator } from "../ui/separator";
 
 const poppins = Poppins({
@@ -59,14 +65,18 @@ const MobileNavbar = () => {
             </Button>
           </SheetTrigger>
           <SheetContent className="w-full bg-blue-200">
-            <h1
-              className={cn(
-                "text-2xl text-center font-semibold",
-                poppins.className
-              )}
-            >
-              TrailBlazer YYC 🎶
-            </h1>
+            <SheetHeader>
+              <SheetTitle>
+                <h1
+                  className={cn(
+                    "text-2xl text-center font-semibold",
+                    poppins.className
+                  )}
+                >
+                  TrailBlazer YYC 🎶
+                </h1>
+              </SheetTitle>
+            </SheetHeader>
             <Separator className="my-4 bg-gray-400" />
 
             <div className=" flex flex-col gap-2 items-center justify-center">

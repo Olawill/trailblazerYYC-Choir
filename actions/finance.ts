@@ -110,3 +110,54 @@ export const allPayments = async () => {
     throw err;
   }
 };
+
+export const recentActivity = async () => {
+  const user = await currentUser();
+
+  if (!user) {
+    return;
+  }
+
+  const hasPermission = user.role !== "USER";
+
+  if (!hasPermission) {
+    return;
+  }
+
+  try {
+    const expenseData = await prisma.expense.findMany({
+      select: {
+        amount: true,
+        description: true,
+        category: true,
+        expenseDate: true,
+      },
+      orderBy: {
+        expenseDate: "desc",
+      },
+    });
+    const paymentData = await prisma.payment.findMany({
+      select: {
+        amount: true,
+        paymentDate: true,
+        member: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
+      },
+      orderBy: {
+        paymentDate: "desc",
+      },
+    });
+
+    const allActivityLength = expenseData.length + paymentData.length;
+
+    return { numberOfActivity: allActivityLength, expenseData, paymentData };
+  } catch (err) {
+    // Handle errors appropriately
+    console.log("error", err);
+    throw err;
+  }
+};

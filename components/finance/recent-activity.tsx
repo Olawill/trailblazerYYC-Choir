@@ -1,67 +1,60 @@
+import { RecentActivityProps } from "@/app/(dashboard)/finance/page";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { formatted } from "../members/columns";
+import { Badge } from "../ui/badge";
 
-const RecentActivity = () => {
+type RecentActivityComponentProps = {
+  data: RecentActivityProps[];
+};
+
+const RecentActivity = ({ data }: RecentActivityComponentProps) => {
+  const sortedData = data.sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
+
   return (
     <div className="space-y-8">
-      <div className="flex items-center">
-        <Avatar className="h-9 w-9">
-          <AvatarImage src="/avatars/01.png" alt="Avatar" />
-          <AvatarFallback>OM</AvatarFallback>
-        </Avatar>
-        <div className="ml-4 space-y-1">
-          <p className="text-sm font-medium leading-none">Olivia Martin</p>
-          <p className="text-sm text-muted-foreground">
-            olivia.martin@email.com
-          </p>
-        </div>
-        <div className="ml-auto font-medium">+$1,999.00</div>
-      </div>
-      <div className="flex items-center">
-        <Avatar className="flex h-9 w-9 items-center justify-center space-y-0 border">
-          <AvatarImage src="/avatars/02.png" alt="Avatar" />
-          <AvatarFallback>JL</AvatarFallback>
-        </Avatar>
-        <div className="ml-4 space-y-1">
-          <p className="text-sm font-medium leading-none">Jackson Lee</p>
-          <p className="text-sm text-muted-foreground">jackson.lee@email.com</p>
-        </div>
-        <div className="ml-auto font-medium">+$39.00</div>
-      </div>
-      <div className="flex items-center">
-        <Avatar className="h-9 w-9">
-          <AvatarImage src="/avatars/03.png" alt="Avatar" />
-          <AvatarFallback>IN</AvatarFallback>
-        </Avatar>
-        <div className="ml-4 space-y-1">
-          <p className="text-sm font-medium leading-none">Isabella Nguyen</p>
-          <p className="text-sm text-muted-foreground">
-            isabella.nguyen@email.com
-          </p>
-        </div>
-        <div className="ml-auto font-medium">+$299.00</div>
-      </div>
-      <div className="flex items-center">
-        <Avatar className="h-9 w-9">
-          <AvatarImage src="/avatars/04.png" alt="Avatar" />
-          <AvatarFallback>WK</AvatarFallback>
-        </Avatar>
-        <div className="ml-4 space-y-1">
-          <p className="text-sm font-medium leading-none">William Kim</p>
-          <p className="text-sm text-muted-foreground">will@email.com</p>
-        </div>
-        <div className="ml-auto font-medium">+$99.00</div>
-      </div>
-      <div className="flex items-center">
-        <Avatar className="h-9 w-9">
-          <AvatarImage src="/avatars/05.png" alt="Avatar" />
-          <AvatarFallback>SD</AvatarFallback>
-        </Avatar>
-        <div className="ml-4 space-y-1">
-          <p className="text-sm font-medium leading-none">Sofia Davis</p>
-          <p className="text-sm text-muted-foreground">sofia.davis@email.com</p>
-        </div>
-        <div className="ml-auto font-medium">+$39.00</div>
-      </div>
+      {sortedData &&
+        sortedData.slice(0, 7).map((activity, index) => (
+          <div className="w-full flex justify-between gap-2 mr-2" key={index}>
+            <div className="flex-[60%] flex items-center">
+              <Avatar className="h-9 w-9">
+                <AvatarImage
+                  src={
+                    activity.type === "expense"
+                      ? "/credit-card.svg"
+                      : "/hand-coins.svg"
+                  }
+                  alt="Avatar"
+                />
+                <AvatarFallback>
+                  {activity.type === "expense" ? "E" : "P"}
+                </AvatarFallback>
+              </Avatar>
+
+              <div className="ml-2 space-y-1">
+                <p className="text-sm font-medium leading-none">
+                  {activity.title}
+                </p>
+                <p className="text-[10px] leading-4 md:text-xs text-muted-foreground line-clamp-1">
+                  {activity.description}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex-[30%] font-normal flex justify-end">
+              <Badge
+                variant={
+                  activity.type === "expense" ? "destructive" : "success"
+                }
+                className="text-sm"
+              >
+                {activity.type === "expense" ? "-" : "+"}
+                {formatted.format(activity.amount)}
+              </Badge>
+            </div>
+          </div>
+        ))}
     </div>
   );
 };
