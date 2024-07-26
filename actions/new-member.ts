@@ -72,6 +72,7 @@ export const newMember = async (values: z.infer<typeof NewMemberSchema>) => {
         data: {
           memberId: newMember.id,
           amount: amount_paid,
+          paymentDate: new Date(),
         },
       });
     }
@@ -135,6 +136,7 @@ export const editMemberDetails = async (
         data: {
           memberId: existingMember.id,
           amount: amount_paid,
+          paymentDate: new Date(),
         },
       });
     }
