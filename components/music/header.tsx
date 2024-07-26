@@ -44,8 +44,8 @@ export const Header = ({ label, action }: HeaderProps) => {
                 <DialogHeader>
                   <DialogTitle>New {label}</DialogTitle>
                   <DialogDescription>
-                    Add new {label.toLowerCase()} here. Click save when you're
-                    done.
+                    Add new {label.toLowerCase()} here. Click save when
+                    you&apos;re done.
                   </DialogDescription>
                 </DialogHeader>
                 <Separator className="my-2" />

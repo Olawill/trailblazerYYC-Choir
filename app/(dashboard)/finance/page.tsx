@@ -8,17 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
-import { faked as fakeData } from "@/data/members/fakeData";
-import { useMemo, useState } from "react";
-import { Bar, BarChart, CartesianGrid, Line, LineChart, XAxis } from "recharts";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RoleGate } from "@/components/auth/role-gate";
 import { UserRole } from "@prisma/client";
 import TotalRevenue from "@/components/finance/total-revenue";
@@ -31,26 +21,6 @@ import { useQuery } from "@tanstack/react-query";
 import { recentActivity } from "@/actions/finance";
 import { BeatLoader } from "react-spinners";
 import { DatePickerWithRange } from "@/components/finance/date-picker";
-
-const chartConfig = {
-  views: {
-    label: "Amount",
-  },
-  balance: {
-    label: "Balance",
-    color: "hsl(var(--chart-1))",
-  },
-  outstanding: {
-    label: "Outstanding",
-    color: "hsl(var(--chart-2))",
-  },
-  expense: {
-    label: "Expense",
-    color: "hsl(var(--chart-3))",
-  },
-} satisfies ChartConfig;
-
-const tabLabels = ["line", "bar"];
 
 export type RecentActivityProps = {
   amount: number;
