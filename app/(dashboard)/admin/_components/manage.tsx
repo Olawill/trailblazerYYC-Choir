@@ -13,12 +13,11 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { getMembers } from "@/data/members";
 import { useCurrentRole } from "@/hooks/use-current-role";
+import { DUE } from "@/utils/constants";
 import { amountOwing } from "@/utils/helper";
 import { UserRole } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import { BeatLoader, PuffLoader } from "react-spinners";
-
-const DUE = 10;
 
 const ManagePage = () => {
   const role = useCurrentRole();
@@ -42,7 +41,7 @@ const ManagePage = () => {
   if (isLoading) {
     return (
       <Card className="h-full flex items-center justify-center my-auto bg-transparent border-none shadow-none">
-        <BeatLoader size={250} />
+        <BeatLoader size={100} />
       </Card>
     );
   }

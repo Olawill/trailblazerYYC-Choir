@@ -8,7 +8,6 @@ import { Calendar } from "@/components/ui/calendar";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -30,11 +29,12 @@ import {
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils";
 import { NewMemberSchema } from "@/schemas";
+import { allQuery } from "@/utils/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { CalendarDays, Loader2 } from "lucide-react";
-import { useEffect, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -97,7 +97,12 @@ const NewMemberForm = ({ member }: { member?: InitialDataProp }) => {
 
         if (data?.success) {
           setSuccess(data?.success);
-          queryClient.invalidateQueries({ queryKey: ["members"] });
+
+          queryClient.invalidateQueries({
+            predicate: (query) =>
+              allQuery.includes(query.queryKey[0] as string),
+          });
+
           form.reset({
             name: "",
             email: "",

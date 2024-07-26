@@ -1,14 +1,22 @@
+"use client";
+
 import { RoleGate } from "@/components/auth/role-gate";
 import { columns } from "@/components/members/columns";
 import { DataTable } from "@/components/members/data-table";
 import { Header } from "@/components/music/header";
-import { getMemberDue, getMembers } from "@/data/members";
+import { getMembers } from "@/data/members";
+import { DUE } from "@/utils/constants";
 import { amountOwing } from "@/utils/helper";
 import { UserRole } from "@prisma/client";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
-const MembersPage = async () => {
-  const members = await getMembers();
-  const due = await getMemberDue();
+const MembersPage = () => {
+  const qC = useQueryClient();
+
+  const { data: members, isLoading } = useQuery({
+    queryKey: ["members"],
+    queryFn: () => getMembers(),
+  });
 
   const memberData =
     members?.map(({ id, name, email, isActive, amountPaid, dateJoined }) => {
@@ -18,12 +26,7 @@ const MembersPage = async () => {
         email,
         status: isActive ? "Active" : "Inactive",
         amount_paid: amountPaid,
-        amount_owing: amountOwing(
-          dateJoined,
-          new Date(),
-          amountPaid,
-          due?.amount!
-        ),
+        amount_owing: amountOwing(dateJoined, new Date(), amountPaid, DUE),
         joined_since: dateJoined,
       };
     }) ?? [];

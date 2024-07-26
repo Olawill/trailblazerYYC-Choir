@@ -43,7 +43,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import NewMemberForm from "@/components/members/new-member/new-member-form";
-import { allQuery } from "@/utils/allQuery";
+import { allQuery } from "@/utils/constants";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
