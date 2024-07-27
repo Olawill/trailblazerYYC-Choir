@@ -1,4 +1,5 @@
 import NextAuth from "next-auth";
+import { getToken } from "next-auth/jwt";
 import authConfig from "./auth.config";
 import {
   apiAuthPrefix,
@@ -6,13 +7,21 @@ import {
   DEFAULT_LOGIN_REDIRECT,
   publicRoutes,
 } from "@/routes";
+import { NextRequest } from "next/server";
 
-const { auth } = NextAuth(authConfig);
+// const { auth } = NextAuth(authConfig);
 
-export default auth((req) => {
+// export default auth((req) => {
+export default async function auth(req: NextRequest) {
+  const token = await getToken({
+    req,
+    secret: process.env.NEXTAUTH_SECRET!,
+    salt: "123456",
+  });
   const { nextUrl } = req;
 
-  const isLoggedIn = !!req.auth;
+  // const isLoggedIn = !!req.auth;
+  const isLoggedIn = !!token;
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
@@ -42,7 +51,8 @@ export default auth((req) => {
   }
 
   // return null
-});
+  // });
+}
 
 // Optionally, don't invoke Middleware on some paths
 export const config = {
