@@ -28,7 +28,7 @@ interface AdminLayoutProps {
 export default function AdminLayout({ children }: AdminLayoutProps) {
   return (
     <RoleGate allowedRole={[UserRole.ADMIN]} onPage>
-      <div className="space-y-6 p-10 pb-16 md:block">
+      <div className="space-y-6 p-2 pb-16 md:block">
         <div className="space-y-0.5 w-full">
           <h2 className="text-2xl font-bold tracking-tight">
             Member Administration
@@ -37,7 +37,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
             Manage your members and keep track of the dues/expenses.
           </p>
         </div>
-        <Separator className="my-6 sm:w-[550px] md:w-[650px] lg:w-[920px] xl:w-[1140px] 2xl:w-[1480px]" />
+        <Separator className="my-6 w-[350px] sm:w-[550px] md:w-[650px] lg:w-[920px] xl:w-[1140px] 2xl:w-[1480px]" />
         <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-6 lg:space-y-0">
           <aside className="lg:w-1/5 pt-4">
             <SidebarNav items={sidebarNavItems} />
