@@ -47,7 +47,11 @@ const MembersPage = () => {
               </p>
             </div>
           </div>
-          <DataTable data={memberData as MemberData[]} columns={columns} />
+          <DataTable
+            data={memberData as MemberData[]}
+            columns={columns}
+            showRowsSelected={false}
+          />
         </div>
       </div>
     </RoleGate>

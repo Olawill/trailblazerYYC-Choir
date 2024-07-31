@@ -29,11 +29,13 @@ import { DataTablePagination } from "@/components/members/data-table-pagination"
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  showRowsSelected?: boolean;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  showRowsSelected = true,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = useState({});
 
@@ -120,7 +122,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} />
+      <DataTablePagination table={table} showRowsSelected={showRowsSelected} />
     </div>
   );
 }
