@@ -13,6 +13,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { getMembers } from "@/data/members";
 import { useCurrentRole } from "@/hooks/use-current-role";
+import { MemberData } from "@/lib/types";
 import { DUE } from "@/utils/constants";
 import { amountOwing } from "@/utils/helper";
 import { UserRole } from "@prisma/client";
