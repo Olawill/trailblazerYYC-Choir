@@ -23,12 +23,11 @@ import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { login } from "@/actions/login";
 import { useTransition, useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import Link from "next/link";
 import {
   InputOTP,
   InputOTPGroup,
-  InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { useSearchParams } from "next/navigation";
@@ -45,6 +44,7 @@ export const LoginForm = () => {
   const [success, setSuccess] = useState<string | undefined>("");
 
   const [showTwoFactor, setShowTwoFactor] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const [codeValue, setCodeValue] = useState("");
 
@@ -163,12 +163,26 @@ export const LoginForm = () => {
                     <FormItem>
                       <FormLabel>Password</FormLabel>
                       <FormControl>
-                        <Input
-                          disabled={isPending}
-                          {...field}
-                          placeholder="Password"
-                          type="password"
-                        />
+                        <div className="flex items-center relative">
+                          <Input
+                            disabled={isPending}
+                            {...field}
+                            placeholder="Password"
+                            type={showPassword ? "text" : "password"}
+                            className="w-full"
+                          />
+                          {!showPassword ? (
+                            <Eye
+                              className="w-4 h-4 text-gray-500 absolute right-2 z-50"
+                              onClick={() => setShowPassword((prev) => !prev)}
+                            />
+                          ) : (
+                            <EyeOff
+                              className="w-4 h-4 text-gray-500 absolute right-2 z-50"
+                              onClick={() => setShowPassword((prev) => !prev)}
+                            />
+                          )}
+                        </div>
                       </FormControl>
 
                       <Button

@@ -22,7 +22,7 @@ import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 
 import { useTransition, useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { newPassword } from "@/actions/new-password";
 
@@ -30,6 +30,8 @@ export const NewPasswordForm = () => {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
@@ -70,12 +72,25 @@ export const NewPasswordForm = () => {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input
-                      disabled={isPending}
-                      {...field}
-                      placeholder="Enter new password..."
-                      type="password"
-                    />
+                    <div className="flex items-center relative">
+                      <Input
+                        disabled={isPending}
+                        {...field}
+                        placeholder="Enter new password..."
+                        type={showPassword ? "text" : "password"}
+                      />
+                      {!showPassword ? (
+                        <Eye
+                          className="w-4 h-4 text-gray-500 absolute right-2 z-50"
+                          onClick={() => setShowPassword((prev) => !prev)}
+                        />
+                      ) : (
+                        <EyeOff
+                          className="w-4 h-4 text-gray-500 absolute right-2 z-50"
+                          onClick={() => setShowPassword((prev) => !prev)}
+                        />
+                      )}
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

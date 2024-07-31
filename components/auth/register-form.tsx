@@ -23,12 +23,14 @@ import { FormSuccess } from "@/components/form-success";
 import { register } from "@/actions/register";
 import { useTransition, useState } from "react";
 
-import { Loader2 } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 
 export const RegisterForm = () => {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
@@ -108,12 +110,25 @@ export const RegisterForm = () => {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input
-                      disabled={isPending}
-                      {...field}
-                      placeholder="Password"
-                      type="password"
-                    />
+                    <div className="flex items-center relative">
+                      <Input
+                        disabled={isPending}
+                        {...field}
+                        placeholder="Password"
+                        type={showPassword ? "text" : "password"}
+                      />
+                      {!showPassword ? (
+                        <Eye
+                          className="w-4 h-4 text-gray-500 absolute right-2 z-50"
+                          onClick={() => setShowPassword((prev) => !prev)}
+                        />
+                      ) : (
+                        <EyeOff
+                          className="w-4 h-4 text-gray-500 absolute right-2 z-50"
+                          onClick={() => setShowPassword((prev) => !prev)}
+                        />
+                      )}
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
