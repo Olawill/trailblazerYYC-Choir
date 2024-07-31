@@ -5,7 +5,6 @@ import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -28,6 +27,7 @@ import { useSession } from "next-auth/react";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { ImageUpload } from "./_components/image-upload";
 
 const SettingsPage = () => {
   const user = useCurrentUser();
@@ -48,6 +48,7 @@ const SettingsPage = () => {
       password: undefined,
       newPassword: undefined,
       isTwoFactorEnabled: user?.isTwoFactorEnabled || undefined,
+      image: user?.image || undefined,
     },
   });
 
@@ -101,6 +102,27 @@ const SettingsPage = () => {
                 <FormDescription className="text-gray-300">
                   This is your public display name. It can be your real name or
                   a pseudonym.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="image"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Image</FormLabel>
+                <FormControl>
+                  <ImageUpload
+                    value={field.value ? [field.value] : []}
+                    onChange={(url) => field.onChange(url)}
+                    onRemove={() => field.onChange("")}
+                  />
+                </FormControl>
+                <FormDescription className="text-gray-300">
+                  Update Profile Image.
                 </FormDescription>
                 <FormMessage />
               </FormItem>

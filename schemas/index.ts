@@ -43,6 +43,7 @@ export const SettingsSchema = z
     // password: z.optional(z.string().min(8)),
     password: z.string().min(8).optional(),
     newPassword: z.optional(z.string().min(8)),
+    image: z.optional(z.string()),
   })
   .refine(
     (data) => {
