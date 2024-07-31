@@ -1,3 +1,5 @@
+import { UserRole } from "@prisma/client";
+
 type LoginButtonProp = {
   children: React.ReactNode;
   mode?: "modal" | "redirect";
@@ -36,4 +38,12 @@ type MemberData = {
   amount_paid: number;
   amount_owing: number;
   joined_since: Date;
+};
+
+type UserData = {
+  id: string;
+  name: string;
+  email: string | undefined;
+  verified: "Yes" | "No";
+  role: UserRole;
 };

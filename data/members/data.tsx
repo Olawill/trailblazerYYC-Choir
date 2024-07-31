@@ -1,3 +1,4 @@
+import { UserRole } from "@prisma/client";
 import {
   ArrowDown,
   ArrowRight,
@@ -42,6 +43,34 @@ export const statuses = [
     value: "inactive",
     label: "Inactive",
     icon: CircleX,
+  },
+];
+
+export const verification = [
+  {
+    value: "true",
+    label: "Yes",
+    icon: CircleCheck,
+  },
+  {
+    value: "false",
+    label: "No",
+    icon: CircleX,
+  },
+];
+
+export const Roles = [
+  {
+    value: "admin",
+    label: UserRole.ADMIN,
+  },
+  {
+    value: "user",
+    label: UserRole.USER,
+  },
+  {
+    value: "superuser",
+    label: UserRole.SUPERUSER,
   },
 ];
 

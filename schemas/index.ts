@@ -80,6 +80,14 @@ export const MemberSchema = z.object({
   status: z.string(),
 });
 
+export const UserSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  email: z.string(),
+  verified: z.enum(["Yes", "No"]),
+  role: z.enum(["ADMIN", "USER", "SUPERUSER"]),
+});
+
 export type Member = z.infer<typeof MemberSchema>;
 
 export const PaymentSchema = z.object({

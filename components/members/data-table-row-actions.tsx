@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { statuses } from "@/data/members/data";
-import { Loader2, MoreHorizontal } from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
 import { useState } from "react";
 import { changeMemberStatus, deleteMember } from "@/actions/memberUpdate";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -37,7 +37,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -57,6 +56,7 @@ export function DataTableRowActions<TData>({
   const queryClient = useQueryClient();
 
   const [memberStatus, setMemberStatus] = useState(status.status);
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -107,6 +107,7 @@ export function DataTableRowActions<TData>({
               <DropdownMenuItem>Edit</DropdownMenuItem>
             </DialogTrigger>
             <DropdownMenuSeparator />
+
             <DropdownMenuSub>
               <DropdownMenuSubTrigger>Status</DropdownMenuSubTrigger>
               <DropdownMenuSubContent>
@@ -169,15 +170,6 @@ export function DataTableRowActions<TData>({
           </DialogHeader>
           <Separator className="mt-4 mb-2" />
           <NewMemberForm member={status} />
-
-          {/* <DialogFooter>
-            <Button
-              className="bg-blue-500 text-white"
-              onClick={() => handleDelete(status.id)}
-            >
-              Save
-            </Button>
-          </DialogFooter> */}
         </DialogContent>
       </Dialog>
     </AlertDialog>

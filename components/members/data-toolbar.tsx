@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { DataTableViewOptions } from "@/components/members/data-table-view-options";
 import { DataTableFacetedFilter } from "@/components/members/data-table-faceted-filter";
-import { months, statuses } from "@/data/members/data";
+import { months, Roles, statuses, verification } from "@/data/members/data";
 import {
   Select,
   SelectContent,
@@ -17,8 +17,9 @@ import {
 import { useState } from "react";
 import { MonthYearFilter } from "./month-year-filter/month-year-filter";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteMember } from "@/actions/memberUpdate";
-import { MemberSchema } from "@/schemas";
+import { deleteMember, deleteUser } from "@/actions/memberUpdate";
+import { MemberSchema, UserSchema } from "@/schemas";
+import { usePathname } from "next/navigation";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -31,6 +32,8 @@ interface DataTableRowActionsProps<TData> {
 export function DataTableToolbar<TData>({
   table,
 }: DataTableToolbarProps<TData>) {
+  const pathname = usePathname();
+
   const queryClient = useQueryClient();
 
   const isFiltered = table.getState().columnFilters.length > 0;
@@ -39,9 +42,16 @@ export function DataTableToolbar<TData>({
 
   // DELETE MEMBER LOGIC
   const { mutateAsync: DeleteMember } = useMutation({
-    mutationFn: (params: { id: string }) => deleteMember(params.id),
+    mutationFn: (params: { id: string }) =>
+      pathname.includes("user")
+        ? deleteUser(params.id)
+        : deleteMember(params.id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["members"] });
+      if (pathname.includes("user")) {
+        queryClient.invalidateQueries({ queryKey: ["users"] });
+      } else {
+        queryClient.invalidateQueries({ queryKey: ["members"] });
+      }
     },
   });
 
@@ -82,7 +92,7 @@ export function DataTableToolbar<TData>({
           />
         )}
 
-        {table.getColumn("status") && (
+        {!pathname.includes("user") && table.getColumn("status") && (
           <DataTableFacetedFilter
             column={table.getColumn("status")}
             title="Status"
@@ -90,7 +100,23 @@ export function DataTableToolbar<TData>({
           />
         )}
 
-        {table.getColumn("joined_since") && (
+        {pathname.includes("user") && table.getColumn("verified") && (
+          <DataTableFacetedFilter
+            column={table.getColumn("verified")}
+            title="Verified"
+            options={verification}
+          />
+        )}
+
+        {pathname.includes("user") && table.getColumn("role") && (
+          <DataTableFacetedFilter
+            column={table.getColumn("role")}
+            title="Role"
+            options={Roles}
+          />
+        )}
+
+        {!pathname.includes("user") && table.getColumn("joined_since") && (
           <MonthYearFilter
             column={table.getColumn("joined_since")}
             title="Month"
@@ -118,7 +144,9 @@ export function DataTableToolbar<TData>({
             className="h-8 font-bold self-start"
             onClick={() => {
               table.getSelectedRowModel().rows.map((row) => {
-                const rowData = MemberSchema.parse(row.original);
+                const rowData = pathname.includes("user")
+                  ? UserSchema.parse(row.original)
+                  : MemberSchema.parse(row.original);
                 handleDelete(rowData.id);
               });
             }}

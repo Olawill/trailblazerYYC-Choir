@@ -25,6 +25,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { DataTablePagination } from "@/components/members/data-table-pagination";
+import { usePathname } from "next/navigation";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -37,6 +38,8 @@ export function DataTable<TData, TValue>({
   data,
   showRowsSelected = true,
 }: DataTableProps<TData, TValue>) {
+  const pathname = usePathname();
+
   const [rowSelection, setRowSelection] = useState({});
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});

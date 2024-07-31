@@ -19,6 +19,10 @@ const sidebarNavItems = [
     title: "Payments & Expense",
     href: "/admin/manage-finance",
   },
+  {
+    title: "Users",
+    href: "/admin/manage-users",
+  },
 ];
 
 interface AdminLayoutProps {

@@ -63,3 +63,21 @@ export const getExpenseCategories = async () => {
     return null;
   }
 };
+
+export const getUsers = async () => {
+  try {
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        emailVerified: true,
+        role: true
+      },
+    });
+
+    return users;
+  } catch {
+    return null;
+  }
+};
