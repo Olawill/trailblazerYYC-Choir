@@ -20,8 +20,6 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
     onChange(result.info.secure_url);
   };
 
-  const preset = (process.env.UPLOAD_PRESET as string) || "hvyji3j6";
-
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-center gap-4">
