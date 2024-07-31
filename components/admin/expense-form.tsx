@@ -155,7 +155,7 @@ export const ExpenseForm = () => {
                       rows={5}
                     />
                   </FormControl>
-                  <FormDescription>
+                  <FormDescription className="text-gray-300">
                     Enter description for your expense.
                   </FormDescription>
                   <FormMessage />
@@ -293,7 +293,7 @@ export const ExpenseForm = () => {
                     </DialogContent>
                   </Dialog>
 
-                  <FormDescription>
+                  <FormDescription className="text-gray-300">
                     Select the category for the expense or create new category.
                   </FormDescription>
                   <FormMessage />
@@ -318,7 +318,9 @@ export const ExpenseForm = () => {
                       type="number"
                     />
                   </FormControl>
-                  <FormDescription>Enter payment amount.</FormDescription>
+                  <FormDescription className="text-gray-300">
+                    Enter payment amount.
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -364,7 +366,7 @@ export const ExpenseForm = () => {
                       />
                     </PopoverContent>
                   </Popover>
-                  <FormDescription>
+                  <FormDescription className="text-gray-300">
                     Select the date of the expense.
                   </FormDescription>
                   <FormMessage />

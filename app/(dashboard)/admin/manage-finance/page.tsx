@@ -31,12 +31,14 @@ const MemberDues = () => {
   }
 
   return (
-    <Card className="w-full bg-blue-300 border-px">
+    <Card className="w-full bg-transparent border">
       <CardHeader>
         <p className="text-2xl font-semibold">Manage Finances</p>
-        <CardDescription>Manage the team finance here.</CardDescription>
+        <CardDescription className="text-gray-300">
+          Manage the team finance here.
+        </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4 w-full md:w-[650px] lg:w-[700px] xl:w-[900px] 2xl:w-[1122px]">
+      <CardContent className="space-y-4 w-[350px] sm:w-[600px] md:w-[650px] lg:w-[700px] xl:w-[900px] 2xl:w-[1250px]">
         <Separator className="mb-2" />
         <RoleGate allowedRole={[UserRole.ADMIN]} onPage>
           <Tabs defaultValue={types[0].value}>

@@ -80,7 +80,7 @@ export function AppearanceForm() {
                 </FormControl>
                 <ChevronDownIcon className="absolute right-3 top-2.5 h-4 w-4 opacity-50" />
               </div>
-              <FormDescription>
+              <FormDescription className="text-gray-300">
                 Set the font you want to use in the dashboard.
               </FormDescription>
               <FormMessage />
@@ -93,7 +93,7 @@ export function AppearanceForm() {
           render={({ field }) => (
             <FormItem className="space-y-1">
               <FormLabel>Theme</FormLabel>
-              <FormDescription>
+              <FormDescription className="text-gray-300">
                 Select the theme for the dashboard.
               </FormDescription>
               <FormMessage />

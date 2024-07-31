@@ -167,7 +167,7 @@ export const PaymentForm = () => {
                     </PopoverContent>
                   </Popover>
 
-                  <FormDescription>
+                  <FormDescription className="text-gray-300">
                     Select the member who made the paymemt.
                   </FormDescription>
                   <FormMessage />
@@ -192,7 +192,9 @@ export const PaymentForm = () => {
                       type="number"
                     />
                   </FormControl>
-                  <FormDescription>Enter payment amount.</FormDescription>
+                  <FormDescription className="text-gray-300">
+                    Enter payment amount.
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -238,7 +240,7 @@ export const PaymentForm = () => {
                       />
                     </PopoverContent>
                   </Popover>
-                  <FormDescription>
+                  <FormDescription className="text-gray-300">
                     Select the date payment was made.
                   </FormDescription>
                   <FormMessage />

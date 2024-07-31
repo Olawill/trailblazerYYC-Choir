@@ -78,7 +78,7 @@ const SettingsPage = () => {
     <div className="space-y-6">
       <div>
         <h3 className="text-lg font-medium">Profile</h3>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-gray-300">
           This is how others will see you on the site.
         </p>
       </div>
@@ -98,7 +98,7 @@ const SettingsPage = () => {
                     disabled={isPending}
                   />
                 </FormControl>
-                <FormDescription>
+                <FormDescription className="text-gray-300">
                   This is your public display name. It can be your real name or
                   a pseudonym.
                 </FormDescription>
@@ -123,7 +123,7 @@ const SettingsPage = () => {
                         disabled={isPending}
                       />
                     </FormControl>
-                    <FormDescription>
+                    <FormDescription className="text-gray-300">
                       This is the email associated with your account. You can
                       modify your email here.
                     </FormDescription>
@@ -138,7 +138,7 @@ const SettingsPage = () => {
               <p className="text-sm font-normal border p-2 rounded-md">
                 {user?.email}
               </p>
-              <FormDescription>
+              <FormDescription className="text-gray-300">
                 This is the email associated with your account. It cannot be
                 modified.
               </FormDescription>
@@ -209,7 +209,7 @@ const SettingsPage = () => {
                   <FormItem className="flex items-center justify-between rounded-lg border border-slate-100 p-3 shadow-sm">
                     <div className="space-y-0.5">
                       <FormLabel>Two Factor Authentication</FormLabel>
-                      <FormDescription>
+                      <FormDescription className="text-gray-300">
                         Enable two-factor authentication for your account.
                       </FormDescription>
                     </div>

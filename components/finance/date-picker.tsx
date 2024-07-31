@@ -22,8 +22,6 @@ export function DatePickerWithRange({
     to: new Date(),
   });
 
-  console.log(date);
-
   return (
     <div className={cn("grid gap-2 mb-4", className)}>
       <Popover>
@@ -32,7 +30,7 @@ export function DatePickerWithRange({
             id="date"
             variant={"outline"}
             className={cn(
-              "w-[300px] justify-start text-left font-normal bg-sky-200 ml-auto",
+              "w-[300px] justify-start text-left font-normal bg-sky-200 dark:bg-gray-500 ml-auto",
               !date && "text-muted-foreground"
             )}
           >
@@ -51,7 +49,10 @@ export function DatePickerWithRange({
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0 bg-sky-200" align="end">
+        <PopoverContent
+          className="w-auto p-0 bg-sky-200 dark:bg-gray-500"
+          align="end"
+        >
           <Calendar
             initialFocus
             mode="range"
