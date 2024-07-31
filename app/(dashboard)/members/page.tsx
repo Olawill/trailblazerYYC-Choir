@@ -5,6 +5,7 @@ import { columns } from "@/components/members/columns";
 import { DataTable } from "@/components/members/data-table";
 import { Header } from "@/components/music/header";
 import { getMembers } from "@/data/members";
+import { MemberData } from "@/lib/types";
 import { DUE } from "@/utils/constants";
 import { amountOwing } from "@/utils/helper";
 import { UserRole } from "@prisma/client";
