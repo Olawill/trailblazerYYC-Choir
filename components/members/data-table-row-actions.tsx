@@ -137,12 +137,12 @@ export function DataTableRowActions<TData>({
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <AlertDialogContent className="bg-white text-grey-500">
+        <AlertDialogContent className="bg-white text-gray-500 dark:bg-background">
           <AlertDialogHeader>
             <AlertDialogTitle className="text-red-500">
               Are you absolutely sure?
             </AlertDialogTitle>
-            <AlertDialogDescription>
+            <AlertDialogDescription className="dark:text-white">
               This action cannot be undone. This will permanently delete{" "}
               <strong>{status.name}</strong> as a member in the group.
             </AlertDialogDescription>
@@ -159,7 +159,7 @@ export function DataTableRowActions<TData>({
           </AlertDialogFooter>
         </AlertDialogContent>
 
-        <DialogContent className="bg-white text-grey-500">
+        <DialogContent className="bg-background text-grey-500">
           <DialogHeader>
             <DialogTitle className="text-red-500">
               Edit Member Details

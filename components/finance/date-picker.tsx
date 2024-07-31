@@ -30,7 +30,7 @@ export function DatePickerWithRange({
             id="date"
             variant={"outline"}
             className={cn(
-              "w-[300px] justify-start text-left font-normal bg-sky-200 dark:bg-gray-500 ml-auto",
+              "w-[300px] justify-start text-left font-normal bg-sky-200 dark:bg-background ml-auto",
               !date && "text-muted-foreground"
             )}
           >
@@ -50,7 +50,7 @@ export function DatePickerWithRange({
           </Button>
         </PopoverTrigger>
         <PopoverContent
-          className="w-auto p-0 bg-sky-200 dark:bg-gray-500"
+          className="w-auto p-0 bg-sky-200 dark:bg-background"
           align="end"
         >
           <Calendar

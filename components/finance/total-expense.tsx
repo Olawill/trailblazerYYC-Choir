@@ -28,7 +28,7 @@ const TotalExpense = () => {
   }
 
   return (
-    <Card className="bg-sky-200 dark:bg-gray-500">
+    <Card className="bg-sky-200 dark:bg-background">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium">Total Expense</CardTitle>
         <DollarSign className="h-4 w-4 text-muted-foreground" />
@@ -37,7 +37,7 @@ const TotalExpense = () => {
         {isLoading ? (
           <Loader2 className="h-8 w-8 animate-spin" />
         ) : (
-          <div className="text-2xl font-bold text-rose-700 dark:text-red-900">
+          <div className="text-2xl font-bold text-rose-700 dark:text-rose-500">
             {formatted.format(data ? data : 0)}
           </div>
         )}
@@ -51,15 +51,15 @@ const TotalExpense = () => {
               <TooltipTrigger>
                 <Info className="w-4 h-4 text-xs text-muted-foreground" />
               </TooltipTrigger>
-              <TooltipContent className="bg-sky-100 dark:bg-gray-400">
-                <Card className="p-0 w-auto bg-transparent border-none dark:bg-gray-400">
+              <TooltipContent className="bg-sky-100 dark:bg-background">
+                <Card className="p-0 w-auto bg-transparent border-none dark:bg-background">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">
                       Account Balance
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-xl font-bold text-emerald-700 dark:text-emerald-900">
+                    <div className="text-xl font-bold text-emerald-700 dark:text-emerald-400">
                       {formatted.format(balance ? balance : 0)}
                     </div>
                   </CardContent>

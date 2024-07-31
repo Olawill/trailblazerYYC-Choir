@@ -139,12 +139,12 @@ export function UserDataTableRowActions<TData>({
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <AlertDialogContent className="bg-white text-grey-500">
+      <AlertDialogContent className="bg-white text-gray-500 dark:bg-background">
         <AlertDialogHeader>
           <AlertDialogTitle className="text-red-500">
             Are you absolutely sure?
           </AlertDialogTitle>
-          <AlertDialogDescription>
+          <AlertDialogDescription className="dark:text-white">
             This action cannot be undone. This will permanently delete{" "}
             <strong>{role.name}</strong> as a user.
           </AlertDialogDescription>

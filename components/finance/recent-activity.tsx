@@ -18,7 +18,7 @@ const RecentActivity = ({ data }: RecentActivityComponentProps) => {
         sortedData.slice(0, 7).map((activity, index) => (
           <div className="w-full flex justify-between gap-2 mr-2" key={index}>
             <div className="flex-[60%] flex items-center">
-              <Avatar className="h-9 w-9">
+              <Avatar className="h-9 w-9 dark:border dark:bg-white dark:rounded-full">
                 <AvatarImage
                   src={
                     activity.type === "expense"
@@ -26,6 +26,7 @@ const RecentActivity = ({ data }: RecentActivityComponentProps) => {
                       : "/hand-coins.svg"
                   }
                   alt="Avatar"
+                  className="object-cover w-8 h-8"
                 />
                 <AvatarFallback>
                   {activity.type === "expense" ? "E" : "P"}

@@ -103,7 +103,7 @@ const FinancePage = () => {
         </div>
 
         <div className="grid gap-4 grid-cols-1 lg:grid-cols-2 xl:grid-cols-7">
-          <Card className="col-span-4 bg-sky-200 dark:bg-gray-500">
+          <Card className="col-span-4 bg-sky-200 dark:bg-background">
             <CardHeader>
               <CardTitle>Overview</CardTitle>
             </CardHeader>
@@ -118,7 +118,7 @@ const FinancePage = () => {
             </CardContent>
           </Card>
 
-          <Card className="col-span-4 lg:col-span-3 bg-sky-200 dark:bg-gray-500">
+          <Card className="col-span-4 lg:col-span-3 bg-sky-200 dark:bg-background">
             <CardHeader className="p-6 pl-2">
               <CardTitle>Recent Activity</CardTitle>
               <CardDescription>
