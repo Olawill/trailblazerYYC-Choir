@@ -8,8 +8,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-  title: "Membership Admin Page",
-  description: "Used to manage members and member details.",
+  title: "Administration | Trailblazer YYC",
+  description:
+    "Created for general administration management of the pages, used to manage members and member details.",
 };
 
 const sidebarNavItems = [

@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
 
 export default function Error({
   error,
@@ -10,8 +9,6 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  // const router = useRouter();
-
   return (
     <html>
       <body>
@@ -31,7 +28,6 @@ export default function Error({
               type="button"
               onClick={() => {
                 reset();
-                // router.refresh();
               }}
               className="inline-block px-5 py-3 mt-6 text-sm font-medium text-white bg-indigo-600 rounded hover:bg-indigo-700 focus:outline-none focus:ring"
             >

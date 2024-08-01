@@ -10,7 +10,15 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Trailblazer YYC",
-  description: "Created to manage the affairs of the choir at TCIC YYC",
+  description: "Created to manage the activity of the choir at TCIC YYC",
+  openGraph: {
+    title: "%s | Trailblazer YYC",
+    description: "Created to manage the activity of the choir at TCIC YYC",
+    url: "https://trailblazer-yyc.vercel.app",
+    siteName: "Trailblazer YYC",
+    locale: "en-CA",
+    type: "website",
+  },
 };
 
 export default async function RootLayout({

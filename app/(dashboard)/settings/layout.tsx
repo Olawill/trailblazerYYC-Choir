@@ -4,7 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import { SidebarNav } from "./_components/sidebar-nav";
 
 export const metadata: Metadata = {
-  title: "Settings Page",
+  title: "Settings | Trailblazer YYC",
   description: "Users manage their account setting here.",
 };
 
