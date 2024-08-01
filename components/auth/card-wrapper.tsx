@@ -10,6 +10,7 @@ import { BackButton } from "@/components/auth/back-button";
 import { Header } from "@/components/auth/header";
 import { Social } from "@/components/auth/socials";
 import { Separator } from "@/components/ui/separator";
+import { CardWrapperProp } from "@/lib/types";
 
 export const CardWrapper = ({
   children,
