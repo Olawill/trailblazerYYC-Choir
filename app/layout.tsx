@@ -12,7 +12,10 @@ export const metadata: Metadata = {
   title: "Trailblazer YYC",
   description: "Created to manage the activity of the choir at TCIC YYC",
   openGraph: {
-    title: "%s | Trailblazer YYC",
+    title: {
+      default: "Trailblazer YYC",
+      template: "%s | Trailblazer YYC",
+    },
     description: "Created to manage the activity of the choir at TCIC YYC",
     url: "https://trailblazer-yyc.vercel.app",
     siteName: "Trailblazer YYC",
