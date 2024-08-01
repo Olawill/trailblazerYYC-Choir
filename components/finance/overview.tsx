@@ -105,7 +105,7 @@ const Overview = ({ data }: OverviewComponentProps) => {
           <ChartTooltip
             content={
               <ChartTooltipContent
-                className="w-[180px] bg-sky-100"
+                className="w-[180px] bg-sky-100 dark:bg-background"
                 labelKey="overview"
                 valueLabel="$"
               />

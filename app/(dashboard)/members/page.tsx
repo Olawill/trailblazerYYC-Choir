@@ -4,12 +4,14 @@ import { RoleGate } from "@/components/auth/role-gate";
 import { columns } from "@/components/members/columns";
 import { DataTable } from "@/components/members/data-table";
 import { Header } from "@/components/music/header";
+import { Card } from "@/components/ui/card";
 import { getMembers } from "@/data/members";
 import { MemberData } from "@/lib/types";
 import { DUE } from "@/utils/constants";
 import { amountOwing } from "@/utils/helper";
 import { UserRole } from "@prisma/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { BeatLoader } from "react-spinners";
 
 const MembersPage = () => {
   const qC = useQueryClient();
@@ -31,6 +33,14 @@ const MembersPage = () => {
         joined_since: dateJoined,
       };
     }) ?? [];
+
+  if (isLoading) {
+    return (
+      <Card className="h-full flex items-center justify-center my-auto bg-transparent border-none shadow-none relative">
+        <BeatLoader size={100} className="absolute top-[350px]" />
+      </Card>
+    );
+  }
 
   return (
     <RoleGate allowedRole={[UserRole.SUPERUSER, UserRole.ADMIN]} onPage>

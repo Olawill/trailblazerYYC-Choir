@@ -21,6 +21,7 @@ import { useQuery } from "@tanstack/react-query";
 import { recentActivity } from "@/actions/finance";
 import { BeatLoader } from "react-spinners";
 import { DatePickerWithRange } from "@/components/finance/date-picker";
+import { useTheme } from "next-themes";
 
 export type RecentActivityProps = {
   amount: number;
@@ -37,6 +38,8 @@ export type OverviewProps = {
 };
 
 const FinancePage = () => {
+  const { theme } = useTheme();
+
   const allData: RecentActivityProps[] = [];
   const overviewData: Record<string, OverviewProps> = {};
 
@@ -109,8 +112,12 @@ const FinancePage = () => {
             </CardHeader>
             <CardContent className="pl-2">
               {recentActivityLoading ? (
-                <div className="flex justify-center items-center">
-                  <BeatLoader size={50} />
+                <div className="flex justify-center items-center relative min-h-[450px]">
+                  <BeatLoader
+                    size={50}
+                    className="absolute top-1/2"
+                    color={theme === "dark" ? "black" : "white"}
+                  />
                 </div>
               ) : (
                 <Overview data={Object.values(overviewData)} />
@@ -128,8 +135,12 @@ const FinancePage = () => {
             </CardHeader>
             <CardContent className="p-2 pt-0">
               {recentActivityLoading ? (
-                <div className="flex justify-center items-center">
-                  <BeatLoader size={50} />
+                <div className="flex justify-center items-center relative min-h-[450px]">
+                  <BeatLoader
+                    size={50}
+                    className="absolute top-1/2"
+                    color={theme === "dark" ? "black" : "white"}
+                  />
                 </div>
               ) : (
                 <RecentActivity data={allData} />
