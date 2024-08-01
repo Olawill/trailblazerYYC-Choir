@@ -41,7 +41,7 @@ const ManagePage = () => {
 
   if (isLoading) {
     return (
-      <Card className="min-h-full flex items-center justify-center my-auto bg-transparent border-none shadow-none relative">
+      <Card className="min-h-[750px] flex items-center justify-center my-auto bg-transparent border-none shadow-none relative">
         <BeatLoader size={100} className="absolute top-[350px]" />
       </Card>
     );

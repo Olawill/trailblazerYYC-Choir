@@ -38,7 +38,7 @@ const UsersPage = () => {
 
   if (isLoading) {
     return (
-      <Card className="h-full flex items-center justify-center my-auto bg-transparent border-none shadow-none">
+      <Card className="min-h-[750px] flex items-center justify-center my-auto bg-transparent border-none shadow-none">
         <BeatLoader size={100} />
       </Card>
     );

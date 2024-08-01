@@ -22,6 +22,8 @@ import { recentActivity } from "@/actions/finance";
 import { BeatLoader } from "react-spinners";
 import { DatePickerWithRange } from "@/components/finance/date-picker";
 import { useTheme } from "next-themes";
+import { Suspense } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export type RecentActivityProps = {
   amount: number;
@@ -93,64 +95,89 @@ const FinancePage = () => {
 
   return (
     <RoleGate allowedRole={[UserRole.SUPERUSER, UserRole.ADMIN]} onPage>
-      <div className="h-full w-[350px] sm:w-[600px] md:w-[650px] lg:w-[700px] xl:w-[900px] 2xl:w-[1250px]">
-        <Header label="Financial Summary" />
+      <Suspense fallback={<FinancePage.Skeleton />}>
+        <div className="h-full w-[350px] sm:w-[600px] md:w-[650px] lg:w-[700px] xl:w-[900px] 2xl:w-[1250px]">
+          <Header label="Financial Summary" />
 
-        <DatePickerWithRange />
+          <DatePickerWithRange />
 
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-4">
-          <TotalRevenue />
-          <TotalExpense />
-          <TotalMembers />
-          <ActiveMembers />
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-4">
+            <TotalRevenue />
+            <TotalExpense />
+            <TotalMembers />
+            <ActiveMembers />
+          </div>
+
+          <div className="grid gap-4 grid-cols-1 lg:grid-cols-2 xl:grid-cols-7">
+            <Card className="col-span-4 bg-sky-200 dark:bg-background">
+              <CardHeader>
+                <CardTitle>Overview</CardTitle>
+              </CardHeader>
+              <CardContent className="pl-2">
+                {recentActivityLoading ? (
+                  <div className="flex justify-center items-center relative min-h-[450px]">
+                    <BeatLoader
+                      size={50}
+                      className="absolute top-1/2"
+                      color={theme === "dark" ? "white" : "black"}
+                    />
+                  </div>
+                ) : (
+                  <Overview data={Object.values(overviewData)} />
+                )}
+              </CardContent>
+            </Card>
+
+            <Card className="col-span-4 lg:col-span-3 bg-sky-200 dark:bg-background">
+              <CardHeader className="p-6 pl-2">
+                <CardTitle>Recent Activity</CardTitle>
+                <CardDescription>
+                  You have {recentActivityData?.numberOfActivity || 0} activity
+                  this month.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="p-2 pt-0">
+                {recentActivityLoading ? (
+                  <div className="flex justify-center items-center relative min-h-[450px]">
+                    <BeatLoader
+                      size={50}
+                      className="absolute top-1/2"
+                      color={theme === "dark" ? "white" : "black"}
+                    />
+                  </div>
+                ) : (
+                  <RecentActivity data={allData} />
+                )}
+              </CardContent>
+            </Card>
+          </div>
         </div>
-
-        <div className="grid gap-4 grid-cols-1 lg:grid-cols-2 xl:grid-cols-7">
-          <Card className="col-span-4 bg-sky-200 dark:bg-background">
-            <CardHeader>
-              <CardTitle>Overview</CardTitle>
-            </CardHeader>
-            <CardContent className="pl-2">
-              {recentActivityLoading ? (
-                <div className="flex justify-center items-center relative min-h-[450px]">
-                  <BeatLoader
-                    size={50}
-                    className="absolute top-1/2"
-                    color={theme === "dark" ? "black" : "white"}
-                  />
-                </div>
-              ) : (
-                <Overview data={Object.values(overviewData)} />
-              )}
-            </CardContent>
-          </Card>
-
-          <Card className="col-span-4 lg:col-span-3 bg-sky-200 dark:bg-background">
-            <CardHeader className="p-6 pl-2">
-              <CardTitle>Recent Activity</CardTitle>
-              <CardDescription>
-                You have {recentActivityData?.numberOfActivity || 0} activity
-                this month.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="p-2 pt-0">
-              {recentActivityLoading ? (
-                <div className="flex justify-center items-center relative min-h-[450px]">
-                  <BeatLoader
-                    size={50}
-                    className="absolute top-1/2"
-                    color={theme === "dark" ? "black" : "white"}
-                  />
-                </div>
-              ) : (
-                <RecentActivity data={allData} />
-              )}
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+      </Suspense>
     </RoleGate>
   );
 };
 
 export default FinancePage;
+
+FinancePage.Skeleton = function FinancePageSkeleton() {
+  return (
+    <div className="mt-2 h-full w-[350px] sm:w-[600px] md:w-[650px] lg:w-[700px] xl:w-[900px] 2xl:w-[1250px]">
+      <Skeleton className="h-10 w-48 bg-gray-500" />
+      <Skeleton className="w-full h-1 my-6 bg-gray-500" />
+
+      <Skeleton className="h-10 w-80 bg-gray-500 ml-auto mb-4" />
+
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-4">
+        <Skeleton className="h-40 bg-gray-500" />
+        <Skeleton className="h-40 bg-gray-500" />
+        <Skeleton className="h-40 bg-gray-500" />
+        <Skeleton className="h-40 bg-gray-500" />
+      </div>
+
+      <div className="grid gap-4 grid-cols-1 lg:grid-cols-2 xl:grid-cols-7">
+        <Skeleton className="col-span-4 bg-gray-500 min-h-[450px]" />
+        <Skeleton className="col-span-4 lg:col-span-3 bg-gray-500 min-h-[450px]" />
+      </div>
+    </div>
+  );
+};
