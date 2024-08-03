@@ -60,6 +60,8 @@ import { Label } from "../ui/label";
 import { useFormStatus } from "react-dom";
 import { getExpenseCategories } from "@/data/members";
 import { expense } from "@/actions/expense";
+import { useQueryClient } from "@tanstack/react-query";
+import { allQuery } from "@/utils/constants";
 
 interface CategoryProp {
   id: string;
@@ -68,7 +70,10 @@ interface CategoryProp {
 
 export const ExpenseForm = () => {
   const [isPending, startTransition] = useTransition();
+
   const { pending } = useFormStatus();
+
+  const queryClient = useQueryClient();
 
   const [open, setOpen] = useState(false);
   const [openCalendar, setOpenCalendar] = useState(false);
@@ -121,6 +126,11 @@ export const ExpenseForm = () => {
         if (data?.success) {
           form.reset();
           setSuccess(data?.success);
+
+          queryClient.invalidateQueries({
+            predicate: (query) =>
+              allQuery.includes(query.queryKey[0] as string),
+          });
         }
 
         if (!data) {

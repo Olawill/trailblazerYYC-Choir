@@ -42,9 +42,13 @@ import { Member } from "@prisma/client";
 import { payment } from "@/actions/expense";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
+import { allQuery } from "@/utils/constants";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const PaymentForm = () => {
   const [isPending, startTransition] = useTransition();
+
+  const queryClient = useQueryClient();
 
   const [open, setOpen] = useState(false);
   const [openCalendar, setOpenCalendar] = useState(false);
@@ -88,6 +92,11 @@ export const PaymentForm = () => {
         if (data?.success) {
           form.reset();
           setSuccess(data?.success);
+
+          queryClient.invalidateQueries({
+            predicate: (query) =>
+              allQuery.includes(query.queryKey[0] as string),
+          });
         }
 
         if (!data) {
