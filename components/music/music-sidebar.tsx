@@ -10,6 +10,7 @@ import {
   LayoutGrid,
   ListMusic,
   PlusCircle,
+  Settings,
   User,
 } from "lucide-react";
 import {
@@ -92,10 +93,12 @@ export const MusicSidebar = ({ className, playlists }: SidebarProps) => {
               <LayoutGrid className="mr-2 h-4 w-4" />
               Browse
             </Button>
-            <Button variant="ghost" className="w-full justify-start">
-              <FolderHeart className="mr-2 h-4 w-4" />
-              Favorite
-            </Button>
+            {user && (
+              <Button variant="ghost" className="w-full justify-start">
+                <FolderHeart className="mr-2 h-4 w-4" />
+                Favorite
+              </Button>
+            )}
           </div>
         </div>
         <div className="px-3 py-2">
@@ -123,10 +126,6 @@ export const MusicSidebar = ({ className, playlists }: SidebarProps) => {
                 <User className="mr-2 h-4 w-4" />
                 Made for You
               </Link>
-              // <Button variant="ghost" className="w-full justify-start">
-              //   <User className="mr-2 h-4 w-4" />
-              //   Made for You
-              // </Button>
             )}
           </div>
         </div>
@@ -170,6 +169,12 @@ export const MusicSidebar = ({ className, playlists }: SidebarProps) => {
           </div>
           <ScrollArea className="h-[300px] px-1">
             <div className="space-y-1 p-2">
+              {user && user?.role !== "USER" && (
+                <Button variant="ghost" className="w-full justify-start">
+                  <Settings className="mr-2 h-4 w-4" />
+                  Manage
+                </Button>
+              )}
               {playlists?.map((playlist, i) => (
                 <Button
                   key={`${playlist.name}-${i}`}

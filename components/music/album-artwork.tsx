@@ -71,13 +71,15 @@ export const AlbumArtWork = ({
             </div>
           </ContextMenuTrigger>
           <ContextMenuContent className="w-40">
-            {addToLibrary && <ContextMenuItem>Add to Library</ContextMenuItem>}
+            {addToLibrary && role && (
+              <ContextMenuItem>Add to Library</ContextMenuItem>
+            )}
             {/* {removeFromLibrary && (
               <ContextMenuItem>Remove From Librar</ContextMenuItem>
             )} */}
 
             <ContextMenuSub>
-              {addToPlaylist && (
+              {addToPlaylist && role && role !== "USER" && (
                 <ContextMenuSubTrigger>Add to Playlist</ContextMenuSubTrigger>
               )}
 
@@ -104,13 +106,14 @@ export const AlbumArtWork = ({
             </ContextMenuSub>
             {!addToLibrary ||
               !addToPlaylist ||
+              !role ||
               (role !== "USER" && <ContextMenuSeparator />)}
             <ContextMenuItem>Play Next</ContextMenuItem>
             <ContextMenuItem>Play Later</ContextMenuItem>
             <ContextMenuSeparator />
-            <ContextMenuItem>Like</ContextMenuItem>
+            {role && <ContextMenuItem>Like</ContextMenuItem>}
             <ContextMenuItem>Share</ContextMenuItem>
-            {role !== "USER" && (
+            {role && role !== "USER" && (
               <ContextMenuItem className="bg-destructive hover:bg-destructive">
                 Delete
               </ContextMenuItem>
