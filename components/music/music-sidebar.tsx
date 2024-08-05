@@ -1,11 +1,12 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils";
 import {
   CirclePlay,
+  FolderHeart,
   LayoutGrid,
   ListMusic,
   PlusCircle,
@@ -26,6 +27,9 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
 
 export type Playlist = (typeof playlists)[number];
 
@@ -33,7 +37,7 @@ export const playlists = [
   "Recently Added",
   "Recently Played",
   "Top Songs",
-  "August 2024 Concert",
+  "Aug 2024 Concert",
   "Sunday Aug 4, 2024",
 ];
 
@@ -44,21 +48,45 @@ interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
 export const MusicSidebar = ({ className, playlists }: SidebarProps) => {
   const user = useCurrentUser();
 
+  const [currentUrl, setCurrentUrl] = useState("#listen-now");
+
+  const pathname = usePathname();
+
+  console.log(pathname);
+
   return (
-    <div className={cn("pb-12 -ml-4", className)}>
+    <div className={cn("pb-12 -ml-4 sticky", className)}>
       <div className="space-y-4 py-4">
         <div className="px-3 py-2">
           <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
             Discover
           </h2>
           <div className="space-y-1">
-            <Button variant="ghost" className="w-full justify-start">
+            <Link
+              href="#listen-now"
+              onClick={() => setCurrentUrl("#listen-now")}
+              className={cn(
+                buttonVariants({ variant: "ghost" }),
+                currentUrl === "#listen-now"
+                  ? "bg-muted hover:bg-muted"
+                  : "hover:bg-background",
+                "w-full justify-start"
+              )}
+            >
               <CirclePlay className="mr-2 h-4 w-4" />
               Listen Now
-            </Button>
+            </Link>
+            {/* <Button variant="ghost" className="w-full justify-start">
+              <CirclePlay className="mr-2 h-4 w-4" />
+              Listen Now
+            </Button> */}
             <Button variant="ghost" className="w-full justify-start">
               <LayoutGrid className="mr-2 h-4 w-4" />
               Browse
+            </Button>
+            <Button variant="ghost" className="w-full justify-start">
+              <FolderHeart className="mr-2 h-4 w-4" />
+              Favorite
             </Button>
           </div>
         </div>
@@ -72,10 +100,24 @@ export const MusicSidebar = ({ className, playlists }: SidebarProps) => {
               Playlists
             </Button>
             {user && (
-              <Button variant="ghost" className="w-full justify-start">
+              <Link
+                href="#made-for-you"
+                onClick={() => setCurrentUrl("#made-for-you")}
+                className={cn(
+                  buttonVariants({ variant: "ghost" }),
+                  currentUrl === "#made-for-you"
+                    ? "bg-muted hover:bg-muted"
+                    : "hover:bg-background",
+                  "w-full justify-start"
+                )}
+              >
                 <User className="mr-2 h-4 w-4" />
                 Made for You
-              </Button>
+              </Link>
+              // <Button variant="ghost" className="w-full justify-start">
+              //   <User className="mr-2 h-4 w-4" />
+              //   Made for You
+              // </Button>
             )}
           </div>
         </div>
