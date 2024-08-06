@@ -23,6 +23,7 @@ model User {
   hashedPassword        String?
   emailVerified         DateTime?
   image                 String?
+  libraryId             String?                @db.ObjectId
   role                  UserRole               @default(USER)
   accounts              Account[]
   isTwoFactorEnabled    Boolean                @default(false)
@@ -130,4 +131,92 @@ model Payment {
   createdAt DateTime @default(now())
 
   @@unique([id, memberId])
+}
+
+model Music {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  title   String
+  link    String? @unique
+  videoId String?
+
+  favorite String[] @db.ObjectId // All users ID who like the music
+
+  playlistIDs String[]   @db.ObjectId
+  playlists   Playlist[] @relation(fields: [playlistIDs], references: [id])
+
+  libraryIDs String[]  @db.ObjectId
+  librarys   Library[] @relation(fields: [libraryIDs], references: [id])
+
+  authorIDs String[] @db.ObjectId
+  authors   Author[] @relation(fields: [authorIDs], references: [id])
+
+  // Relations to verses and choruses
+  verses   Verse[]
+  choruses Chorus[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Verse {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  content String
+  order   Int // Field to determine the order of verses
+  musicId String @db.ObjectId
+  music   Music  @relation(fields: [musicId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([musicId, order]) // Optional index for performance
+}
+
+model Chorus {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  content String
+  order   Int // Field to determine the order of choruses
+  musicId String @db.ObjectId
+  music   Music  @relation(fields: [musicId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([musicId, order]) // Optional index for performance
+}
+
+model Author {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  name     String   @unique
+  musicIDs String[] @db.ObjectId
+  music    Music[]  @relation(fields: [musicIDs], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Playlist {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  name     String
+  musicIDs String[] @db.ObjectId
+  canAddTo Boolean  @default(false)
+  music    Music[]  @relation(fields: [musicIDs], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Library {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId   String   @db.ObjectId
+  musicIDs String[] @db.ObjectId
+  music    Music[]  @relation(fields: [musicIDs], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // @@unique([id, userId])
 }

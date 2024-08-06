@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { useCurrentRole } from "@/hooks/use-current-role";
+import { NewPlaylistForm } from "./new-playlist-form";
 
 interface AlbumArtworkProps extends React.HTMLAttributes<HTMLDivElement> {
   album: Album;
@@ -134,6 +135,7 @@ export const AlbumArtWork = ({
           </DialogDescription>
         </DialogHeader>
         <Separator className="my-2" />
+        <NewPlaylistForm />
       </DialogContent>
     </Dialog>
   );

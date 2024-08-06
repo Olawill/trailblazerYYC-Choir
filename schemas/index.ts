@@ -121,3 +121,43 @@ export const NewMemberSchema = z.object({
   status: z.enum(["active", "inactive"]),
   amount_paid: z.coerce.number().min(0),
 });
+
+export const NewPlaylistSchema = z.object({
+  name: z.string().min(4, {
+    message: "Name must contain at least 4 character(s)",
+  }),
+  musicIds: z.array(z.string()),
+  canAddTo: z.enum(["yes", "no"]),
+});
+
+export const VerseChorusSchema = z.object({
+  type: z.enum(["Verse", "Chorus", "Bridge"]),
+  content: z.string().min(1, {
+    message: "Content must not be empty",
+  }),
+});
+
+export const NewMusicSchema = z.object({
+  title: z.string().min(4, {
+    message: "Name must contain at least 4 character(s)",
+  }),
+  link: z.string().url().optional(),
+  playlistIds: z.array(z.string()),
+  authorIds: z.array(z.string().min(1)),
+  content: z
+    .array(VerseChorusSchema)
+    .min(1, {
+      message: "You must include at least one verse",
+    })
+    .refine(
+      (content) => {
+        const hasVerse = content.some((item) => item.type === "Verse");
+        const hasChorus = content.some((item) => item.type === "Chorus");
+        const hasBridge = content.some((item) => item.type === "Bridge");
+        return hasVerse || hasChorus || hasBridge;
+      },
+      {
+        message: "Content must include at least one of verse, chorus or bridge",
+      }
+    ),
+});

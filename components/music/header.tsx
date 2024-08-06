@@ -14,6 +14,7 @@ import {
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { LoginForm } from "@/components/auth/login-form";
 import NewMemberForm from "@/components/members/new-member/new-member-form";
+import { NewMusicForm } from "./new-music-form";
 
 // import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -49,7 +50,7 @@ export const Header = ({ label, action }: HeaderProps) => {
                   </DialogDescription>
                 </DialogHeader>
                 <Separator className="my-2" />
-                {label === "Members" ? <NewMemberForm /> : ""}
+                {label === "Members" ? <NewMemberForm /> : <NewMusicForm />}
               </DialogContent>
             ) : (
               <DialogContent className="p-0 w-auto bg-transparent border-none">

@@ -31,6 +31,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { NewPlaylistForm } from "./new-playlist-form";
 
 export type Playlist = (typeof playlists)[number];
 
@@ -93,12 +94,6 @@ export const MusicSidebar = ({ className, playlists }: SidebarProps) => {
               <LayoutGrid className="mr-2 h-4 w-4" />
               Browse
             </Button>
-            {user && (
-              <Button variant="ghost" className="w-full justify-start">
-                <FolderHeart className="mr-2 h-4 w-4" />
-                Favorite
-              </Button>
-            )}
           </div>
         </div>
         <div className="px-3 py-2">
@@ -106,10 +101,6 @@ export const MusicSidebar = ({ className, playlists }: SidebarProps) => {
             Library
           </h2>
           <div className="space-y-1">
-            <Button variant="ghost" className="w-full justify-start">
-              <ListMusic className="mr-2 h-4 w-4" />
-              Playlists
-            </Button>
             {user && (
               <Link
                 href="#made-for-you"
@@ -126,6 +117,13 @@ export const MusicSidebar = ({ className, playlists }: SidebarProps) => {
                 <User className="mr-2 h-4 w-4" />
                 Made for You
               </Link>
+            )}
+
+            {user && (
+              <Button variant="ghost" className="w-full justify-start">
+                <FolderHeart className="mr-2 h-4 w-4" />
+                Favorite
+              </Button>
             )}
           </div>
         </div>
@@ -163,6 +161,7 @@ export const MusicSidebar = ({ className, playlists }: SidebarProps) => {
                     </DialogDescription>
                   </DialogHeader>
                   <Separator className="my-2" />
+                  <NewPlaylistForm />
                 </DialogContent>
               </Dialog>
             )}
