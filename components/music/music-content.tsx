@@ -13,7 +13,7 @@ import { Textarea } from "../ui/textarea";
 import { FormControl } from "../ui/form";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
-import { PlusCircle } from "lucide-react";
+import { MinusCircle, PlusCircle } from "lucide-react";
 import { ScrollArea } from "../ui/scroll-area";
 
 interface ContentProps {
@@ -49,6 +49,10 @@ export const MusicContent = ({
   // };
   const handleAddField = () => {
     setContentState((prev) => [...prev, { type: "Verse", content: "" }]); // Default values
+  };
+
+  const handleRemoveField = () => {
+    setContentState((prev) => prev.slice(0, -1)); // Default values
   };
 
   return (
@@ -101,7 +105,18 @@ export const MusicContent = ({
           />
         </div>
       ))}
-      <div className="flex justify-end">
+      <div className="flex justify-end items-center">
+        {contentState.length > 1 && (
+          <Button
+            type="button"
+            size="icon"
+            aria-label="remove verse, chorus or bridge"
+            className="bg-background dark:text-gray-300 focus-visible:ring-px hover:bg-transparent"
+            onClick={handleRemoveField}
+          >
+            <MinusCircle className="w-4 h-4" />
+          </Button>
+        )}
         <Button
           type="button"
           size="icon"

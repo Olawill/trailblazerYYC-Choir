@@ -16,6 +16,12 @@ enum UserRole {
   USER
 }
 
+enum ContentType {
+  Verse
+  Chorus
+  Bridge
+}
+
 model User {
   id                    String                 @id @default(auto()) @map("_id") @db.ObjectId
   name                  String?
@@ -152,32 +158,23 @@ model Music {
   authors   Author[] @relation(fields: [authorIDs], references: [id])
 
   // Relations to verses and choruses
-  verses   Verse[]
-  choruses Chorus[]
+  contents Content[]
+
+  lastTimePlayed      DateTime?
+  numberOfTimesPlayed Int       @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model Verse {
-  id      String @id @default(auto()) @map("_id") @db.ObjectId
+model Content {
+  id      String      @id @default(auto()) @map("_id") @db.ObjectId
   content String
+  type    ContentType
+
   order   Int // Field to determine the order of verses
   musicId String @db.ObjectId
-  music   Music  @relation(fields: [musicId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([musicId, order]) // Optional index for performance
-}
-
-model Chorus {
-  id      String @id @default(auto()) @map("_id") @db.ObjectId
-  content String
-  order   Int // Field to determine the order of choruses
-  musicId String @db.ObjectId
-  music   Music  @relation(fields: [musicId], references: [id])
+  music   Music  @relation(fields: [musicId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -199,9 +196,10 @@ model Author {
 model Playlist {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  name     String
+  name     String  @unique
+  canAddTo Boolean @default(false)
+
   musicIDs String[] @db.ObjectId
-  canAddTo Boolean  @default(false)
   music    Music[]  @relation(fields: [musicIDs], references: [id])
 
   createdAt DateTime @default(now())

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import {
   Form,
   FormControl,
@@ -41,6 +41,19 @@ import {
 } from "../ui/command";
 import { Checkbox } from "../ui/checkbox";
 import { MusicContent } from "./music-content";
+import { FormError } from "../form-error";
+import { FormSuccess } from "../form-success";
+import { addAuthor, getAuthors, getPlaylists } from "@/data/playlistData";
+import { newMusic } from "@/actions/playlist";
+import { allQuery } from "@/utils/constants";
+
+type PlayListType = {
+  id: string;
+  name: string;
+  canAddTo: boolean;
+};
+
+type AuthorType = Omit<PlayListType, "canAddTo">;
 
 export const NewMusicForm = () => {
   const queryClient = useQueryClient();
@@ -53,21 +66,23 @@ export const NewMusicForm = () => {
   const [listName, setListName] = useState<string[]>([]);
   const [authorNames, setAuthorNames] = useState<string[]>([]);
 
-  const [playlists, setPlaylists] = useState([
-    { id: "1", name: "Recently Added", canAddTo: false },
-    { id: "2", name: "Recently Played", canAddTo: false },
-    { id: "3", name: "Top Songs", canAddTo: false },
-    { id: "4", name: "Aug 2024 Concert", canAddTo: true },
-    { id: "5", name: "Sunday Aug 4, 2024", canAddTo: true },
-  ]);
+  const [error, setError] = useState<string | undefined>("");
+  const [success, setSuccess] = useState<string | undefined>("");
 
-  const [authors, setAuthors] = useState([
-    { id: "1", name: "Dunsin Oyekan" },
-    { id: "2", name: "Nathaniel Bassey" },
-    { id: "3", name: "Jonathan McReynolds" },
-    { id: "4", name: "Gabriel Eziashi" },
-    { id: "5", name: "Jes Dolapo" },
-  ]);
+  const [playlists, setPlaylists] = useState<PlayListType[] | null>([]);
+
+  const [authors, setAuthors] = useState<AuthorType[]>([]);
+
+  const [inputValue, setInputValue] = useState("");
+
+  const addValue = async (item: string) => {
+    const author = await addAuthor(item);
+
+    if (author) {
+      setAuthors((prev) => [...prev, { id: author.id, name: author.name }]);
+      setInputValue("");
+    }
+  };
 
   const form = useForm<z.infer<typeof NewMusicSchema>>({
     resolver: zodResolver(NewMusicSchema),
@@ -80,16 +95,57 @@ export const NewMusicForm = () => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof NewMusicSchema>) => {
-    console.log(values);
-  };
+  useEffect(() => {
+    const getAllPlaylist = async () => {
+      const playlists = await getPlaylists();
 
-  const handleKeyPress = (
-    e:
-      | React.KeyboardEvent<HTMLInputElement>
-      | React.KeyboardEvent<HTMLTextAreaElement>
-  ) => {
-    if (e.key === "Enter") e.preventDefault();
+      if (playlists) {
+        const nonGenericPlaylist = playlists.filter((p) => !p.canAddTo);
+        setPlaylists(nonGenericPlaylist);
+      }
+    };
+
+    const getAllAuthors = async () => {
+      const authors = await getAuthors();
+
+      if (authors) {
+        setAuthors(authors);
+      }
+    };
+
+    getAllPlaylist();
+    getAllAuthors();
+  }, []);
+
+  const onSubmit = (values: z.infer<typeof NewMusicSchema>) => {
+    setError("");
+    setSuccess("");
+
+    startTransition(async () => {
+      const data = await newMusic(values);
+
+      try {
+        if (data?.error) {
+          setError(data?.error);
+        }
+
+        if (data?.success) {
+          form.reset();
+          setSuccess(data?.success);
+
+          queryClient.invalidateQueries({
+            predicate: (query) =>
+              allQuery.includes(query.queryKey[0] as string),
+          });
+        }
+
+        if (!data) {
+          window.location.reload();
+        }
+      } catch {
+        setError("Something went wrong!");
+      }
+    });
   };
 
   return (
@@ -188,7 +244,7 @@ export const NewMusicForm = () => {
                         className="h-9"
                       />
                       <CommandList>
-                        {playlists.length === 0 && (
+                        {!playlists && (
                           <CommandEmpty>No results found.</CommandEmpty>
                         )}
                         <CommandGroup>
@@ -268,11 +324,21 @@ export const NewMusicForm = () => {
                   <PopoverContent className="w-full p-0">
                     <Command>
                       <CommandInput
-                        placeholder="Select playlist(s)"
+                        placeholder="Select artist(s)"
                         className="h-9"
+                        value={inputValue}
+                        onChangeCapture={(e) =>
+                          setInputValue(e.currentTarget.value)
+                        }
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            addValue(inputValue);
+                          }
+                        }}
                       />
                       <CommandList>
-                        {playlists.length === 0 && (
+                        {!playlists && (
                           <CommandEmpty>No results found.</CommandEmpty>
                         )}
                         <CommandGroup>
@@ -325,6 +391,9 @@ export const NewMusicForm = () => {
             )}
           />
         </div>
+
+        <FormError message={error} />
+        <FormSuccess message={success} />
 
         <Button disabled={isPending} type="submit" className="w-full">
           {isPending ? (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import {
   Form,
   FormControl,
@@ -40,6 +40,16 @@ import {
   CommandList,
 } from "../ui/command";
 import { Checkbox } from "../ui/checkbox";
+import { FormError } from "../form-error";
+import { FormSuccess } from "../form-success";
+import { getAllMusic } from "@/data/playlistData";
+import { newPlaylist } from "@/actions/playlist";
+import { allQuery } from "@/utils/constants";
+
+type MusicType = {
+  id: string;
+  title: string;
+};
 
 export const NewPlaylistForm = () => {
   const queryClient = useQueryClient();
@@ -49,13 +59,22 @@ export const NewPlaylistForm = () => {
   const [open, setOpen] = useState(false);
   const [listName, setListName] = useState<string[]>([]);
 
-  const [music, setMusic] = useState([
-    { id: "1", name: "Recently Added", canAddTo: false },
-    { id: "2", name: "Recently Played", canAddTo: false },
-    { id: "3", name: "Top Songs", canAddTo: false },
-    { id: "4", name: "Aug 2024 Concert", canAddTo: true },
-    { id: "5", name: "Sunday Aug 4, 2024", canAddTo: true },
-  ]);
+  const [error, setError] = useState<string | undefined>("");
+  const [success, setSuccess] = useState<string | undefined>("");
+
+  const [music, setMusic] = useState<MusicType[] | null>([]);
+
+  useEffect(() => {
+    const getMusic = async () => {
+      const musics = await getAllMusic();
+
+      if (musics) {
+        setMusic(musics);
+      }
+    };
+
+    getMusic();
+  }, []);
 
   const form = useForm<z.infer<typeof NewPlaylistSchema>>({
     resolver: zodResolver(NewPlaylistSchema),
@@ -67,7 +86,34 @@ export const NewPlaylistForm = () => {
   });
 
   const onSubmit = (values: z.infer<typeof NewPlaylistSchema>) => {
-    console.log(values);
+    setError("");
+    setSuccess("");
+
+    startTransition(async () => {
+      const data = await newPlaylist(values);
+
+      try {
+        if (data?.error) {
+          setError(data?.error);
+        }
+
+        if (data?.success) {
+          // form.reset();
+          setSuccess(data?.success);
+
+          queryClient.invalidateQueries({
+            predicate: (query) =>
+              allQuery.includes(query.queryKey[0] as string),
+          });
+        }
+
+        if (!data) {
+          window.location.reload();
+        }
+      } catch {
+        setError("Something went wrong!");
+      }
+    });
   };
 
   const handleKeyPress = (
@@ -153,7 +199,7 @@ export const NewPlaylistForm = () => {
                       >
                         {field.value.length > 0
                           ? listName.join(", ")
-                          : "Select playlist(s)"}
+                          : "Select music(s)"}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
                     </FormControl>
@@ -165,7 +211,7 @@ export const NewPlaylistForm = () => {
                         className="h-9"
                       />
                       <CommandList>
-                        {music.length === 0 && (
+                        {!music && (
                           <CommandEmpty>No results found.</CommandEmpty>
                         )}
                         <CommandGroup>
@@ -173,7 +219,7 @@ export const NewPlaylistForm = () => {
                             music.length > 0 &&
                             music.map((d) => (
                               <CommandItem
-                                value={d.name}
+                                value={d.title}
                                 key={d.id}
                                 // onSelect={() => {
                                 //   form.setValue("musicIds", d.name);
@@ -187,7 +233,7 @@ export const NewPlaylistForm = () => {
                                     if (checked) {
                                       // When the checkbox is checked
                                       field.onChange([...field.value, d.id]);
-                                      setListName((prev) => [...prev, d.name]);
+                                      setListName((prev) => [...prev, d.title]);
                                     } else {
                                       // When the checkbox is unchecked
                                       field.onChange(
@@ -196,12 +242,14 @@ export const NewPlaylistForm = () => {
                                         )
                                       );
                                       setListName((prev) =>
-                                        prev.filter((name) => name !== d.name)
+                                        prev.filter((name) => name !== d.title)
                                       );
                                     }
                                   }}
                                 />
-                                <FormLabel className="ml-2">{d.name}</FormLabel>
+                                <FormLabel className="ml-2">
+                                  {d.title}
+                                </FormLabel>
                               </CommandItem>
                             ))}
                         </CommandGroup>
@@ -215,6 +263,9 @@ export const NewPlaylistForm = () => {
             )}
           />
         </div>
+
+        <FormError message={error} />
+        <FormSuccess message={success} />
 
         <Button disabled={isPending} type="submit" className="w-full">
           {isPending ? (
