@@ -39,6 +39,7 @@ import { FormSuccess } from "@/components/form-success";
 import { addAuthor, getAuthors, getPlaylists } from "@/data/playlistData";
 import { newMusic } from "@/actions/playlist";
 import { allQuery } from "@/utils/constants";
+import { ScrollArea } from "../ui/scroll-area";
 
 type PlayListType = {
   id: string;
@@ -143,259 +144,268 @@ export const NewMusicForm = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <div className="space-y-4">
-          <FormField
-            control={form.control}
-            name="title"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Title</FormLabel>
-                <FormControl>
-                  <Input
-                    disabled={isPending}
-                    {...field}
-                    placeholder="Title"
-                    type="text"
-                  />
-                </FormControl>
+      <ScrollArea className="h-[500px] px-1">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <div className="space-y-4">
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Title</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={isPending}
+                      {...field}
+                      placeholder="Title"
+                      type="text"
+                    />
+                  </FormControl>
 
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
-        <div className="space-y-4">
-          <FormField
-            control={form.control}
-            name="link"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Youtube Link</FormLabel>
-                <FormControl>
-                  <Input
-                    disabled={isPending}
-                    {...field}
-                    placeholder="Youtube Link"
-                    type="text"
-                  />
-                </FormControl>
+          <div className="space-y-4">
+            <FormField
+              control={form.control}
+              name="link"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Youtube Link</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={isPending}
+                      {...field}
+                      placeholder="Youtube Link"
+                      type="text"
+                    />
+                  </FormControl>
 
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
-        <div className="space-y-4">
-          <FormField
-            control={form.control}
-            name="content"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Lyrics</FormLabel>
-                <FormControl>
-                  <MusicContent />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+          <div className="space-y-4">
+            <FormField
+              control={form.control}
+              name="content"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Lyrics</FormLabel>
+                  <FormControl>
+                    <MusicContent />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
-        <div className="space-y-4">
-          <FormField
-            control={form.control}
-            name="playlistIds"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>Playlist(s)</FormLabel>
-                <Popover open={openPlaylist} onOpenChange={setOpenPlaylist}>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant="outline"
-                        role="combobox"
-                        disabled={isPending}
-                        className={cn(
-                          "w-full justify-between",
-                          !field.value && "text-muted-foreground"
-                        )}
-                      >
-                        {field.value.length > 0
-                          ? listName.join(", ")
-                          : "Select playlist(s)"}
-                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-full p-0">
-                    <Command>
-                      <CommandInput
-                        placeholder="Select playlist(s)"
-                        className="h-9"
-                      />
-                      <CommandList>
-                        {!playlists && (
-                          <CommandEmpty>No results found.</CommandEmpty>
-                        )}
-                        <CommandGroup>
-                          {playlists &&
-                            playlists.length > 0 &&
-                            playlists.map((d) => (
-                              <CommandItem
-                                value={d.name}
-                                key={d.id}
-                                // onSelect={() => {
-                                //   form.setValue("musicIds", d.name);
-                                //   setOpen(false);
-                                // }}
-                                className="w-full"
-                              >
-                                <Checkbox
-                                  checked={field.value?.includes(d.id)}
-                                  onCheckedChange={(checked) => {
-                                    if (checked) {
-                                      // When the checkbox is checked
-                                      field.onChange([...field.value, d.id]);
-                                      setListName((prev) => [...prev, d.name]);
-                                    } else {
-                                      // When the checkbox is unchecked
-                                      field.onChange(
-                                        field.value?.filter(
-                                          (value) => value !== d.id
-                                        )
-                                      );
-                                      setListName((prev) =>
-                                        prev.filter((name) => name !== d.name)
-                                      );
-                                    }
-                                  }}
-                                />
-                                <FormLabel className="ml-2">{d.name}</FormLabel>
-                              </CommandItem>
-                            ))}
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
+          <div className="space-y-4">
+            <FormField
+              control={form.control}
+              name="playlistIds"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Playlist(s)</FormLabel>
+                  <Popover open={openPlaylist} onOpenChange={setOpenPlaylist}>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          disabled={isPending}
+                          className={cn(
+                            "w-full justify-between",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value.length > 0
+                            ? listName.join(", ")
+                            : "Select playlist(s)"}
+                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-full p-0">
+                      <Command>
+                        <CommandInput
+                          placeholder="Select playlist(s)"
+                          className="h-9"
+                        />
+                        <CommandList>
+                          {!playlists && (
+                            <CommandEmpty>No results found.</CommandEmpty>
+                          )}
+                          <CommandGroup>
+                            {playlists &&
+                              playlists.length > 0 &&
+                              playlists.map((d) => (
+                                <CommandItem
+                                  value={d.name}
+                                  key={d.id}
+                                  // onSelect={() => {
+                                  //   form.setValue("musicIds", d.name);
+                                  //   setOpen(false);
+                                  // }}
+                                  className="w-full"
+                                >
+                                  <Checkbox
+                                    checked={field.value?.includes(d.id)}
+                                    onCheckedChange={(checked) => {
+                                      if (checked) {
+                                        // When the checkbox is checked
+                                        field.onChange([...field.value, d.id]);
+                                        setListName((prev) => [
+                                          ...prev,
+                                          d.name,
+                                        ]);
+                                      } else {
+                                        // When the checkbox is unchecked
+                                        field.onChange(
+                                          field.value?.filter(
+                                            (value) => value !== d.id
+                                          )
+                                        );
+                                        setListName((prev) =>
+                                          prev.filter((name) => name !== d.name)
+                                        );
+                                      }
+                                    }}
+                                  />
+                                  <FormLabel className="ml-2">
+                                    {d.name}
+                                  </FormLabel>
+                                </CommandItem>
+                              ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
 
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
-        <div className="space-y-4">
-          <FormField
-            control={form.control}
-            name="authorIds"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>Author(s)</FormLabel>
-                <Popover open={openAuthor} onOpenChange={setOpenAuthor}>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant="outline"
-                        role="combobox"
-                        disabled={isPending}
-                        className={cn(
-                          "w-full justify-between",
-                          !field.value && "text-muted-foreground"
-                        )}
-                      >
-                        {field.value.length > 0
-                          ? authorNames.join(", ")
-                          : "Select author(s)"}
-                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-full p-0">
-                    <Command>
-                      <CommandInput
-                        placeholder="Select artist(s)"
-                        className="h-9"
-                        value={inputValue}
-                        onChangeCapture={(e) =>
-                          setInputValue(e.currentTarget.value)
-                        }
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            e.preventDefault();
-                            addValue(inputValue);
+          <div className="space-y-4">
+            <FormField
+              control={form.control}
+              name="authorIds"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Author(s)</FormLabel>
+                  <Popover open={openAuthor} onOpenChange={setOpenAuthor}>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          disabled={isPending}
+                          className={cn(
+                            "w-full justify-between",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value.length > 0
+                            ? authorNames.join(", ")
+                            : "Select author(s)"}
+                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-full p-0">
+                      <Command>
+                        <CommandInput
+                          placeholder="Select artist(s)"
+                          className="h-9"
+                          value={inputValue}
+                          onChangeCapture={(e) =>
+                            setInputValue(e.currentTarget.value)
                           }
-                        }}
-                      />
-                      <CommandList>
-                        {!playlists && (
-                          <CommandEmpty>No results found.</CommandEmpty>
-                        )}
-                        <CommandGroup>
-                          {authors &&
-                            authors.length > 0 &&
-                            authors.map((d) => (
-                              <CommandItem
-                                value={d.name}
-                                key={d.id}
-                                // onSelect={() => {
-                                //   form.setValue("musicIds", d.name);
-                                //   setOpen(false);
-                                // }}
-                                className="w-full"
-                              >
-                                <Checkbox
-                                  checked={field.value?.includes(d.id)}
-                                  onCheckedChange={(checked) => {
-                                    if (checked) {
-                                      // When the checkbox is checked
-                                      field.onChange([...field.value, d.id]);
-                                      setAuthorNames((prev) => [
-                                        ...prev,
-                                        d.name,
-                                      ]);
-                                    } else {
-                                      // When the checkbox is unchecked
-                                      field.onChange(
-                                        field.value?.filter(
-                                          (value) => value !== d.id
-                                        )
-                                      );
-                                      setAuthorNames((prev) =>
-                                        prev.filter((name) => name !== d.name)
-                                      );
-                                    }
-                                  }}
-                                />
-                                <FormLabel className="ml-2">{d.name}</FormLabel>
-                              </CommandItem>
-                            ))}
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              e.preventDefault();
+                              addValue(inputValue);
+                            }
+                          }}
+                        />
+                        <CommandList>
+                          {!playlists && (
+                            <CommandEmpty>No results found.</CommandEmpty>
+                          )}
+                          <CommandGroup>
+                            {authors &&
+                              authors.length > 0 &&
+                              authors.map((d) => (
+                                <CommandItem
+                                  value={d.name}
+                                  key={d.id}
+                                  // onSelect={() => {
+                                  //   form.setValue("musicIds", d.name);
+                                  //   setOpen(false);
+                                  // }}
+                                  className="w-full"
+                                >
+                                  <Checkbox
+                                    checked={field.value?.includes(d.id)}
+                                    onCheckedChange={(checked) => {
+                                      if (checked) {
+                                        // When the checkbox is checked
+                                        field.onChange([...field.value, d.id]);
+                                        setAuthorNames((prev) => [
+                                          ...prev,
+                                          d.name,
+                                        ]);
+                                      } else {
+                                        // When the checkbox is unchecked
+                                        field.onChange(
+                                          field.value?.filter(
+                                            (value) => value !== d.id
+                                          )
+                                        );
+                                        setAuthorNames((prev) =>
+                                          prev.filter((name) => name !== d.name)
+                                        );
+                                      }
+                                    }}
+                                  />
+                                  <FormLabel className="ml-2">
+                                    {d.name}
+                                  </FormLabel>
+                                </CommandItem>
+                              ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
 
-                <FormMessage />
-              </FormItem>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <FormError message={error} />
+          <FormSuccess message={success} />
+
+          <Button disabled={isPending} type="submit" className="w-full">
+            {isPending ? (
+              <Loader2 className="animate-spin h-4 w-4" />
+            ) : (
+              "Add New Music"
             )}
-          />
-        </div>
-
-        <FormError message={error} />
-        <FormSuccess message={success} />
-
-        <Button disabled={isPending} type="submit" className="w-full">
-          {isPending ? (
-            <Loader2 className="animate-spin h-4 w-4" />
-          ) : (
-            "Add New Music"
-          )}
-        </Button>
-      </form>
+          </Button>
+        </form>
+      </ScrollArea>
     </Form>
   );
 };
