@@ -144,7 +144,7 @@ export const NewMusicForm = () => {
 
   return (
     <Form {...form}>
-      <ScrollArea className="h-[500px] px-1">
+      <ScrollArea className="h-[400px] md:h-[600px] px-1">
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-4">
             <FormField
@@ -159,6 +159,7 @@ export const NewMusicForm = () => {
                       {...field}
                       placeholder="Title"
                       type="text"
+                      className="focus-visible:ring-px"
                     />
                   </FormControl>
 
@@ -181,6 +182,7 @@ export const NewMusicForm = () => {
                       {...field}
                       placeholder="Youtube Link"
                       type="text"
+                      className="focus-visible:ring-px"
                     />
                   </FormControl>
 
