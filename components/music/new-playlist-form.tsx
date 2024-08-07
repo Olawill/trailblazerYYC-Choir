@@ -16,7 +16,7 @@ import { NewPlaylistSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { CheckIcon, ChevronsUpDown, Loader2 } from "lucide-react";
+import { ChevronsUpDown, Loader2 } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -24,7 +24,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Playlist } from "@prisma/client";
 import {
   Popover,
   PopoverContent,
@@ -38,10 +37,10 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "../ui/command";
-import { Checkbox } from "../ui/checkbox";
-import { FormError } from "../form-error";
-import { FormSuccess } from "../form-success";
+} from "@/components/ui/command";
+import { Checkbox } from "@/components/ui/checkbox";
+import { FormError } from "@/components/form-error";
+import { FormSuccess } from "@/components/form-success";
 import { getAllMusic } from "@/data/playlistData";
 import { newPlaylist } from "@/actions/playlist";
 import { allQuery } from "@/utils/constants";

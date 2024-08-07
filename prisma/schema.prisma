@@ -198,6 +198,7 @@ model Playlist {
 
   name     String  @unique
   canAddTo Boolean @default(false)
+  current  Boolean @default(false)
 
   musicIDs String[] @db.ObjectId
   music    Music[]  @relation(fields: [musicIDs], references: [id])

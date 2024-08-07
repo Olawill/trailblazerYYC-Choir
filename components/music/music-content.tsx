@@ -8,13 +8,13 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
-import { Textarea } from "../ui/textarea";
-import { FormControl } from "../ui/form";
-import { useEffect, useState } from "react";
-import { Button } from "../ui/button";
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { FormControl } from "@/components/ui/form";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import { MinusCircle, PlusCircle } from "lucide-react";
-import { ScrollArea } from "../ui/scroll-area";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface ContentProps {
   type: "Verse" | "Chorus" | "Bridge";
@@ -35,18 +35,7 @@ export const MusicContent = ({
   });
 
   const [contentState, setContentState] = useState(initialContents);
-  // useEffect(() => {
-  //   if (initialContents.length > 0) {
-  //     initialContents.forEach((content) => {
-  //       append(content);
-  //     });
-  //   }
-  // }, [initialContents, append]);
 
-  // Function to add a new empty content item
-  // const handleAddField = () => {
-  //   initialContents.push({ type: "Verse", content: "" }); // Default values
-  // };
   const handleAddField = () => {
     setContentState((prev) => [...prev, { type: "Verse", content: "" }]); // Default values
   };

@@ -14,7 +14,6 @@ import {
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
 import Image from "next/image";
-import { playlists } from "./music-sidebar";
 import {
   Dialog,
   DialogContent,
@@ -27,6 +26,8 @@ import { Separator } from "@/components/ui/separator";
 import { useCurrentRole } from "@/hooks/use-current-role";
 import { NewPlaylistForm } from "./new-playlist-form";
 
+import { Playlist } from "@prisma/client";
+
 interface AlbumArtworkProps extends React.HTMLAttributes<HTMLDivElement> {
   album: Album;
   aspectRatio?: "portrait" | "square";
@@ -36,6 +37,7 @@ interface AlbumArtworkProps extends React.HTMLAttributes<HTMLDivElement> {
   removeFromLibrary?: boolean;
   addToPlaylist?: boolean;
   createPlaylist?: boolean;
+  playlists: Playlist[];
 }
 
 export const AlbumArtWork = ({
@@ -47,6 +49,7 @@ export const AlbumArtWork = ({
   removeFromLibrary,
   addToPlaylist,
   createPlaylist,
+  playlists,
   className,
   ...props
 }: AlbumArtworkProps) => {
@@ -94,15 +97,16 @@ export const AlbumArtWork = ({
                   </DialogTrigger>
                 )}
                 <ContextMenuSeparator />
-                {playlists.map(
-                  (playlist) =>
-                    playlist.canBeAddedTo && (
-                      <ContextMenuItem key={playlist.name}>
-                        <ListMusic className="mr-2 h-4 w-4" />
-                        {playlist.name}
-                      </ContextMenuItem>
-                    )
-                )}
+                {playlists &&
+                  playlists.map(
+                    (playlist) =>
+                      !playlist.canAddTo && (
+                        <ContextMenuItem key={playlist.name}>
+                          <ListMusic className="mr-2 h-4 w-4" />
+                          {playlist.name}
+                        </ContextMenuItem>
+                      )
+                  )}
               </ContextMenuSubContent>
             </ContextMenuSub>
             {!addToLibrary ||

@@ -32,16 +32,17 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { NewPlaylistForm } from "./new-playlist-form";
+import { Playlist } from "@prisma/client";
 
-export type Playlist = (typeof playlists)[number];
+// export type Playlist = (typeof playlists)[number];
 
-export const playlists = [
-  { name: "Recently Added", canBeAddedTo: false },
-  { name: "Recently Played", canBeAddedTo: false },
-  { name: "Top Songs", canBeAddedTo: false },
-  { name: "Aug 2024 Concert", canBeAddedTo: true },
-  { name: "Sunday Aug 4, 2024", canBeAddedTo: true },
-];
+// export const playlists = [
+//   { name: "Recently Added", canBeAddedTo: false },
+//   { name: "Recently Played", canBeAddedTo: false },
+//   { name: "Top Songs", canBeAddedTo: false },
+//   { name: "Aug 2024 Concert", canBeAddedTo: true },
+//   { name: "Sunday Aug 4, 2024", canBeAddedTo: true },
+// ];
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   playlists: Playlist[];

@@ -33,6 +33,16 @@ export const getPlaylists = async () => {
   }
 };
 
+export const getAllPlay = async () => {
+  try {
+    const playlists = await prisma.playlist.findMany();
+
+    return playlists;
+  } catch {
+    return null;
+  }
+};
+
 export const getAuthors = async () => {
   try {
     const authors = await prisma.author.findMany({
@@ -67,6 +77,44 @@ export const addAuthor = async (name: string) => {
     });
 
     return author;
+  } catch {
+    return null;
+  }
+};
+
+export const getCurrentList = async () => {
+  try {
+    const currentList = await prisma.playlist.findFirst({
+      where: {
+        current: true,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (currentList) {
+      const currentListDetails = await prisma.music.findMany({
+        where: {
+          playlistIDs: {
+            has: currentList.id,
+          },
+        },
+        select: {
+          id: true,
+          title: true,
+          videoId: true,
+          authors: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      });
+
+      return currentListDetails;
+    }
   } catch {
     return null;
   }
