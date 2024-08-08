@@ -60,6 +60,8 @@ export const getAuthors = async () => {
 
 export const addAuthor = async (name: string) => {
   try {
+    if (!name) return null
+    
     const existingAuthor = await prisma.author.findFirst({
       where: {
         name,

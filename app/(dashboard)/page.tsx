@@ -6,13 +6,14 @@ import { Header } from "@/components/music/header";
 import { MusicSidebar } from "@/components/music/music-sidebar";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 import { getAllPlay, getCurrentList } from "@/data/playlistData";
 
 import { useCurrentUser } from "@/hooks/use-current-user";
 
 import { Playlist } from "@prisma/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { Suspense } from "react";
 
 export default function Home() {
   const user = useCurrentUser();
@@ -47,6 +48,7 @@ export default function Home() {
           <MusicSidebar
             playlists={playlists as Playlist[]}
             className="hidden lg:block col-span-1"
+            loading={isLoading}
           />
 
           <div className="col-span-3 lg:col-span-4 border rounded-md">
@@ -64,20 +66,23 @@ export default function Home() {
                 <div className="relative">
                   <ScrollArea>
                     <div className="flex space-x-4 pb-4">
-                      {modlistenNow &&
-                        modlistenNow.map((album) => (
-                          <AlbumArtWork
-                            key={album.name}
-                            album={album}
-                            playlists={playlists as Playlist[]}
-                            className="w-[250px]"
-                            aspectRatio="portrait"
-                            addToLibrary
-                            addToPlaylist
-                            width={250}
-                            height={330}
-                          />
-                        ))}
+                      {listenLoading && <Home.Skeleton />}
+                      <Suspense fallback={<Home.Skeleton />}>
+                        {modlistenNow &&
+                          modlistenNow.map((album) => (
+                            <AlbumArtWork
+                              key={album.name}
+                              album={album}
+                              playlists={playlists as Playlist[]}
+                              className="w-[250px]"
+                              aspectRatio="portrait"
+                              addToLibrary
+                              addToPlaylist
+                              width={250}
+                              height={330}
+                            />
+                          ))}
+                      </Suspense>
                     </div>
                     <ScrollBar orientation="horizontal" />
                   </ScrollArea>
@@ -98,17 +103,19 @@ export default function Home() {
                   <div className="relative">
                     <ScrollArea>
                       <div className="flex space-x-4 pb-4">
-                        {madeForYouAlbums.map((album) => (
-                          <AlbumArtWork
-                            key={album.name}
-                            playlists={playlists as Playlist[]}
-                            album={album}
-                            className="w-[250px]"
-                            aspectRatio="portrait"
-                            width={250}
-                            height={330}
-                          />
-                        ))}
+                        <Suspense fallback={<Home.Skeleton />}>
+                          {madeForYouAlbums.map((album) => (
+                            <AlbumArtWork
+                              key={album.name}
+                              playlists={playlists as Playlist[]}
+                              album={album}
+                              className="w-[250px]"
+                              aspectRatio="portrait"
+                              width={250}
+                              height={330}
+                            />
+                          ))}
+                        </Suspense>
                       </div>
                       <ScrollBar orientation="horizontal" />
                     </ScrollArea>
@@ -130,17 +137,19 @@ export default function Home() {
                       <div className="relative">
                         <ScrollArea>
                           <div className="flex space-x-4 pb-4">
-                            {madeForYouAlbums.map((album) => (
-                              <AlbumArtWork
-                                key={album.name}
-                                playlists={playlists}
-                                album={album}
-                                className="w-[250px]"
-                                aspectRatio="portrait"
-                                width={250}
-                                height={330}
-                              />
-                            ))}
+                            <Suspense fallback={<Home.Skeleton />}>
+                              {madeForYouAlbums.map((album) => (
+                                <AlbumArtWork
+                                  key={album.name}
+                                  playlists={playlists}
+                                  album={album}
+                                  className="w-[250px]"
+                                  aspectRatio="portrait"
+                                  width={250}
+                                  height={330}
+                                />
+                              ))}
+                            </Suspense>
                           </div>
                           <ScrollBar orientation="horizontal" />
                         </ScrollArea>
@@ -155,3 +164,64 @@ export default function Home() {
     </div>
   );
 }
+
+Home.Skeleton = function AlbumSkeleton() {
+  return (
+    <div className="flex space-x-4">
+      <div className="space-y-3 w-[250px]">
+        <div className="overflow-hidden rounded-md">
+          <Skeleton className="object-cover transition-all hover:scale-105 h-[330px] w-[250px] bg-gray-500" />
+        </div>
+
+        <div className="space-y-1 text-sm">
+          <Skeleton className="w-14 h-3 bg-gray-500" />
+          <Skeleton className="w-20 h-3 bg-gray-500" />
+        </div>
+      </div>
+
+      <div className="space-y-3 w-[250px]">
+        <div className="overflow-hidden rounded-md">
+          <Skeleton className="object-cover transition-all hover:scale-105 h-[330px] w-[250px] bg-gray-500" />
+        </div>
+
+        <div className="space-y-1 text-sm">
+          <Skeleton className="w-14 h-3 bg-gray-500" />
+          <Skeleton className="w-20 h-3 bg-gray-500" />
+        </div>
+      </div>
+
+      <div className="space-y-3 w-[250px]">
+        <div className="overflow-hidden rounded-md">
+          <Skeleton className="object-cover transition-all hover:scale-105 h-[330px] w-[250px] bg-gray-500" />
+        </div>
+
+        <div className="space-y-1 text-sm">
+          <Skeleton className="w-14 h-3 bg-gray-500" />
+          <Skeleton className="w-20 h-3 bg-gray-500" />
+        </div>
+      </div>
+
+      <div className="space-y-3 w-[250px]">
+        <div className="overflow-hidden rounded-md">
+          <Skeleton className="object-cover transition-all hover:scale-105 h-[330px] w-[250px] bg-gray-500" />
+        </div>
+
+        <div className="space-y-1 text-sm">
+          <Skeleton className="w-14 h-3 bg-gray-500" />
+          <Skeleton className="w-20 h-3 bg-gray-500" />
+        </div>
+      </div>
+
+      <div className="space-y-3 w-[250px]">
+        <div className="overflow-hidden rounded-md">
+          <Skeleton className="object-cover transition-all hover:scale-105 h-[330px] w-[250px] bg-gray-500" />
+        </div>
+
+        <div className="space-y-1 text-sm">
+          <Skeleton className="w-14 h-3 bg-gray-500" />
+          <Skeleton className="w-20 h-3 bg-gray-500" />
+        </div>
+      </div>
+    </div>
+  );
+};

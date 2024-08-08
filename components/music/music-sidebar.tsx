@@ -22,6 +22,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Tooltip,
   TooltipContent,
@@ -30,7 +31,7 @@ import {
 } from "@/components/ui/tooltip";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { NewPlaylistForm } from "./new-playlist-form";
 import { Playlist } from "@prisma/client";
 
@@ -46,9 +47,14 @@ import { Playlist } from "@prisma/client";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   playlists: Playlist[];
+  loading: boolean;
 }
 
-export const MusicSidebar = ({ className, playlists }: SidebarProps) => {
+export const MusicSidebar = ({
+  className,
+  playlists,
+  loading,
+}: SidebarProps) => {
   const user = useCurrentUser();
 
   const [currentUrl, setCurrentUrl] = useState("");
@@ -97,12 +103,12 @@ export const MusicSidebar = ({ className, playlists }: SidebarProps) => {
             </Button>
           </div>
         </div>
-        <div className="px-3 py-2">
-          <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
-            Library
-          </h2>
-          <div className="space-y-1">
-            {user && (
+        {user && (
+          <div className="px-3 py-2">
+            <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
+              Library
+            </h2>
+            <div className="space-y-1">
               <Link
                 href="#made-for-you"
                 onClick={() => handleClick("made-for-you")}
@@ -118,16 +124,14 @@ export const MusicSidebar = ({ className, playlists }: SidebarProps) => {
                 <User className="mr-2 h-4 w-4" />
                 Made for You
               </Link>
-            )}
 
-            {user && (
               <Button variant="ghost" className="w-full justify-start">
                 <FolderHeart className="mr-2 h-4 w-4" />
                 Favorite
               </Button>
-            )}
+            </div>
           </div>
-        </div>
+        )}
         <div className="py-2">
           <div className="flex items-center justify-between">
             <h2 className="relative px-7 text-lg font-semibold tracking-tight">
@@ -175,20 +179,37 @@ export const MusicSidebar = ({ className, playlists }: SidebarProps) => {
                   Manage
                 </Button>
               )}
-              {playlists?.map((playlist, i) => (
-                <Button
-                  key={`${playlist.name}-${i}`}
-                  variant="ghost"
-                  className="w-full justify-start font-normal"
-                >
-                  <ListMusic className="mr-2 h-4 w-4" />
-                  {playlist.name}
-                </Button>
-              ))}
+
+              {loading && <MusicSidebar.Skeleton />}
+
+              <Suspense fallback={<MusicSidebar.Skeleton />}>
+                {playlists?.map((playlist, i) => (
+                  <Button
+                    key={`${playlist.name}-${i}`}
+                    variant="ghost"
+                    className="w-full justify-start font-normal"
+                  >
+                    <ListMusic className="mr-2 h-4 w-4" />
+                    {playlist.name}
+                  </Button>
+                ))}
+              </Suspense>
             </div>
           </ScrollArea>
         </div>
       </div>
+    </div>
+  );
+};
+
+MusicSidebar.Skeleton = function PlaylistSkeleton() {
+  return (
+    <div className="space-y-1 p-2">
+      <Skeleton className="w-full h-10 justify-start bg-gray-500" />
+      <Skeleton className="w-full h-10 justify-start bg-gray-500" />
+      <Skeleton className="w-full h-10 justify-start bg-gray-500" />
+      <Skeleton className="w-full h-10 justify-start bg-gray-500" />
+      <Skeleton className="w-full h-10 justify-start bg-gray-500" />
     </div>
   );
 };
