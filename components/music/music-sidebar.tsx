@@ -11,7 +11,6 @@ import {
   ListMusic,
   PlusCircle,
   Settings,
-  User,
 } from "lucide-react";
 import {
   Dialog,
@@ -33,45 +32,34 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, Suspense } from "react";
 import { NewPlaylistForm } from "./new-playlist-form";
-import { Playlist } from "@prisma/client";
+import { useQuery } from "@tanstack/react-query";
+import { getAllPlay } from "@/data/playlistData";
 
-// export type Playlist = (typeof playlists)[number];
+interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-// export const playlists = [
-//   { name: "Recently Added", canBeAddedTo: false },
-//   { name: "Recently Played", canBeAddedTo: false },
-//   { name: "Top Songs", canBeAddedTo: false },
-//   { name: "Aug 2024 Concert", canBeAddedTo: true },
-//   { name: "Sunday Aug 4, 2024", canBeAddedTo: true },
-// ];
-
-interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
-  playlists: Playlist[];
-  loading: boolean;
-}
-
-export const MusicSidebar = ({
-  className,
-  playlists,
-  loading,
-}: SidebarProps) => {
+export const MusicSidebar = ({ className }: SidebarProps) => {
   const user = useCurrentUser();
 
-  const [currentUrl, setCurrentUrl] = useState("");
+  const { data: playlists, isLoading } = useQuery({
+    queryKey: ["playlists"],
+    queryFn: () => getAllPlay(),
+  });
+
+  const [activeId, setActiveId] = useState<string>("");
 
   // console.log(currentUrl);
 
   const pathname = usePathname();
 
-  const handleClick = (id: string) => {
-    setCurrentUrl(`#${id}`);
+  // const handleClick = (id: string) => {
+  //   setActiveId(`#${id}`);
 
-    const elem = document.getElementById(id);
+  //   const elem = document.getElementById(id);
 
-    if (elem) {
-      elem.scrollIntoView({ behavior: "smooth" });
-    }
-  };
+  //   if (elem) {
+  //     elem.scrollIntoView({ behavior: "smooth" });
+  //   }
+  // };
 
   return (
     <div className={cn("pb-12 -ml-4 sticky", className)}>
@@ -82,12 +70,10 @@ export const MusicSidebar = ({
           </h2>
           <div className="space-y-1">
             <Link
-              href="#listen-now"
-              onClick={() => handleClick("listen-now")}
-              scroll={false}
+              href="/"
               className={cn(
                 buttonVariants({ variant: "ghost" }),
-                currentUrl === "#listen-now"
+                pathname === "/"
                   ? "bg-muted hover:bg-muted"
                   : "hover:bg-background",
                 "w-full justify-start"
@@ -97,41 +83,37 @@ export const MusicSidebar = ({
               Listen Now
             </Link>
 
-            <Button variant="ghost" className="w-full justify-start">
+            <Link
+              href="/browse"
+              className={cn(
+                buttonVariants({ variant: "ghost" }),
+                pathname === "/browse"
+                  ? "bg-muted hover:bg-muted"
+                  : "hover:bg-background",
+                "w-full justify-start"
+              )}
+            >
               <LayoutGrid className="mr-2 h-4 w-4" />
               Browse
-            </Button>
-          </div>
-        </div>
-        {user && (
-          <div className="px-3 py-2">
-            <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
-              Library
-            </h2>
-            <div className="space-y-1">
+            </Link>
+
+            {user && (
               <Link
-                href="#made-for-you"
-                onClick={() => handleClick("made-for-you")}
-                scroll={false}
+                href="/favs"
                 className={cn(
                   buttonVariants({ variant: "ghost" }),
-                  currentUrl === "#made-for-you"
+                  pathname === "/favs"
                     ? "bg-muted hover:bg-muted"
                     : "hover:bg-background",
                   "w-full justify-start"
                 )}
               >
-                <User className="mr-2 h-4 w-4" />
-                Made for You
-              </Link>
-
-              <Button variant="ghost" className="w-full justify-start">
                 <FolderHeart className="mr-2 h-4 w-4" />
                 Favorite
-              </Button>
-            </div>
+              </Link>
+            )}
           </div>
-        )}
+        </div>
         <div className="py-2">
           <div className="flex items-center justify-between">
             <h2 className="relative px-7 text-lg font-semibold tracking-tight">
@@ -174,13 +156,22 @@ export const MusicSidebar = ({
           <ScrollArea className="h-[300px] px-1">
             <div className="space-y-1 p-2">
               {user && user?.role !== "USER" && (
-                <Button variant="ghost" className="w-full justify-start">
+                <Link
+                  href="/manage"
+                  className={cn(
+                    buttonVariants({ variant: "ghost" }),
+                    pathname === "/manage"
+                      ? "bg-muted hover:bg-muted"
+                      : "hover:bg-background",
+                    "w-full justify-start"
+                  )}
+                >
                   <Settings className="mr-2 h-4 w-4" />
                   Manage
-                </Button>
+                </Link>
               )}
 
-              {loading && <MusicSidebar.Skeleton />}
+              {isLoading && <MusicSidebar.Skeleton />}
 
               <Suspense fallback={<MusicSidebar.Skeleton />}>
                 {playlists?.map((playlist, i) => (

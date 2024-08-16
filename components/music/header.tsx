@@ -41,7 +41,7 @@ export const Header = ({ label, action }: HeaderProps) => {
               </Button>
             </DialogTrigger>
             {user ? (
-              <DialogContent>
+              <DialogContent className="">
                 <DialogHeader>
                   <DialogTitle>New {label}</DialogTitle>
                   <DialogDescription>

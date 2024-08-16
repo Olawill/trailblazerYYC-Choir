@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { FormControl } from "@/components/ui/form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { MinusCircle, PlusCircle } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -23,10 +23,12 @@ interface ContentProps {
 
 interface MusicContentProps {
   contents?: ContentProps[];
+  reload: boolean;
 }
 
 export const MusicContent = ({
   contents: initialContents = [{ type: "Verse", content: "" }],
+  reload,
 }: MusicContentProps) => {
   const { control } = useFormContext();
   const { append } = useFieldArray({
@@ -43,6 +45,10 @@ export const MusicContent = ({
   const handleRemoveField = () => {
     setContentState((prev) => prev.slice(0, -1)); // Default values
   };
+
+  useEffect(() => {
+    if (reload) setContentState(initialContents);
+  }, [reload]);
 
   return (
     <ScrollArea className="h-[300px] px-1">
@@ -100,7 +106,7 @@ export const MusicContent = ({
             type="button"
             size="icon"
             aria-label="remove verse, chorus or bridge"
-            className="bg-background dark:text-gray-300 focus-visible:ring-px hover:bg-transparent"
+            className="bg-background text-gray-500 dark:text-gray-300 focus-visible:ring-px hover:bg-transparent"
             onClick={handleRemoveField}
           >
             <MinusCircle className="w-4 h-4" />
@@ -110,7 +116,7 @@ export const MusicContent = ({
           type="button"
           size="icon"
           aria-label="Add verse, chorus or bridge"
-          className="bg-background dark:text-gray-300 focus-visible:ring-px hover:bg-transparent"
+          className="bg-background text-gray-500 dark:text-gray-300 focus-visible:ring-px hover:bg-transparent"
           onClick={handleAddField}
         >
           <PlusCircle className="w-4 h-4" />

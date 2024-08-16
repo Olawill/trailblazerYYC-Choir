@@ -57,6 +57,8 @@ export const NewMusicForm = () => {
   const [openPlaylist, setOpenPlaylist] = useState(false);
   const [openAuthor, setOpenAuthor] = useState(false);
 
+  const [formSubmitted, setFormSubmitted] = useState(false);
+
   const [listName, setListName] = useState<string[]>([]);
   const [authorNames, setAuthorNames] = useState<string[]>([]);
 
@@ -126,6 +128,7 @@ export const NewMusicForm = () => {
         if (data?.success) {
           form.reset();
           setSuccess(data?.success);
+          setFormSubmitted(true);
 
           queryClient.invalidateQueries({
             predicate: (query) =>
@@ -200,7 +203,7 @@ export const NewMusicForm = () => {
                 <FormItem>
                   <FormLabel>Lyrics</FormLabel>
                   <FormControl>
-                    <MusicContent />
+                    <MusicContent reload={formSubmitted} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -1,3 +1,4 @@
+import { FormErrorProp } from "@/lib/types";
 import { TriangleAlert } from "lucide-react";
 
 export const FormError = ({ message, forPage = false }: FormErrorProp) => {
@@ -6,10 +7,12 @@ export const FormError = ({ message, forPage = false }: FormErrorProp) => {
     <div
       className={`${
         forPage ? "bg-gray-300" : "bg-destructive/15"
-      } p-3 rounded-md flex items-center gap-x-2 text-sm text-destructive`}
+      } p-3 rounded-md flex items-center gap-x-2 text-sm text-destructive col-span-4`}
     >
-      <TriangleAlert className="h-4 w-4" />
-      <p>{message}</p>
+      <p className="flex items-center justify-center w-full">
+        <TriangleAlert className="h-4 w-4 mr-2" />
+        {message}
+      </p>
     </div>
   );
 };

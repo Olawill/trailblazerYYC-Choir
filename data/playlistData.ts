@@ -60,8 +60,8 @@ export const getAuthors = async () => {
 
 export const addAuthor = async (name: string) => {
   try {
-    if (!name) return null
-    
+    if (!name) return null;
+
     const existingAuthor = await prisma.author.findFirst({
       where: {
         name,
@@ -117,6 +117,83 @@ export const getCurrentList = async () => {
 
       return currentListDetails;
     }
+  } catch {
+    return null;
+  }
+};
+
+export const getAllPlaylistMusic = async () => {
+  try {
+    const currentList = await prisma.music.findMany({
+      select: {
+        id: true,
+        title: true,
+        videoId: true,
+        authors: {
+          select: {
+            name: true,
+          },
+        },
+        _count: {
+          select: {
+            contents: true,
+          },
+        },
+      },
+    });
+
+    const modifiedList = currentList.map((c) => {
+      return {
+        title: c.title,
+        id: c.id,
+        videoId: c.videoId,
+        count: c._count.contents,
+        artists: c.authors.map((a) => a.name).join(", "),
+      };
+    });
+
+    return modifiedList;
+  } catch {
+    return null;
+  }
+};
+
+export const getCurrentPlaylistMusic = async (id: string) => {
+  try {
+    const currentList = await prisma.music.findMany({
+      where: {
+        playlistIDs: {
+          has: id,
+        },
+      },
+      select: {
+        id: true,
+        title: true,
+        videoId: true,
+        authors: {
+          select: {
+            name: true,
+          },
+        },
+        _count: {
+          select: {
+            contents: true,
+          },
+        },
+      },
+    });
+
+    const modifiedList = currentList.map((c) => {
+      return {
+        title: c.title,
+        id: c.id,
+        videoId: c.videoId,
+        count: c._count.contents,
+        artists: c.authors.map((a) => a.name).join(", "),
+      };
+    });
+
+    return modifiedList;
   } catch {
     return null;
   }
