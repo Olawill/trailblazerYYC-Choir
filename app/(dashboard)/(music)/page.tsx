@@ -37,7 +37,7 @@ export default function Home() {
   const modlistenNow = listenNow?.map((l) => {
     return {
       id: l.id,
-      name: l.title,
+      name: l.title.split(" - ")[0],
       cover: `https://img.youtube.com/vi/${l.videoId}/0.jpg`,
       artist: l.authors.map((a) => a.name).join(", "),
     };

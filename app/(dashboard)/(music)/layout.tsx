@@ -13,7 +13,6 @@ export default async function MusicLayout({ children }: MusicLayoutProps) {
       <div className="w-full">
         <div className="grid grid-cols-1 lg:grid-cols-5">
           <MusicSidebar className="hidden lg:block col-span-1" />
-
           {children}
         </div>
       </div>

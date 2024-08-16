@@ -226,7 +226,7 @@ export const NewMusicForm = () => {
                           role="combobox"
                           disabled={isPending}
                           className={cn(
-                            "w-full justify-between",
+                            "w-full justify-between text-wrap",
                             !field.value && "text-muted-foreground"
                           )}
                         >
@@ -315,7 +315,7 @@ export const NewMusicForm = () => {
                           role="combobox"
                           disabled={isPending}
                           className={cn(
-                            "w-full justify-between",
+                            "w-full justify-between text-wrap",
                             !field.value && "text-muted-foreground"
                           )}
                         >

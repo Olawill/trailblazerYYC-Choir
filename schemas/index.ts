@@ -130,6 +130,13 @@ export const NewPlaylistSchema = z.object({
   canAddTo: z.enum(["yes", "no"]),
 });
 
+export const EditPlaylistSchema = z.object({
+  name: z.string().min(4, {
+    message: "Name must contain at least 4 character(s)",
+  }),
+  musicIds: z.array(z.string()),
+});
+
 export const PlaylistManagerSchema = z.object({
   name: z.string().min(4, {
     message: "Name must contain at least 4 character(s)",

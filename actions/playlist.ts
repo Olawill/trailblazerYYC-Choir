@@ -2,7 +2,12 @@
 
 import { currentUser } from "@/lib/auth";
 import { prisma } from "@/lib/client";
-import { NewMusicSchema, NewPlaylistSchema } from "@/schemas";
+import {
+  EditPlaylistSchema,
+  NewMusicSchema,
+  NewPlaylistSchema,
+  PlaylistManagerSchema,
+} from "@/schemas";
 import { z } from "zod";
 
 export const newPlaylist = async (
@@ -55,6 +60,84 @@ export const newPlaylist = async (
   }
 };
 
+export const editPlaylist = async (
+  values: z.infer<typeof EditPlaylistSchema>,
+  id: string
+) => {
+  const validatedFields = EditPlaylistSchema.safeParse(values);
+
+  if (!validatedFields.success) {
+    return { error: "Invalid data!" };
+  }
+
+  const { name, musicIds } = validatedFields.data;
+
+  const user = await currentUser();
+
+  if (!user) {
+    return { error: "You are not authorized to perform this action" };
+  }
+
+  const hasPermission = user.role !== "USER";
+
+  if (!hasPermission) {
+    return { error: "Unauthorized" };
+  }
+
+  const playlist = await prisma.playlist.findFirst({
+    where: {
+      id,
+    },
+  });
+
+  if (!playlist) {
+    return { error: "Playlist does not exist!!" };
+  }
+
+  try {
+    await prisma.playlist.update({
+      where: {
+        id,
+      },
+      data: {
+        name,
+        musicIDs: musicIds,
+      },
+    });
+
+    for (const id of musicIds) {
+      // Fetch the current music entry
+      const musicEntry = await prisma.music.findUnique({
+        where: { id },
+        select: { playlistIDs: true },
+      });
+
+      if (musicEntry) {
+        // Check if the playlist.id is already in the playlistIDs array
+        if (!musicEntry.playlistIDs.includes(playlist.id)) {
+          // Update the playlistIDs only if the playlist.id is not already included
+          await prisma.music.update({
+            where: {
+              id,
+            },
+            data: {
+              playlistIDs: {
+                push: playlist.id,
+              },
+            },
+          });
+        }
+      }
+    }
+
+    return { success: "Playlist updated!" };
+  } catch (err) {
+    // Handle errors appropriately
+    console.log("error", err);
+    return { error: "Something went wrong. Please try again!" };
+  }
+};
+
 export const newMusic = async (values: z.infer<typeof NewMusicSchema>) => {
   const validatedFields = NewMusicSchema.safeParse(values);
 
@@ -89,9 +172,31 @@ export const newMusic = async (values: z.infer<typeof NewMusicSchema>) => {
   try {
     const videoId = link?.split("?")[0].split("/").slice(-1)[0];
 
+    const existingTitle = await prisma.music.findFirst({
+      where: {
+        title,
+      },
+    });
+
+    let modifiedTitle: string = "";
+
+    if (existingTitle) {
+      const author = await prisma.author.findFirst({
+        where: {
+          id: authorIds[0],
+        },
+        select: {
+          name: true,
+        },
+      });
+      modifiedTitle = `${title} - ${author?.name}`;
+    } else {
+      modifiedTitle = title;
+    }
+
     const createdMusic = await prisma.music.create({
       data: {
-        title,
+        title: modifiedTitle,
         link,
         videoId: videoId,
         authorIDs: authorIds,
@@ -139,6 +244,53 @@ export const newMusic = async (values: z.infer<typeof NewMusicSchema>) => {
     }
 
     return { success: "Music created!" };
+  } catch (err) {
+    // Handle errors appropriately
+    console.log("error", err);
+    return { error: "Something went wrong. Please try again!" };
+  }
+};
+
+export const updatePlaylist = async (
+  values: z.infer<typeof PlaylistManagerSchema>,
+  id: string
+) => {
+  const validatedFields = PlaylistManagerSchema.safeParse(values);
+
+  if (!validatedFields.success) {
+    return { error: "Invalid data!" };
+  }
+
+  const { name, current } = validatedFields.data;
+
+  const user = await currentUser();
+
+  if (!user) {
+    return { error: "You are not authorized to perform this action" };
+  }
+
+  const hasPermission = user.role !== "USER";
+
+  if (!hasPermission) {
+    return { error: "Unauthorized" };
+  }
+
+  try {
+    const playlist = await prisma.playlist.update({
+      where: {
+        id,
+      },
+      data: {
+        name,
+        current: current === "yes",
+      },
+    });
+
+    if (!playlist) {
+      return { error: "Playlist does not exist!" };
+    }
+
+    return { success: "Playlist updated!" };
   } catch (err) {
     // Handle errors appropriately
     console.log("error", err);

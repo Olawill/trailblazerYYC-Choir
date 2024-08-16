@@ -5,6 +5,8 @@ export const allQuery = [
   "users",
   "playlists",
   "listen",
+  "allMusics",
+  "currentMusics",
 ];
 
 export const DUE = 10;

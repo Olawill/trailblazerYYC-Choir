@@ -1,6 +1,8 @@
 "use client";
 
+import { updatePlaylist } from "@/actions/playlist";
 import { RoleGate } from "@/components/auth/role-gate";
+import { EditPlaylistForm } from "@/components/music/edit-playlist-form";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,6 +12,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -28,6 +38,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
@@ -42,35 +53,31 @@ import {
   getAllPlaylistMusic,
   getCurrentPlaylistMusic,
 } from "@/data/playlistData";
-import { NewPlaylistSchema, PlaylistManagerSchema } from "@/schemas";
+import { PlaylistManagerSchema } from "@/schemas";
+import { allQuery } from "@/utils/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Playlist, UserRole } from "@prisma/client";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { FilePen, FilePenIcon, Trash, User } from "lucide-react";
+import { FilePen, Loader, Trash } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
-
-interface CurrentListMusicProp {
-  id: string;
-  title: string;
-  videoId: string | null;
-  _count: {
-    contents: number;
-  };
-}
 
 const ManageMusicPage = () => {
   const qc = useQueryClient();
+
+  const [isPending, startTransition] = useTransition();
+
+  const [error, setError] = useState<string | undefined>("");
+  const [success, setSuccess] = useState<string | undefined>("");
+
   const [list, setList] = useState("all");
   const [currentList, setCurrentList] = useState<Playlist | undefined>(
     undefined
   );
-
-  console.log(list);
-  console.log("@@CURRENT LIST", currentList);
 
   const { data: playlists, isLoading } = useQuery({
     queryKey: ["playlists"],
@@ -117,7 +124,36 @@ const ManageMusicPage = () => {
   }, [currentList, form]);
 
   const onSubmit = (values: z.infer<typeof PlaylistManagerSchema>) => {
-    console.log(values);
+    setError("");
+    setSuccess("");
+
+    startTransition(async () => {
+      const data = await updatePlaylist(values, currentList?.id as string);
+
+      try {
+        if (data?.error) {
+          setError(data?.error);
+          toast.error("Something went wrong. Please try again!");
+        }
+
+        if (data?.success) {
+          // form.reset();
+          setSuccess(data?.success);
+          toast.success("Playlist updated!");
+
+          qc.invalidateQueries({
+            predicate: (query) =>
+              allQuery.includes(query.queryKey[0] as string),
+          });
+        }
+
+        if (!data) {
+          window.location.reload();
+        }
+      } catch {
+        setError("Something went wrong!");
+      }
+    });
   };
 
   return (
@@ -188,12 +224,10 @@ const ManageMusicPage = () => {
                                   <FormLabel>Title</FormLabel>
                                   <FormControl>
                                     <Input
-                                      // disabled={isPending}
+                                      disabled={isPending}
                                       {...field}
                                       placeholder="Playlist Name"
                                       className="focus-visible:ring-px"
-                                      // defaultValue={field.name}
-                                      // value={currentList?.name}
                                       type="text"
                                     />
                                   </FormControl>
@@ -214,9 +248,8 @@ const ManageMusicPage = () => {
                                   <Select
                                     onValueChange={field.onChange}
                                     {...field}
-                                    // defaultValue={field.value}
                                     value={field.value}
-                                    // disabled={isPending}
+                                    disabled={isPending}
                                   >
                                     <FormControl>
                                       <SelectTrigger className="w-full bg-transparent focus:ring-px">
@@ -236,8 +269,12 @@ const ManageMusicPage = () => {
                         </div>
                       </CardContent>
                       <CardFooter className="justify-end">
-                        <Button type="submit" size="sm">
-                          Save Changes
+                        <Button type="submit" size="sm" className="w-32">
+                          {isPending ? (
+                            <Loader className="w-4 h-4 animate-spin" />
+                          ) : (
+                            "Save Changes"
+                          )}
                         </Button>
                       </CardFooter>
                     </Card>
@@ -307,7 +344,7 @@ const ManageMusicPage = () => {
                                         className="w-8 h-8 rounded-full"
                                       />
                                       <div className="font-medium">
-                                        {c.title}
+                                        {c.title.split(" - ")[0]}
                                       </div>
                                     </div>
                                   </div>
@@ -316,7 +353,7 @@ const ManageMusicPage = () => {
                                   {c.artists}
                                 </TableCell>
                                 <TableCell>{c.count}</TableCell>
-                                <TableCell className="text-right flex space-x-1">
+                                <TableCell className="text-right flex justify-end space-x-1">
                                   <Button
                                     size="icon"
                                     variant="ghost"
@@ -351,14 +388,14 @@ const ManageMusicPage = () => {
                                         className="w-8 h-8 rounded-full"
                                       />
                                       <div className="font-medium">
-                                        {c.title}
+                                        {c.title.split(" - ")[0]}
                                       </div>
                                     </div>
                                   </div>
                                 </TableCell>
                                 <TableCell>{c.artists}</TableCell>
                                 <TableCell>{c.count}</TableCell>
-                                <TableCell className="text-right flex space-x-1">
+                                <TableCell className="text-right flex justify-end space-x-1">
                                   <Button
                                     size="icon"
                                     variant="ghost"
@@ -387,9 +424,25 @@ const ManageMusicPage = () => {
                     )}
                   </ScrollArea>
                   {list !== "all" && (
-                    <div className="flex justify-center pt-4">
-                      <Button size="sm">Add Music</Button>
-                    </div>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <div className="flex justify-center pt-4">
+                          <Button size="sm">Add Music</Button>
+                        </div>
+                      </DialogTrigger>
+
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Add Music to Playlist</DialogTitle>
+                          <DialogDescription>
+                            Add music to playlist. Click save when you&apos;re
+                            done.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <Separator className="my-2" />
+                        <EditPlaylistForm list={currentList!} />
+                      </DialogContent>
+                    </Dialog>
                   )}
                 </CardContent>
                 {list !== "all" && (

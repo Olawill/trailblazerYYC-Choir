@@ -12,7 +12,7 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { NewPlaylistSchema } from "@/schemas";
+import { EditPlaylistSchema, NewPlaylistSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -42,7 +42,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { getAllMusic } from "@/data/playlistData";
-import { newPlaylist } from "@/actions/playlist";
+import { editPlaylist, newPlaylist } from "@/actions/playlist";
 import { allQuery } from "@/utils/constants";
 
 type MusicType = {
@@ -50,7 +50,17 @@ type MusicType = {
   title: string;
 };
 
-export const NewPlaylistForm = () => {
+type ListType = {
+  id: string;
+  name: string;
+  canAddTo: boolean;
+  current: boolean;
+  musicIDs: string[];
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export const EditPlaylistForm = ({ list }: { list: ListType }) => {
   const queryClient = useQueryClient();
 
   const [isPending, startTransition] = useTransition();
@@ -69,27 +79,32 @@ export const NewPlaylistForm = () => {
 
       if (musics) {
         setMusic(musics);
+
+        const modListName = musics?.filter((m) =>
+          list?.musicIDs.includes(m.id)
+        );
+
+        setListName(modListName?.map((m) => m.title) as string[]);
       }
     };
 
     getMusic();
   }, []);
 
-  const form = useForm<z.infer<typeof NewPlaylistSchema>>({
-    resolver: zodResolver(NewPlaylistSchema),
+  const form = useForm<z.infer<typeof EditPlaylistSchema>>({
+    resolver: zodResolver(EditPlaylistSchema),
     defaultValues: {
-      name: "",
-      musicIds: [],
-      canAddTo: "no",
+      name: list?.name,
+      musicIds: list?.musicIDs,
     },
   });
 
-  const onSubmit = (values: z.infer<typeof NewPlaylistSchema>) => {
+  const onSubmit = (values: z.infer<typeof EditPlaylistSchema>) => {
     setError("");
     setSuccess("");
 
     startTransition(async () => {
-      const data = await newPlaylist(values);
+      const data = await editPlaylist(values, list.id);
 
       try {
         if (data?.error) {
@@ -142,35 +157,6 @@ export const NewPlaylistForm = () => {
                   />
                 </FormControl>
 
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <div className="space-y-4">
-          <FormField
-            control={form.control}
-            name="canAddTo"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Generic Group</FormLabel>
-                <Select
-                  onValueChange={(value) => field.onChange(value)}
-                  defaultValue={field.value}
-                  value={field.value}
-                  disabled={isPending}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select whether the playlist is generic or not" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="yes">Yes</SelectItem>
-                    <SelectItem value="no">No</SelectItem>
-                  </SelectContent>
-                </Select>
                 <FormMessage />
               </FormItem>
             )}
@@ -270,7 +256,7 @@ export const NewPlaylistForm = () => {
           {isPending ? (
             <Loader2 className="animate-spin h-4 w-4" />
           ) : (
-            "Add New Playlist"
+            "Add New Music"
           )}
         </Button>
       </form>
