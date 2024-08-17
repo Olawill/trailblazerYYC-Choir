@@ -97,7 +97,7 @@ export const NewPlaylistForm = () => {
         }
 
         if (data?.success) {
-          // form.reset();
+          form.reset();
           setSuccess(data?.success);
 
           queryClient.invalidateQueries({
@@ -113,14 +113,6 @@ export const NewPlaylistForm = () => {
         setError("Something went wrong!");
       }
     });
-  };
-
-  const handleKeyPress = (
-    e:
-      | React.KeyboardEvent<HTMLInputElement>
-      | React.KeyboardEvent<HTMLTextAreaElement>
-  ) => {
-    if (e.key === "Enter") e.preventDefault();
   };
 
   return (

@@ -198,3 +198,53 @@ export const getCurrentPlaylistMusic = async (id: string) => {
     return null;
   }
 };
+
+export const deletePlaylist = async (id: string) => {
+  try {
+    const playlist = await prisma.playlist.findFirst({
+      where: {
+        id,
+      },
+    });
+
+    if (playlist && playlist?.musicIDs.length > 0) {
+      // Step 1: Fetch the current data
+      const musicRecords = await prisma.music.findMany({
+        where: {
+          id: {
+            in: playlist?.musicIDs,
+          },
+        },
+        select: {
+          id: true,
+          playlistIDs: true,
+        },
+      });
+
+      // Step 2: Modify the data in your application
+      const updatedMusicRecords = musicRecords.map((record) => {
+        return {
+          id: record.id,
+          playlistIDs: record.playlistIDs.filter((id) => id !== playlist.id),
+        };
+      });
+
+      // Step 3: Update the records
+      for (const record of updatedMusicRecords) {
+        await prisma.music.update({
+          where: { id: record.id },
+          data: { playlistIDs: record.playlistIDs },
+        });
+      }
+    }
+
+    const deletedPlaylist = await prisma.playlist.delete({
+      where: {
+        id,
+      },
+    });
+    return deletedPlaylist;
+  } catch {
+    return null;
+  }
+};

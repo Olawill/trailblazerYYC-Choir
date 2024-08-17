@@ -49,6 +49,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
+  deletePlaylist,
   getAllPlay,
   getAllPlaylistMusic,
   getCurrentPlaylistMusic,
@@ -60,7 +61,9 @@ import { Playlist, UserRole } from "@prisma/client";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { FilePen, Loader, Trash } from "lucide-react";
+import { revalidatePath } from "next/cache";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -68,6 +71,8 @@ import { z } from "zod";
 
 const ManageMusicPage = () => {
   const qc = useQueryClient();
+
+  const router = useRouter();
 
   const [isPending, startTransition] = useTransition();
 
@@ -156,6 +161,30 @@ const ManageMusicPage = () => {
     });
   };
 
+  const handleDelete = (id: string) => {
+    startTransition(async () => {
+      const data = await deletePlaylist(id);
+
+      try {
+        if (data) {
+          toast.success("Playlist deleted!");
+
+          qc.invalidateQueries({
+            predicate: (query) =>
+              allQuery.includes(query.queryKey[0] as string),
+          });
+
+          setList("all");
+
+          form.reset();
+        }
+      } catch (error) {
+        console.log(error);
+        toast.error("Something went wrong. Please try again!");
+      }
+    });
+  };
+
   return (
     <RoleGate allowedRole={[UserRole.ADMIN, UserRole.SUPERUSER]} onPage>
       <div className="col-span-3 lg:col-span-4 border rounded-md">
@@ -176,7 +205,7 @@ const ManageMusicPage = () => {
                   <Label htmlFor="playlist-select">Select Playlist</Label>
                   <Select
                     name="playlist-select"
-                    defaultValue="all"
+                    value={list}
                     onValueChange={setList}
                   >
                     <SelectTrigger className="w-full bg-transparent focus:ring-px">
@@ -248,7 +277,8 @@ const ManageMusicPage = () => {
                                   <Select
                                     onValueChange={field.onChange}
                                     {...field}
-                                    value={field.value}
+                                    // value={field.value}
+                                    value={currentList?.current ? "yes" : "no"}
                                     disabled={isPending}
                                   >
                                     <FormControl>
@@ -447,8 +477,17 @@ const ManageMusicPage = () => {
                 </CardContent>
                 {list !== "all" && (
                   <CardFooter className="justify-end">
-                    <Button size="sm" variant="outline">
-                      Delete Playlist
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => handleDelete(currentList?.id!)}
+                      className="w-32 hover:bg-destructive hover:border-none hover:text-white"
+                    >
+                      {isPending ? (
+                        <Loader className="w-4 h-4 animate-spin" />
+                      ) : (
+                        "Delete Playlist"
+                      )}
                     </Button>
                   </CardFooter>
                 )}
