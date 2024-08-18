@@ -61,9 +61,9 @@ import { Playlist, UserRole } from "@prisma/client";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { FilePen, Loader, Trash } from "lucide-react";
-import { revalidatePath } from "next/cache";
+
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+
 import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -72,12 +72,7 @@ import { z } from "zod";
 const ManageMusicPage = () => {
   const qc = useQueryClient();
 
-  const router = useRouter();
-
   const [isPending, startTransition] = useTransition();
-
-  const [error, setError] = useState<string | undefined>("");
-  const [success, setSuccess] = useState<string | undefined>("");
 
   const [list, setList] = useState("all");
   const [currentList, setCurrentList] = useState<Playlist | undefined>(
@@ -129,21 +124,15 @@ const ManageMusicPage = () => {
   }, [currentList, form]);
 
   const onSubmit = (values: z.infer<typeof PlaylistManagerSchema>) => {
-    setError("");
-    setSuccess("");
-
     startTransition(async () => {
       const data = await updatePlaylist(values, currentList?.id as string);
 
       try {
         if (data?.error) {
-          setError(data?.error);
           toast.error("Something went wrong. Please try again!");
         }
 
         if (data?.success) {
-          // form.reset();
-          setSuccess(data?.success);
           toast.success("Playlist updated!");
 
           qc.invalidateQueries({
@@ -156,7 +145,7 @@ const ManageMusicPage = () => {
           window.location.reload();
         }
       } catch {
-        setError("Something went wrong!");
+        toast.error("Something went wrong!");
       }
     });
   };

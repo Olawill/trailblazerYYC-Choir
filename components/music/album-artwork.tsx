@@ -46,7 +46,7 @@ export const AlbumArtWork = ({
   width,
   height,
   addToLibrary,
-  removeFromLibrary,
+  removeFromLibrary = false,
   addToPlaylist,
   createPlaylist,
   playlists,
@@ -118,7 +118,7 @@ export const AlbumArtWork = ({
             <ContextMenuSeparator />
             {role && <ContextMenuItem>Like</ContextMenuItem>}
             <ContextMenuItem>Share</ContextMenuItem>
-            {role && role !== "USER" && (
+            {role && (role !== "USER" || removeFromLibrary) && (
               <ContextMenuItem className="bg-destructive hover:bg-destructive">
                 Delete
               </ContextMenuItem>

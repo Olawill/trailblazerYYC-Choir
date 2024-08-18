@@ -7,6 +7,7 @@ export const allQuery = [
   "listen",
   "allMusics",
   "currentMusics",
+  "track",
 ];
 
 export const DUE = 10;

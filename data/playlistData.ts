@@ -122,6 +122,80 @@ export const getCurrentList = async () => {
   }
 };
 
+export const getAllMusicList = async () => {
+  try {
+    const currentListDetails = await prisma.music.findMany({
+      select: {
+        id: true,
+        title: true,
+        videoId: true,
+        authors: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+
+    return currentListDetails;
+  } catch {
+    return null;
+  }
+};
+
+export const getMusicListForSearchTerm = async (term: string) => {
+  try {
+    const searchTermListDetails = await prisma.music.findMany({
+      where: {
+        OR: [
+          {
+            title: {
+              contains: term,
+              mode: "insensitive",
+            },
+          },
+          {
+            authors: {
+              some: {
+                name: {
+                  contains: term,
+                  mode: "insensitive",
+                },
+              },
+            },
+          },
+          {
+            contents: {
+              some: {
+                content: {
+                  contains: term,
+                  mode: "insensitive",
+                },
+              },
+            },
+          },
+        ],
+      },
+      select: {
+        id: true,
+        title: true,
+        videoId: true,
+        authors: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+
+    return searchTermListDetails;
+  } catch {
+    return null;
+  }
+};
+
 export const getAllPlaylistMusic = async () => {
   try {
     const currentList = await prisma.music.findMany({

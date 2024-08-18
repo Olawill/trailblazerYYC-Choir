@@ -29,6 +29,8 @@ export default function Home() {
     queryFn: () => getAllPlay(),
   });
 
+  const listenNowPlaylist = playlists?.filter((playlist) => !playlist.current);
+
   const { data: listenNow, isLoading: listenLoading } = useQuery({
     queryKey: ["listen"],
     queryFn: () => getCurrentList(),
@@ -80,7 +82,7 @@ export default function Home() {
                       <AlbumArtWork
                         key={album.name}
                         album={album}
-                        playlists={playlists as Playlist[]}
+                        playlists={listenNowPlaylist as Playlist[]}
                         className="w-[250px]"
                         aspectRatio="portrait"
                         addToLibrary
@@ -123,6 +125,7 @@ export default function Home() {
                         album={album}
                         className="w-[250px]"
                         aspectRatio="portrait"
+                        removeFromLibrary
                         width={250}
                         height={330}
                       />
