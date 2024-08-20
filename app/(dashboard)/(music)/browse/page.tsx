@@ -58,7 +58,7 @@ const BrowsePage = ({
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>No Music Found</AlertTitle>
             <AlertDescription>
-              Looks like the playlist is on mute—no music found!
+              Looks like the playlist is on mute — no music found!
             </AlertDescription>
           </Alert>
         )}

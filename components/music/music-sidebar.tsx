@@ -69,48 +69,58 @@ export const MusicSidebar = ({ className }: SidebarProps) => {
             Discover
           </h2>
           <div className="space-y-1">
-            <Link
-              href="/"
-              className={cn(
-                buttonVariants({ variant: "ghost" }),
-                pathname === "/"
-                  ? "bg-muted hover:bg-muted"
-                  : "hover:bg-background",
-                "w-full justify-start"
-              )}
-            >
-              <CirclePlay className="mr-2 h-4 w-4" />
-              Listen Now
-            </Link>
+            {isLoading ? (
+              <>
+                <Skeleton className="w-full h-10 justify-start bg-gray-500" />
+                <Skeleton className="w-full h-10 justify-start bg-gray-500" />
+                <Skeleton className="w-full h-10 justify-start bg-gray-500" />
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/"
+                  className={cn(
+                    buttonVariants({ variant: "ghost" }),
+                    pathname === "/"
+                      ? "bg-muted hover:bg-muted"
+                      : "hover:bg-background",
+                    "w-full justify-start"
+                  )}
+                >
+                  <CirclePlay className="mr-2 h-4 w-4" />
+                  Listen Now
+                </Link>
 
-            <Link
-              href="/browse"
-              className={cn(
-                buttonVariants({ variant: "ghost" }),
-                pathname === "/browse"
-                  ? "bg-muted hover:bg-muted"
-                  : "hover:bg-background",
-                "w-full justify-start"
-              )}
-            >
-              <LayoutGrid className="mr-2 h-4 w-4" />
-              Browse
-            </Link>
+                <Link
+                  href="/browse"
+                  className={cn(
+                    buttonVariants({ variant: "ghost" }),
+                    pathname === "/browse"
+                      ? "bg-muted hover:bg-muted"
+                      : "hover:bg-background",
+                    "w-full justify-start"
+                  )}
+                >
+                  <LayoutGrid className="mr-2 h-4 w-4" />
+                  Browse
+                </Link>
 
-            {user && (
-              <Link
-                href="/favs"
-                className={cn(
-                  buttonVariants({ variant: "ghost" }),
-                  pathname === "/favs"
-                    ? "bg-muted hover:bg-muted"
-                    : "hover:bg-background",
-                  "w-full justify-start"
+                {user && (
+                  <Link
+                    href="/favs"
+                    className={cn(
+                      buttonVariants({ variant: "ghost" }),
+                      pathname === "/favs"
+                        ? "bg-muted hover:bg-muted"
+                        : "hover:bg-background",
+                      "w-full justify-start"
+                    )}
+                  >
+                    <FolderHeart className="mr-2 h-4 w-4" />
+                    Favorite
+                  </Link>
                 )}
-              >
-                <FolderHeart className="mr-2 h-4 w-4" />
-                Favorite
-              </Link>
+              </>
             )}
           </div>
         </div>
@@ -155,20 +165,27 @@ export const MusicSidebar = ({ className }: SidebarProps) => {
           </div>
           <ScrollArea className="h-[300px] px-1">
             <div className="space-y-1 p-2">
-              {user && user?.role !== "USER" && (
-                <Link
-                  href="/manage"
-                  className={cn(
-                    buttonVariants({ variant: "ghost" }),
-                    pathname === "/manage"
-                      ? "bg-muted hover:bg-muted"
-                      : "hover:bg-background",
-                    "w-full justify-start"
-                  )}
-                >
-                  <Settings className="mr-2 h-4 w-4" />
-                  Manage
-                </Link>
+              {isLoading ? (
+                <div className="p-2">
+                  <Skeleton className="w-full h-10 justify-start bg-gray-500" />
+                </div>
+              ) : (
+                user &&
+                user?.role !== "USER" && (
+                  <Link
+                    href="/manage"
+                    className={cn(
+                      buttonVariants({ variant: "ghost" }),
+                      pathname === "/manage"
+                        ? "bg-muted hover:bg-muted"
+                        : "hover:bg-background",
+                      "w-full justify-start"
+                    )}
+                  >
+                    <Settings className="mr-2 h-4 w-4" />
+                    Manage
+                  </Link>
+                )
               )}
 
               {isLoading && <MusicSidebar.Skeleton />}
