@@ -1,4 +1,11 @@
-import { FileMusic, HandCoins, UsersRound, Cog } from "lucide-react";
+import {
+  FileMusic,
+  HandCoins,
+  UsersRound,
+  Cog,
+  FolderHeart,
+  FolderSearch,
+} from "lucide-react";
 
 export const menus = [
   {
@@ -6,6 +13,18 @@ export const menus = [
     url: "/",
     allowedUsers: ["USER", "SUPERUSER", "ADMIN"],
     icon: FileMusic,
+  },
+  {
+    label: "Browse",
+    url: "/browse",
+    allowedUsers: ["USER", "SUPERUSER", "ADMIN"],
+    icon: FolderSearch,
+  },
+  {
+    label: "Favorites",
+    url: "/favs",
+    allowedUsers: ["USER", "SUPERUSER", "ADMIN"],
+    icon: FolderHeart,
   },
   {
     label: "Members",
