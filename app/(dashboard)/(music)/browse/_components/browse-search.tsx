@@ -31,7 +31,7 @@ export const BrowseSearch = () => {
         onChange={(e) => handleSearch(e.target.value)}
       />
 
-      <div className="relative h-10 w-8 border border-l-transparent text-white bg-slate-300 rounded-e-sm">
+      <div className="relative h-10 w-8 border border-l-transparent text-white bg-slate-300 rounded-e-md">
         <Search className="w-6 h-6 absolute inset-0 m-auto" />
       </div>
     </div>

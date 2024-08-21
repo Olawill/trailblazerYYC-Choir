@@ -60,7 +60,7 @@ export default function Home() {
                   href="/manage"
                   className={cn(
                     buttonVariants({ variant: "ghost" }),
-                    "lg:hidden p-0 bg-transparent hover:bg-muted justify-end"
+                    "lg:hidden p-0 bg-transparent hover:bg-transparent justify-end"
                   )}
                 >
                   <Settings className="mr-2 h-4 w-4" />

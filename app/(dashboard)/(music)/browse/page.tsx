@@ -45,8 +45,8 @@ const BrowsePage = ({
   return (
     <div className="col-span-3 lg:col-span-4 border rounded-md">
       <div className="h-full w-full px-4 py-6 lg:px-8 space-y-4">
-        <div className="flex flex-col md:flex-row gap-4 md:items-center justify-between">
-          <h1 className="text-3xl font-bold">Browse</h1>
+        <div className="flex flex-col md:flex-row gap-4 items-center justify-center md:justify-between">
+          <h1 className="text-xl md:text-3xl font-bold">Browse</h1>
 
           <BrowseSearch />
         </div>
@@ -63,7 +63,7 @@ const BrowsePage = ({
           </Alert>
         )}
 
-        <div className="grid md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-4">
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-4">
           <Suspense fallback={<BrowsePage.Skeleton />}>
             {tracks &&
               tracks.map((album) => (
@@ -71,7 +71,7 @@ const BrowsePage = ({
                   key={album.name}
                   album={album}
                   playlists={playlists as Playlist[]}
-                  className="w-[310px] md:w-[200px] "
+                  className="w-[310px] md:w-[200px]"
                   aspectRatio="portrait"
                   addToLibrary
                   addToPlaylist
@@ -88,7 +88,7 @@ const BrowsePage = ({
 
 BrowsePage.Skeleton = function AlbumSkeleton() {
   return (
-    <div className="grid md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-4">
+    <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-4">
       <div className="space-y-3 w-[310px] md:w-[200px]">
         <div className="overflow-hidden rounded-md">
           <Skeleton className="object-cover transition-all hover:scale-105 h-[330px] w-full bg-gray-500" />

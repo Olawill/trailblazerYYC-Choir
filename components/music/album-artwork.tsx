@@ -60,15 +60,24 @@ export const AlbumArtWork = ({
       <div className={cn("space-y-3 cursor-pointer", className)} {...props}>
         <ContextMenu>
           <ContextMenuTrigger>
-            <div className="overflow-hidden rounded-md">
+            <div
+              className={cn(
+                "relative overflow-hidden rounded-md",
+                `h-[${height}px] w-full sm:w-[220px] md:w-[${width}px]`
+              )}
+            >
               <Image
                 src={album.cover}
                 alt={album.name}
-                width={width}
-                height={height}
+                // width={width}
+                // height={height}
+                fill
+                sizes="100%"
                 className={cn(
                   "object-cover transition-all hover:scale-105",
-                  `h-[${height}px] w-[${width}px]`,
+                  // `h-[${height}px] w-full min-[640px]:w-[${
+                  //   width! - 100
+                  // }px] md:w-[${width}px]`,
                   aspectRatio === "portrait" ? "aspect-[3/4]" : "aspect-square"
                 )}
               />

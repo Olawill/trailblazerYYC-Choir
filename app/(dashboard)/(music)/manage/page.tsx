@@ -178,10 +178,12 @@ const ManageMusicPage = () => {
     <RoleGate allowedRole={[UserRole.ADMIN, UserRole.SUPERUSER]} onPage>
       <div className="col-span-3 lg:col-span-4 border rounded-md">
         <div className="h-full w-full px-4 py-6 lg:px-8 space-y-4">
-          <div className="grid gap-6 max-w-6xl mx-auto px-4 py-8">
-            <div className="grid gap-4">
+          <div className="grid grid-cols-1 gap-6 max-w-6xl mx-auto px-2 sm:px-4 py-8">
+            <div className="col-span-1 grid gap-4">
               <div className="flex items-center justify-between">
-                <h1 className="text-3xl font-bold">Playlist Management</h1>
+                <h1 className="text-2xl md:text-3xl font-bold">
+                  Playlist Management
+                </h1>
               </div>
               {isLoading && (
                 <div className="space-y-2">
@@ -190,7 +192,7 @@ const ManageMusicPage = () => {
                 </div>
               )}
               {playlists && (
-                <div className="grid gap-2">
+                <div className="w-full grid gap-2">
                   <Label htmlFor="playlist-select">Select Playlist</Label>
                   <Select
                     name="playlist-select"
@@ -200,7 +202,7 @@ const ManageMusicPage = () => {
                     <SelectTrigger className="w-full bg-transparent focus:ring-px">
                       <SelectValue placeholder="Select a playlist" />
                     </SelectTrigger>
-                    <SelectContent className="bg-background">
+                    <SelectContent className="bg-background w-full">
                       <SelectItem value="all">All</SelectItem>
                       {playlists &&
                         playlists.map(
@@ -220,7 +222,7 @@ const ManageMusicPage = () => {
               )}
             </div>
 
-            <div className="grid gap-6">
+            <div className="col-span-1 grid grid-cols-1 gap-6">
               {list !== "all" && (
                 <Form {...form}>
                   <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -310,10 +312,11 @@ const ManageMusicPage = () => {
                 </CardHeader>
                 <CardContent>
                   <ScrollArea className="h-[300px] px-1">
-                    {(!currentList && allMusic?.length) ||
-                    (currentList &&
-                      currentMusic &&
-                      currentMusic?.length > 0) ? (
+                    {isLoading ? (
+                      <div className="h-[300px] w-full flex items-center justify-center">
+                        <Loader className="animate-spin" />
+                      </div>
+                    ) : allLoading || currentLoading ? (
                       <Table>
                         <TableHeader>
                           <TableRow>
@@ -332,26 +335,50 @@ const ManageMusicPage = () => {
                           </TableRow>
                         </TableHeader>
                         <TableBody>
-                          {(allLoading || currentLoading) && (
-                            <TableRow>
-                              <TableCell>
-                                <ManageMusicPage.Skeleton />
-                              </TableCell>
-                              <TableCell>
-                                <ManageMusicPage.Skeleton />
-                              </TableCell>
-                              <TableCell>
-                                <ManageMusicPage.Skeleton />
-                              </TableCell>
-                              <TableCell>
-                                <ManageMusicPage.Skeleton />
-                              </TableCell>
-                            </TableRow>
-                          )}
-
+                          <TableRow>
+                            <TableCell>
+                              <ManageMusicPage.Skeleton />
+                            </TableCell>
+                            <TableCell>
+                              <ManageMusicPage.Skeleton />
+                            </TableCell>
+                            <TableCell>
+                              <ManageMusicPage.Skeleton />
+                            </TableCell>
+                            <TableCell>
+                              <ManageMusicPage.Skeleton />
+                            </TableCell>
+                          </TableRow>
+                        </TableBody>
+                      </Table>
+                    ) : (allMusic && allMusic?.length > 0) ||
+                      (currentList &&
+                        currentMusic &&
+                        currentMusic?.length > 0) ? (
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead className="text-gray-300">
+                              Title
+                            </TableHead>
+                            <TableHead className="text-gray-300">
+                              Artist
+                            </TableHead>
+                            <TableHead className="text-gray-300">
+                              Content
+                            </TableHead>
+                            <TableHead className="text-right text-gray-300">
+                              Actions
+                            </TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
                           {currentList &&
                             currentMusic?.map((c) => (
-                              <TableRow key={c.id}>
+                              <TableRow
+                                key={c.id}
+                                className="max-[639px]:text-[12px]"
+                              >
                                 <TableCell>
                                   <div className="grid gap-1">
                                     <div className="flex items-center gap-2">
@@ -362,7 +389,7 @@ const ManageMusicPage = () => {
                                         height={32}
                                         className="w-8 h-8 rounded-full"
                                       />
-                                      <div className="font-medium">
+                                      <div className="font-medium tracking-tight">
                                         {c.title.split(" - ")[0]}
                                       </div>
                                     </div>
@@ -395,7 +422,10 @@ const ManageMusicPage = () => {
 
                           {!currentList &&
                             allMusic?.map((c) => (
-                              <TableRow key={c.id}>
+                              <TableRow
+                                key={c.id}
+                                className="max-[639px]:text-[12px]"
+                              >
                                 <TableCell>
                                   <div className="grid gap-1">
                                     <div className="flex items-center gap-2">
@@ -406,7 +436,7 @@ const ManageMusicPage = () => {
                                         height={32}
                                         className="w-8 h-8 rounded-full"
                                       />
-                                      <div className="font-medium">
+                                      <div className="font-medium tracking-tight">
                                         {c.title.split(" - ")[0]}
                                       </div>
                                     </div>
