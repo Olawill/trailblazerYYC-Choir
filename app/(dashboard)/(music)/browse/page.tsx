@@ -80,6 +80,7 @@ const BrowsePage = ({
                   aspectRatio="portrait"
                   addToLibrary
                   addToPlaylist
+                  removeFromLibrary={user?.role !== "USER"}
                   width={250}
                   height={330}
                 />

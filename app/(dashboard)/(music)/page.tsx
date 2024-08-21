@@ -129,6 +129,7 @@ export default function Home() {
                         className="w-[250px]"
                         aspectRatio="portrait"
                         removeFromLibrary
+                        fromLibrary
                         width={250}
                         height={330}
                       />

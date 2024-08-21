@@ -82,7 +82,6 @@ const FavsPage = ({
                   className="w-[310px] md:w-[200px]"
                   aspectRatio="portrait"
                   addToLibrary
-                  addToPlaylist
                   width={250}
                   height={330}
                 />

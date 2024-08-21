@@ -23,10 +23,13 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
-import { useCurrentRole } from "@/hooks/use-current-role";
 import { NewPlaylistForm } from "./new-playlist-form";
 
 import { Playlist } from "@prisma/client";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useCurrentUser } from "@/hooks/use-current-user";
+import { changeMusicStatus } from "@/actions/music-update";
+import { allQuery } from "@/utils/constants";
 
 interface AlbumArtworkProps extends React.HTMLAttributes<HTMLDivElement> {
   album: Album;
@@ -34,6 +37,7 @@ interface AlbumArtworkProps extends React.HTMLAttributes<HTMLDivElement> {
   width?: number;
   height?: number;
   addToLibrary?: boolean;
+  fromLibrary?: boolean;
   removeFromLibrary?: boolean;
   addToPlaylist?: boolean;
   createPlaylist?: boolean;
@@ -47,13 +51,45 @@ export const AlbumArtWork = ({
   height,
   addToLibrary,
   removeFromLibrary = false,
+  fromLibrary = false,
   addToPlaylist,
   createPlaylist,
   playlists,
   className,
   ...props
 }: AlbumArtworkProps) => {
-  const role = useCurrentRole();
+  const user = useCurrentUser();
+
+  const queryClient = useQueryClient();
+
+  // CHANGE MUSIC FAVORITE STATUS
+  const { data, mutateAsync: changeRole } = useMutation({
+    mutationFn: (params: { id: string; musicId: string }) =>
+      changeMusicStatus(params.id, params.musicId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        predicate: (query) => allQuery.includes(query.queryKey[0] as string),
+      });
+    },
+  });
+
+  // DELETE MUSIC LOGIC
+  // const { mutateAsync: DeleteUser } = useMutation({
+  //   mutationFn: (params: { id: string }) => deleteUser(params.id),
+  //   onSuccess: () => {
+  //     queryClient.invalidateQueries({
+  //       predicate: (query) => allQuery.includes(query.queryKey[0] as string),
+  //     });
+  //   },
+  // });
+
+  const handleClick = async (id: string, musicId: string) => {
+    await changeRole({ id, musicId });
+  };
+
+  // const handleDelete = async (id: string) => {
+  //   await DeleteUser({ id });
+  // };
 
   return (
     <Dialog>
@@ -84,7 +120,7 @@ export const AlbumArtWork = ({
             </div>
           </ContextMenuTrigger>
           <ContextMenuContent className="w-40">
-            {addToLibrary && role && (
+            {addToLibrary && user && (
               <ContextMenuItem>Add to Library</ContextMenuItem>
             )}
             {/* {removeFromLibrary && (
@@ -92,12 +128,12 @@ export const AlbumArtWork = ({
             )} */}
 
             <ContextMenuSub>
-              {addToPlaylist && role && role !== "USER" && (
+              {addToPlaylist && user && user.role !== "USER" && (
                 <ContextMenuSubTrigger>Add to Playlist</ContextMenuSubTrigger>
               )}
 
               <ContextMenuSubContent className="w-48">
-                {role !== "USER" && (
+                {user && user.role !== "USER" && (
                   <DialogTrigger asChild>
                     <ContextMenuItem>
                       <PlusCircle className="mr-2 h-4 w-4" />
@@ -121,21 +157,30 @@ export const AlbumArtWork = ({
             </ContextMenuSub>
             {!addToLibrary ||
               !addToPlaylist ||
-              !role ||
-              (role !== "USER" && <ContextMenuSeparator />)}
+              !user ||
+              (user.role !== "USER" && <ContextMenuSeparator />)}
             <ContextMenuItem>Play Next</ContextMenuItem>
             <ContextMenuItem>Play Later</ContextMenuItem>
             <ContextMenuSeparator />
-            {role && (
+            {user && user.role && (
               <ContextMenuItem
-                onClick={() => console.log(album.artist, album.isLiked)}
+                onClick={() =>
+                  handleClick(user.id as string, album.id as string)
+                }
               >
-                Like
+                {album.isLiked ? "Undo Like" : "Like"}
               </ContextMenuItem>
             )}
             <ContextMenuItem>Share</ContextMenuItem>
-            {role && (role !== "USER" || removeFromLibrary) && (
-              <ContextMenuItem className="bg-destructive hover:bg-destructive">
+            {user && removeFromLibrary && (
+              <ContextMenuItem
+                className="bg-destructive hover:bg-destructive"
+                onClick={() =>
+                  fromLibrary
+                    ? console.log("from library")
+                    : console.log("from database")
+                }
+              >
                 Delete
               </ContextMenuItem>
             )}
