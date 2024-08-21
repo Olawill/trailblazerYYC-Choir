@@ -109,7 +109,8 @@ export const AlbumArtWork = ({
                 {playlists &&
                   playlists.map(
                     (playlist) =>
-                      !playlist.canAddTo && (
+                      !playlist.canAddTo &&
+                      !album.playlistIDs?.includes(playlist.id) && (
                         <ContextMenuItem key={playlist.name}>
                           <ListMusic className="mr-2 h-4 w-4" />
                           {playlist.name}
@@ -125,7 +126,13 @@ export const AlbumArtWork = ({
             <ContextMenuItem>Play Next</ContextMenuItem>
             <ContextMenuItem>Play Later</ContextMenuItem>
             <ContextMenuSeparator />
-            {role && <ContextMenuItem>Like</ContextMenuItem>}
+            {role && (
+              <ContextMenuItem
+                onClick={() => console.log(album.artist, album.isLiked)}
+              >
+                Like
+              </ContextMenuItem>
+            )}
             <ContextMenuItem>Share</ContextMenuItem>
             {role && (role !== "USER" || removeFromLibrary) && (
               <ContextMenuItem className="bg-destructive hover:bg-destructive">

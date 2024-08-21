@@ -42,6 +42,8 @@ export default function Home() {
       name: l.title.split(" - ")[0],
       cover: `https://img.youtube.com/vi/${l.videoId}/0.jpg`,
       artist: l.authors.map((a) => a.name).join(", "),
+      isLiked: user ? l.favorite.includes(user?.id as string) : false,
+      playlistIDs: l.playlistIDs,
     };
   });
 
@@ -64,6 +66,7 @@ export default function Home() {
                   )}
                 >
                   <Settings className="mr-2 h-4 w-4" />
+                  <span className="sr-only">Manage</span>
                 </Link>
               )}
             </div>

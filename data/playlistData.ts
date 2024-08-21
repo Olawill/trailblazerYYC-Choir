@@ -112,6 +112,8 @@ export const getCurrentList = async () => {
               name: true,
             },
           },
+          playlistIDs: true,
+          favorite: true,
         },
       });
 
@@ -135,6 +137,8 @@ export const getAllMusicList = async () => {
             name: true,
           },
         },
+        playlistIDs: true,
+        favorite: true,
       },
     });
 
@@ -187,6 +191,8 @@ export const getMusicListForSearchTerm = async (term: string) => {
             name: true,
           },
         },
+        playlistIDs: true,
+        favorite: true,
       },
     });
 
@@ -318,6 +324,119 @@ export const deletePlaylist = async (id: string) => {
       },
     });
     return deletedPlaylist;
+  } catch {
+    return null;
+  }
+};
+
+export const getFavPlaylistMusic = async (id: string) => {
+  try {
+    const favList = await prisma.music.findMany({
+      where: {
+        favorite: {
+          has: id,
+        },
+      },
+      select: {
+        id: true,
+        title: true,
+        videoId: true,
+        authors: {
+          select: {
+            name: true,
+          },
+        },
+        playlistIDs: true,
+        favorite: true,
+      },
+    });
+
+    const modifiedList = favList.map((c) => {
+      return {
+        title: c.title,
+        id: c.id,
+        videoId: c.videoId,
+        artists: c.authors.map((a) => a.name).join(", "),
+        playlistIDs: c.playlistIDs,
+        favorite: c.favorite,
+      };
+    });
+
+    return modifiedList;
+  } catch {
+    return null;
+  }
+};
+
+export const getFavListForSearchTerm = async (term: string, id: string) => {
+  try {
+    const searchTermListDetails = await prisma.music.findMany({
+      where: {
+        AND: [
+          {
+            OR: [
+              {
+                title: {
+                  contains: term,
+                  mode: "insensitive",
+                },
+              },
+              {
+                authors: {
+                  some: {
+                    name: {
+                      contains: term,
+                      mode: "insensitive",
+                    },
+                  },
+                },
+              },
+              {
+                contents: {
+                  some: {
+                    content: {
+                      contains: term,
+                      mode: "insensitive",
+                    },
+                  },
+                },
+              },
+            ],
+          },
+          {
+            favorite: {
+              has: id,
+            },
+          },
+        ],
+      },
+      select: {
+        id: true,
+        title: true,
+        videoId: true,
+        authors: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        playlistIDs: true,
+        favorite: true,
+      },
+    });
+
+    const modifiedList = searchTermListDetails.map((c) => {
+      return {
+        title: c.title,
+        id: c.id,
+        videoId: c.videoId,
+        artists: c.authors.map((a) => a.name).join(", "),
+        playlistIDs: c.playlistIDs,
+        favorite: c.favorite,
+      };
+    });
+
+    return modifiedList;
   } catch {
     return null;
   }

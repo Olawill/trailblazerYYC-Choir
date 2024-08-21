@@ -1,6 +1,6 @@
 "use client";
 
-import { MemberSchema, UserSchema } from "@/schemas";
+import { UserSchema } from "@/schemas";
 import { Row } from "@tanstack/react-table";
 import {
   DropdownMenu,
@@ -16,15 +16,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Roles, statuses } from "@/data/members/data";
+import { Roles } from "@/data/members/data";
 import { MoreHorizontal } from "lucide-react";
 import { useState } from "react";
-import {
-  changeMemberStatus,
-  changeUserRole,
-  deleteMember,
-  deleteUser,
-} from "@/actions/memberUpdate";
+import { changeUserRole, deleteUser } from "@/actions/memberUpdate";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   AlertDialog,
@@ -38,17 +33,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Separator } from "@/components/ui/separator";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import NewMemberForm from "@/components/members/new-member/new-member-form";
 import { allQuery } from "@/utils/constants";
-import { UserRole } from "@prisma/client";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;

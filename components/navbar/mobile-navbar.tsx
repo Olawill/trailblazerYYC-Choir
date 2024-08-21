@@ -64,7 +64,10 @@ const MobileNavbar = () => {
               <Menu className="w-6 h-6" />
             </Button>
           </SheetTrigger>
-          <SheetContent className="w-full bg-blue-200">
+          <SheetContent
+            className="w-full bg-blue-200"
+            aria-describedby="mobile-nav-bar"
+          >
             <SheetHeader>
               <SheetTitle>
                 <h1

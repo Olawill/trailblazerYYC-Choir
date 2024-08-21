@@ -13,6 +13,7 @@ import { Suspense } from "react";
 import { BrowseSearch } from "./_components/browse-search";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useCurrentUser } from "@/hooks/use-current-user";
 
 const BrowsePage = ({
   searchParams,
@@ -22,6 +23,8 @@ const BrowsePage = ({
   };
 }) => {
   const searchQuery = searchParams?.query;
+
+  const user = useCurrentUser();
 
   const { data: playlists, isLoading: allLoading } = useQuery({
     queryKey: ["playlists"],
@@ -40,6 +43,8 @@ const BrowsePage = ({
       name: l.title.split(" - ")[0],
       cover: `https://img.youtube.com/vi/${l.videoId}/0.jpg`,
       artist: l.authors.map((a) => a.name).join(", "),
+      isLiked: user ? l.favorite.includes(user?.id as string) : false,
+      playlistIDs: l.playlistIDs,
     };
   });
   return (
@@ -48,7 +53,7 @@ const BrowsePage = ({
         <div className="flex flex-col md:flex-row gap-4 items-center justify-center md:justify-between">
           <h1 className="text-xl md:text-3xl font-bold">Browse</h1>
 
-          <BrowseSearch />
+          <BrowseSearch placeholder="music list" />
         </div>
 
         {/* <div className="flex space-x-4 pb-4"> */}
@@ -58,7 +63,7 @@ const BrowsePage = ({
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>No Music Found</AlertTitle>
             <AlertDescription>
-              Looks like the playlist is on mute — no music found!
+              🎵Looks like the playlist is on mute — no music found!🎵
             </AlertDescription>
           </Alert>
         )}

@@ -3,6 +3,8 @@ export interface Album {
   name: string;
   artist: string;
   cover: string;
+  playlistIDs?: string[];
+  isLiked?: boolean;
 }
 
 export const listenNowAlbums: Album[] = [

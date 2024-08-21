@@ -8,6 +8,7 @@ export const allQuery = [
   "allMusics",
   "currentMusics",
   "track",
+  "favTrack",
 ];
 
 export const DUE = 10;

@@ -5,7 +5,11 @@ import { Search } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
 
-export const BrowseSearch = () => {
+interface BrowseSearchProps {
+  placeholder: string;
+}
+
+export const BrowseSearch: React.FC<BrowseSearchProps> = ({ placeholder }) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
@@ -26,7 +30,7 @@ export const BrowseSearch = () => {
     <div className="flex items-center">
       <Input
         className="w-[250px] md:w-[300px] bg-transparent rounded-r-none focus-visible:ring-px placeholder:text-gray-300"
-        placeholder="Filter music list..."
+        placeholder={`Filter ${placeholder}...`}
         defaultValue={searchParams.get("query"?.toString()) || ""}
         onChange={(e) => handleSearch(e.target.value)}
       />
