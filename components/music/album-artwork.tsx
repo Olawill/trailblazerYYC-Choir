@@ -28,7 +28,12 @@ import { NewPlaylistForm } from "./new-playlist-form";
 import { Playlist } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { addMusicToLibrary, changeMusicStatus } from "@/actions/music-update";
+import {
+  addMusicToLibrary,
+  changeMusicStatus,
+  deleteMusic,
+  deleteMusicFromLibrary,
+} from "@/actions/music-update";
 import { allQuery } from "@/utils/constants";
 import { toast } from "sonner";
 
@@ -94,14 +99,23 @@ export const AlbumArtWork = ({
   });
 
   // DELETE MUSIC LOGIC
-  // const { mutateAsync: DeleteUser } = useMutation({
-  //   mutationFn: (params: { id: string }) => deleteUser(params.id),
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries({
-  //       predicate: (query) => allQuery.includes(query.queryKey[0] as string),
-  //     });
-  //   },
-  // });
+  const { mutateAsync: DeleteMusic } = useMutation({
+    mutationFn: (params: { id: string }) =>
+      fromLibrary ? deleteMusicFromLibrary(params.id) : deleteMusic(params.id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        predicate: (query) => allQuery.includes(query.queryKey[0] as string),
+      });
+      toast.success(
+        fromLibrary
+          ? "Library updated successfully!"
+          : "Music deleted successfully!"
+      );
+    },
+    onError: () => {
+      toast.error("Something went wrong. Please try again!");
+    },
+  });
 
   const handleClick = async (id: string, musicId: string) => {
     await changeStatus({ id, musicId });
@@ -111,9 +125,9 @@ export const AlbumArtWork = ({
     await changeLibraryStatus({ id, musicId });
   };
 
-  // const handleDelete = async (id: string) => {
-  //   await DeleteUser({ id });
-  // };
+  const handleDelete = async (id: string) => {
+    await DeleteMusic({ id });
+  };
 
   return (
     <Dialog>
@@ -209,11 +223,7 @@ export const AlbumArtWork = ({
             {user && removeFromLibrary && (
               <ContextMenuItem
                 className="bg-destructive hover:bg-destructive"
-                onClick={() =>
-                  fromLibrary
-                    ? console.log("from library")
-                    : console.log("from database")
-                }
+                onClick={() => handleDelete(album.id as string)}
               >
                 Delete
               </ContextMenuItem>
