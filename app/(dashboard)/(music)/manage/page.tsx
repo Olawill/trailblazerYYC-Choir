@@ -359,7 +359,7 @@ const ManageMusicPage = () => {
                           </TableRow>
                         </TableBody>
                       </Table>
-                    ) : (allMusic && allMusic?.length > 0) ||
+                    ) : (!currentList && allMusic && allMusic?.length > 0) ||
                       (currentList &&
                         currentMusic &&
                         currentMusic?.length > 0) ? (
@@ -429,8 +429,9 @@ const ManageMusicPage = () => {
                         </TableBody>
                       </Table>
                     ) : (
-                      <div className="text-gray-300 text-lg italic text-center w-full pt-2">
-                        No music added to this playlist
+                      <div className="text-gray-300 text-lg italic text-center w-full p-2 border rounded-md">
+                        🎵This playlist is on a sound diet — no tracks to speak
+                        of yet!🎵
                       </div>
                     )}
                     <ScrollBar orientation="horizontal" />

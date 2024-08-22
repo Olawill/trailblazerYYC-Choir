@@ -113,7 +113,7 @@ export default function Home() {
                         height={330}
                       />
                     ))}
-                  {!modlistenNow && (
+                  {(!modlistenNow || modlistenNow.length === 0) && (
                     <div className="w-full italic text-center text-base text-gray-300 border rounded-md p-2">
                       🎵 The &apos;Listen Now&apos; playlist is a bit too quiet
                       — looks like it&apos;s taking a nap! 🎵
@@ -156,7 +156,7 @@ export default function Home() {
                           height={330}
                         />
                       ))}
-                    {libTracks?.length === 0 && (
+                    {(!libTracks || libTracks?.length === 0) && (
                       <div className="w-full italic text-center text-base text-gray-300 border rounded-md p-2">
                         🎵 The &apos;Made for You&apos; playlist must be on a
                         break — it&apos;s still finding its groove! 🎵
