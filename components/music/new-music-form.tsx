@@ -77,6 +77,8 @@ export const NewMusicForm = () => {
     if (author) {
       setAuthors((prev) => [...prev, { id: author.id, name: author.name }]);
       setInputValue("");
+
+      return author;
     }
   };
 
@@ -335,10 +337,15 @@ export const NewMusicForm = () => {
                           onChangeCapture={(e) =>
                             setInputValue(e.currentTarget.value)
                           }
-                          onKeyDown={(e) => {
+                          onKeyDown={async (e) => {
                             if (e.key === "Enter") {
                               e.preventDefault();
-                              addValue(inputValue);
+                              const aut = await addValue(inputValue);
+                              field.onChange([...field.value, aut?.id]);
+                              setAuthorNames((prev) => [
+                                ...prev,
+                                aut?.name as string,
+                              ]);
                             }
                           }}
                         />
