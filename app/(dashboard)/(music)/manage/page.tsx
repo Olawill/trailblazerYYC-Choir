@@ -75,6 +75,7 @@ const ManageMusicPage = () => {
   const [isPending, startTransition] = useTransition();
 
   const [list, setList] = useState("all");
+  const [current, setCurrent] = useState<"yes" | "no">("no");
   const [currentList, setCurrentList] = useState<Playlist | undefined>(
     undefined
   );
@@ -116,12 +117,21 @@ const ManageMusicPage = () => {
 
   useEffect(() => {
     if (currentList) {
+      // Ensure values are valid and non-empty
+      const newCurrentValue = currentList.current ? "yes" : "no";
+
+      setCurrent(newCurrentValue);
+
       form.reset({
         name: currentList.name,
-        current: currentList.current ? "yes" : "no",
+        current: newCurrentValue,
       });
     }
   }, [currentList, form]);
+
+  useEffect(() => {
+    form.setValue("current", current);
+  }, [current]);
 
   const onSubmit = (values: z.infer<typeof PlaylistManagerSchema>) => {
     startTransition(async () => {
@@ -267,11 +277,7 @@ const ManageMusicPage = () => {
                                   <FormLabel>Current List?</FormLabel>
                                   <Select
                                     onValueChange={field.onChange}
-                                    {...field}
-                                    // value={field.value}
-                                    defaultValue={
-                                      currentList?.current ? "yes" : "no"
-                                    }
+                                    value={field.value}
                                     disabled={isPending}
                                   >
                                     <FormControl>
