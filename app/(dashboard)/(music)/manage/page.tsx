@@ -30,7 +30,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import {
   Select,
   SelectContent,
@@ -312,8 +312,8 @@ const ManageMusicPage = () => {
                     Manage the tracks in your playlist
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <ScrollArea className="h-[300px] px-1">
+                <CardContent className="m-auto">
+                  <ScrollArea className="h-[300px]">
                     {isLoading ? (
                       <div className="h-[300px] w-full flex items-center justify-center">
                         <Loader className="animate-spin" />
@@ -375,97 +375,51 @@ const ManageMusicPage = () => {
                           </TableRow>
                         </TableHeader>
                         <TableBody>
-                          {currentList &&
-                            currentMusic?.map((c) => (
-                              <TableRow
-                                key={c.id}
-                                className="max-[639px]:text-[12px]"
-                              >
-                                <TableCell>
-                                  <div className="grid gap-1">
-                                    <div className="flex items-center gap-2">
-                                      <Image
-                                        src={`https://img.youtube.com/vi/${c.videoId}/0.jpg`}
-                                        alt="music-image"
-                                        width={32}
-                                        height={32}
-                                        className="w-8 h-8 rounded-full"
-                                      />
-                                      <div className="font-medium tracking-tight">
-                                        {c.title.split(" - ")[0]}
-                                      </div>
+                          {(currentList ? currentMusic : allMusic)?.map((c) => (
+                            <TableRow
+                              key={c.id}
+                              className="max-[639px]:text-[12px]"
+                            >
+                              <TableCell>
+                                <div className="grid gap-1">
+                                  <div className="flex items-center gap-2">
+                                    <Image
+                                      src={`https://img.youtube.com/vi/${c.videoId}/0.jpg`}
+                                      alt="music-image"
+                                      width={32}
+                                      height={32}
+                                      className="w-8 h-8 rounded-full"
+                                    />
+                                    <div className="font-medium tracking-tight">
+                                      {c.title.split(" - ")[0]}
                                     </div>
                                   </div>
-                                </TableCell>
-                                <TableCell className="ellipsis">
-                                  {c.artists}
-                                </TableCell>
-                                <TableCell>{c.count}</TableCell>
-                                <TableCell className="text-right flex justify-end space-x-1">
-                                  <Button
-                                    size="icon"
-                                    variant="ghost"
-                                    className="hover:bg-emerald-400 hover:text-white"
-                                  >
-                                    <FilePen className="w-5 h-5" />
-                                    <span className="sr-only">Edit</span>
-                                  </Button>
-                                  <Button
-                                    size="icon"
-                                    variant="destructive"
-                                    className="hover:bg-rose-700"
-                                  >
-                                    <Trash className="w-5 h-5" />
-                                    <span className="sr-only">Delete</span>
-                                  </Button>
-                                </TableCell>
-                              </TableRow>
-                            ))}
-
-                          {!currentList &&
-                            allMusic?.map((c) => (
-                              <TableRow
-                                key={c.id}
-                                className="max-[639px]:text-[12px]"
-                              >
-                                <TableCell>
-                                  <div className="grid gap-1">
-                                    <div className="flex items-center gap-2">
-                                      <Image
-                                        src={`https://img.youtube.com/vi/${c.videoId}/0.jpg`}
-                                        alt="music-image"
-                                        width={32}
-                                        height={32}
-                                        className="w-8 h-8 rounded-full"
-                                      />
-                                      <div className="font-medium tracking-tight">
-                                        {c.title.split(" - ")[0]}
-                                      </div>
-                                    </div>
-                                  </div>
-                                </TableCell>
-                                <TableCell>{c.artists}</TableCell>
-                                <TableCell>{c.count}</TableCell>
-                                <TableCell className="text-right flex justify-end space-x-1">
-                                  <Button
-                                    size="icon"
-                                    variant="ghost"
-                                    className="hover:bg-emerald-400 hover:text-white"
-                                  >
-                                    <FilePen className="w-5 h-5" />
-                                    <span className="sr-only">Edit</span>
-                                  </Button>
-                                  <Button
-                                    size="icon"
-                                    variant="destructive"
-                                    className="hover:bg-rose-700"
-                                  >
-                                    <Trash className="w-5 h-5" />
-                                    <span className="sr-only">Delete</span>
-                                  </Button>
-                                </TableCell>
-                              </TableRow>
-                            ))}
+                                </div>
+                              </TableCell>
+                              <TableCell className="truncate">
+                                {c.artists}
+                              </TableCell>
+                              <TableCell>{c.count}</TableCell>
+                              <TableCell className="flex justify-end my-auto space-x-1">
+                                <Button
+                                  size="icon"
+                                  variant="ghost"
+                                  className="hover:bg-emerald-400 hover:text-white"
+                                >
+                                  <FilePen className="w-5 h-5" />
+                                  <span className="sr-only">Edit</span>
+                                </Button>
+                                <Button
+                                  size="icon"
+                                  variant="destructive"
+                                  className="hover:bg-rose-700"
+                                >
+                                  <Trash className="w-5 h-5" />
+                                  <span className="sr-only">Delete</span>
+                                </Button>
+                              </TableCell>
+                            </TableRow>
+                          ))}
                         </TableBody>
                       </Table>
                     ) : (
@@ -473,6 +427,7 @@ const ManageMusicPage = () => {
                         No music added to this playlist
                       </div>
                     )}
+                    <ScrollBar orientation="horizontal" />
                   </ScrollArea>
                   {list !== "all" && (
                     <Dialog>
