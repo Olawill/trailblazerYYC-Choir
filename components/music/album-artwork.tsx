@@ -28,8 +28,9 @@ import { NewPlaylistForm } from "./new-playlist-form";
 import { Playlist } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { changeMusicStatus } from "@/actions/music-update";
+import { addMusicToLibrary, changeMusicStatus } from "@/actions/music-update";
 import { allQuery } from "@/utils/constants";
+import { toast } from "sonner";
 
 interface AlbumArtworkProps extends React.HTMLAttributes<HTMLDivElement> {
   album: Album;
@@ -63,13 +64,32 @@ export const AlbumArtWork = ({
   const queryClient = useQueryClient();
 
   // CHANGE MUSIC FAVORITE STATUS
-  const { data, mutateAsync: changeRole } = useMutation({
+  const { data, mutateAsync: changeStatus } = useMutation({
     mutationFn: (params: { id: string; musicId: string }) =>
       changeMusicStatus(params.id, params.musicId),
     onSuccess: () => {
       queryClient.invalidateQueries({
         predicate: (query) => allQuery.includes(query.queryKey[0] as string),
       });
+      toast.success("Music status updated successfully!");
+    },
+    onError: () => {
+      toast.error("Something went wrong. Please try again!");
+    },
+  });
+
+  // CHANGE MUSIC FAVORITE STATUS
+  const { data: libData, mutateAsync: changeLibraryStatus } = useMutation({
+    mutationFn: (params: { id: string; musicId: string }) =>
+      addMusicToLibrary(params.id, params.musicId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        predicate: (query) => allQuery.includes(query.queryKey[0] as string),
+      });
+      toast.success("Music library updated successfully!");
+    },
+    onError: () => {
+      toast.error("Something went wrong. Please try again!");
     },
   });
 
@@ -84,7 +104,11 @@ export const AlbumArtWork = ({
   // });
 
   const handleClick = async (id: string, musicId: string) => {
-    await changeRole({ id, musicId });
+    await changeStatus({ id, musicId });
+  };
+
+  const handleLibrary = async (id: string, musicId: string) => {
+    await changeLibraryStatus({ id, musicId });
   };
 
   // const handleDelete = async (id: string) => {
@@ -105,15 +129,10 @@ export const AlbumArtWork = ({
               <Image
                 src={album.cover}
                 alt={album.name}
-                // width={width}
-                // height={height}
                 fill
                 sizes="100%"
                 className={cn(
                   "object-cover transition-all hover:scale-105",
-                  // `h-[${height}px] w-full min-[640px]:w-[${
-                  //   width! - 100
-                  // }px] md:w-[${width}px]`,
                   aspectRatio === "portrait" ? "aspect-[3/4]" : "aspect-square"
                 )}
               />
@@ -121,7 +140,22 @@ export const AlbumArtWork = ({
           </ContextMenuTrigger>
           <ContextMenuContent className="w-40">
             {addToLibrary && user && (
-              <ContextMenuItem>Add to Library</ContextMenuItem>
+              <ContextMenuItem
+                onClick={() =>
+                  handleLibrary(user.id as string, album.id as string)
+                }
+                className={
+                  album.libraryIDs &&
+                  album?.libraryIDs.includes(user?.id as string)
+                    ? "text-red-600"
+                    : ""
+                }
+              >
+                {album.libraryIDs &&
+                album?.libraryIDs.includes(user?.id as string)
+                  ? "Delete from Library"
+                  : "Add to Library"}
+              </ContextMenuItem>
             )}
             {/* {removeFromLibrary && (
               <ContextMenuItem>Remove From Librar</ContextMenuItem>

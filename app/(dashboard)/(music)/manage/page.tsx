@@ -269,7 +269,9 @@ const ManageMusicPage = () => {
                                     onValueChange={field.onChange}
                                     {...field}
                                     // value={field.value}
-                                    value={currentList?.current ? "yes" : "no"}
+                                    defaultValue={
+                                      currentList?.current ? "yes" : "no"
+                                    }
                                     disabled={isPending}
                                   >
                                     <FormControl>

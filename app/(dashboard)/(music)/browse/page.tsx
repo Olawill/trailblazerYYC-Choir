@@ -45,6 +45,7 @@ const BrowsePage = ({
       artist: l.authors.map((a) => a.name).join(", "),
       isLiked: user ? l.favorite.includes(user?.id as string) : false,
       playlistIDs: l.playlistIDs,
+      libraryIDs: l.libraryIDs,
     };
   });
   return (
@@ -68,7 +69,7 @@ const BrowsePage = ({
           </Alert>
         )}
 
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-4">
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 min-[1280px]:grid-cols-4 2xl:grid-cols-5 gap-4">
           <Suspense fallback={<BrowsePage.Skeleton />}>
             {tracks &&
               tracks.map((album) => (
@@ -81,7 +82,7 @@ const BrowsePage = ({
                   addToLibrary
                   addToPlaylist
                   removeFromLibrary={user?.role !== "USER"}
-                  width={250}
+                  width={200}
                   height={330}
                 />
               ))}
@@ -94,7 +95,7 @@ const BrowsePage = ({
 
 BrowsePage.Skeleton = function AlbumSkeleton() {
   return (
-    <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-4">
+    <div className="grid sm:grid-cols-2 md:grid-cols-3 min-[1280px]:grid-cols-4 2xl:grid-cols-5 gap-4">
       <div className="space-y-3 w-[310px] md:w-[200px]">
         <div className="overflow-hidden rounded-md">
           <Skeleton className="object-cover transition-all hover:scale-105 h-[330px] w-full bg-gray-500" />

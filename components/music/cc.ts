@@ -4,6 +4,7 @@ export interface Album {
   artist: string;
   cover: string;
   playlistIDs?: string[];
+  libraryIDs?: string[];
   isLiked?: boolean;
 }
 

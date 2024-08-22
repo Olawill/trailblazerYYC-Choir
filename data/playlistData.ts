@@ -35,7 +35,11 @@ export const getPlaylists = async () => {
 
 export const getAllPlay = async () => {
   try {
-    const playlists = await prisma.playlist.findMany();
+    const playlists = await prisma.playlist.findMany({
+      orderBy: {
+        canAddTo: "desc",
+      },
+    });
 
     return playlists;
   } catch {
@@ -114,6 +118,7 @@ export const getCurrentList = async () => {
           },
           playlistIDs: true,
           favorite: true,
+          libraryIDs: true,
         },
       });
 
@@ -139,6 +144,7 @@ export const getAllMusicList = async () => {
         },
         playlistIDs: true,
         favorite: true,
+        libraryIDs: true,
       },
     });
 
@@ -193,6 +199,7 @@ export const getMusicListForSearchTerm = async (term: string) => {
         },
         playlistIDs: true,
         favorite: true,
+        libraryIDs: true,
       },
     });
 
@@ -238,6 +245,7 @@ export const getAllPlaylistMusic = async () => {
   }
 };
 
+// FOR THE MANAGE TABLE AND PAGE
 export const getCurrentPlaylistMusic = async (id: string) => {
   try {
     const currentList = await prisma.music.findMany({
@@ -347,6 +355,7 @@ export const getFavPlaylistMusic = async (id: string) => {
           },
         },
         playlistIDs: true,
+        libraryIDs: true,
         favorite: true,
       },
     });
@@ -359,6 +368,7 @@ export const getFavPlaylistMusic = async (id: string) => {
         artists: c.authors.map((a) => a.name).join(", "),
         playlistIDs: c.playlistIDs,
         favorite: c.favorite,
+        libraryIDs: c.libraryIDs,
       };
     });
 
@@ -422,10 +432,51 @@ export const getFavListForSearchTerm = async (term: string, id: string) => {
         },
         playlistIDs: true,
         favorite: true,
+        libraryIDs: true,
       },
     });
 
     const modifiedList = searchTermListDetails.map((c) => {
+      return {
+        title: c.title,
+        id: c.id,
+        videoId: c.videoId,
+        artists: c.authors.map((a) => a.name).join(", "),
+        playlistIDs: c.playlistIDs,
+        favorite: c.favorite,
+        libraryIDs: c.libraryIDs,
+      };
+    });
+
+    return modifiedList;
+  } catch {
+    return null;
+  }
+};
+
+export const getLibraryMusic = async (id: string) => {
+  try {
+    const libraryList = await prisma.music.findMany({
+      where: {
+        libraryIDs: {
+          has: id,
+        },
+      },
+      select: {
+        id: true,
+        title: true,
+        videoId: true,
+        authors: {
+          select: {
+            name: true,
+          },
+        },
+        playlistIDs: true,
+        favorite: true,
+      },
+    });
+
+    const modifiedList = libraryList.map((c) => {
       return {
         title: c.title,
         id: c.id,

@@ -13,7 +13,7 @@ import { publicRoutes } from "@/routes";
 import { usePathname, useRouter } from "next/navigation";
 import UserButton from "@/components/auth/user-button";
 import LoginButton from "../auth/login-button";
-import { Skeleton } from "../ui/skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -42,7 +42,7 @@ const DesktopNavbar = () => {
 
         <div className="flex gap-4 items-center justify-center">
           {menus.map((menu, i) =>
-            publicRoutes.includes(menu.url) ? (
+            publicRoutes.includes(menu.url) && !menu.mobile ? (
               <Button
                 key={i}
                 asChild
@@ -60,7 +60,8 @@ const DesktopNavbar = () => {
               </Button>
             ) : (
               session.status === "authenticated" &&
-              menu.allowedUsers.includes(session.data.user.role) && (
+              menu.allowedUsers.includes(session.data.user.role) &&
+              !menu.mobile && (
                 <Button
                   key={i}
                   asChild

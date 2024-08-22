@@ -48,6 +48,7 @@ const FavsPage = ({
       artist: l.artists,
       isLiked: user ? l.favorite.includes(user?.id as string) : false,
       playlistIDs: l.playlistIDs,
+      libraryIDs: l.libraryIDs,
     };
   });
 
@@ -71,7 +72,7 @@ const FavsPage = ({
           </Alert>
         )}
 
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-4">
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 min-[1280px]:grid-cols-4 2xl:grid-cols-5 gap-4">
           <Suspense fallback={<BrowsePage.Skeleton />}>
             {tracks &&
               tracks.map((album) => (
@@ -82,7 +83,7 @@ const FavsPage = ({
                   className="w-[310px] md:w-[200px]"
                   aspectRatio="portrait"
                   addToLibrary
-                  width={250}
+                  width={200}
                   height={330}
                 />
               ))}

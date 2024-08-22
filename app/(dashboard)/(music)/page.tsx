@@ -8,7 +8,11 @@ import { buttonVariants } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getAllPlay, getCurrentList } from "@/data/playlistData";
+import {
+  getAllPlay,
+  getCurrentList,
+  getLibraryMusic,
+} from "@/data/playlistData";
 
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils";
@@ -29,8 +33,6 @@ export default function Home() {
     queryFn: () => getAllPlay(),
   });
 
-  const listenNowPlaylist = playlists?.filter((playlist) => !playlist.current);
-
   const { data: listenNow, isLoading: listenLoading } = useQuery({
     queryKey: ["listen"],
     queryFn: () => getCurrentList(),
@@ -42,6 +44,23 @@ export default function Home() {
       name: l.title.split(" - ")[0],
       cover: `https://img.youtube.com/vi/${l.videoId}/0.jpg`,
       artist: l.authors.map((a) => a.name).join(", "),
+      isLiked: user ? l.favorite.includes(user?.id as string) : false,
+      playlistIDs: l.playlistIDs,
+      libraryIDs: l.libraryIDs,
+    };
+  });
+
+  const { data: libMusic, isLoading: libLoading } = useQuery({
+    queryKey: ["library"],
+    queryFn: () => getLibraryMusic(user?.id as string),
+  });
+
+  const libTracks = libMusic?.map((l) => {
+    return {
+      id: l.id,
+      name: l.title.split(" - ")[0],
+      cover: `https://img.youtube.com/vi/${l.videoId}/0.jpg`,
+      artist: l.artists,
       isLiked: user ? l.favorite.includes(user?.id as string) : false,
       playlistIDs: l.playlistIDs,
     };
@@ -85,7 +104,7 @@ export default function Home() {
                       <AlbumArtWork
                         key={album.name}
                         album={album}
-                        playlists={listenNowPlaylist as Playlist[]}
+                        playlists={playlists as Playlist[]}
                         className="w-[250px]"
                         aspectRatio="portrait"
                         addToLibrary
@@ -95,8 +114,9 @@ export default function Home() {
                       />
                     ))}
                   {!modlistenNow && (
-                    <div className="w-full italic text-center text-base text-gray-300">
-                      Check back later!!! 🎧
+                    <div className="w-full italic text-center text-base text-gray-300 border rounded-md p-2">
+                      🎵 The 'Listen Now' playlist is a bit too quiet — looks
+                      like it&apos;s taking a nap! 🎵
                     </div>
                   )}
                 </Suspense>
@@ -120,20 +140,28 @@ export default function Home() {
             <div className="relative">
               <ScrollArea>
                 <div className="flex space-x-4 pb-4">
+                  {libLoading && <Home.Skeleton />}
                   <Suspense fallback={<Home.Skeleton />}>
-                    {madeForYouAlbums.map((album) => (
-                      <AlbumArtWork
-                        key={album.name}
-                        playlists={playlists as Playlist[]}
-                        album={album}
-                        className="w-[250px]"
-                        aspectRatio="portrait"
-                        removeFromLibrary
-                        fromLibrary
-                        width={250}
-                        height={330}
-                      />
-                    ))}
+                    {libTracks &&
+                      libTracks?.map((album) => (
+                        <AlbumArtWork
+                          key={album.name}
+                          playlists={playlists as Playlist[]}
+                          album={album}
+                          className="w-[250px]"
+                          aspectRatio="portrait"
+                          removeFromLibrary
+                          fromLibrary
+                          width={250}
+                          height={330}
+                        />
+                      ))}
+                    {libTracks?.length === 0 && (
+                      <div className="w-full italic text-center text-base text-gray-300 border rounded-md p-2">
+                        🎵 The 'Made for You' playlist must be on a break —
+                        it&apos;s still finding its groove! 🎵
+                      </div>
+                    )}
                   </Suspense>
                 </div>
                 <ScrollBar orientation="horizontal" />

@@ -31,7 +31,7 @@ export const deleteMember = async (id: string) => {
   }
 };
 
-export const deleteUser = async (id: string) => {
+export const deleteMusic = async (id: string) => {
   const user = await currentUser();
 
   if (!user) {
@@ -58,8 +58,6 @@ export const deleteUser = async (id: string) => {
     return { error: "Something went wrong. Please try again!" };
   }
 };
-
-export const editMember = async () => {};
 
 export const changeMusicStatus = async (userId: string, musicId: string) => {
   const user = await currentUser();
@@ -116,41 +114,54 @@ export const changeMusicStatus = async (userId: string, musicId: string) => {
   }
 };
 
-export const changeUserRole = async (
-  id: string,
-  val: "USER" | "SUPERUSER" | "ADMIN"
-) => {
+export const addMusicToLibrary = async (userId: string, musicId: string) => {
   const user = await currentUser();
 
   if (!user) {
     return { error: "You are not authorized to perform this action" };
   }
 
-  const hasPermission = user.role === "ADMIN";
+  const hasPermission = user.role !== "USER";
 
   if (!hasPermission) {
     return { error: "Unauthorized" };
   }
 
   try {
-    const userToChangeRole = await prisma.user.findFirst({
+    const existingMusic = await prisma.music.findFirst({
       where: {
-        id,
+        id: musicId,
       },
     });
 
-    if (!userToChangeRole) {
-      return { error: "User not found!" };
+    if (!existingMusic) {
+      return { error: "Music not found!" };
     }
 
-    await prisma.user.update({
-      where: { id: userToChangeRole.id },
-      data: {
-        role: val,
-      },
-    });
+    // Check if userId exist in library and remove it
+    if (existingMusic.libraryIDs.includes(userId)) {
+      await prisma.music.update({
+        where: {
+          id: existingMusic.id,
+        },
+        data: {
+          libraryIDs: existingMusic.libraryIDs.filter((uid) => uid !== userId),
+        },
+      });
+    } else {
+      await prisma.music.update({
+        where: {
+          id: existingMusic.id,
+        },
+        data: {
+          libraryIDs: {
+            push: userId,
+          },
+        },
+      });
+    }
 
-    return { success: "User role updated successfully!" };
+    return { success: "Music library updated successfully!" };
   } catch (err) {
     // Handle errors appropriately
     console.log("error", err);

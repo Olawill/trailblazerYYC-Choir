@@ -12,6 +12,8 @@ const { auth } = NextAuth(authConfig);
 export default auth((req) => {
   const { nextUrl } = req;
 
+  let callbackUrl: string = "";
+
   const isLoggedIn = !!req.auth;
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
@@ -30,7 +32,7 @@ export default auth((req) => {
   }
 
   if (!isLoggedIn && !isPublicRoute) {
-    let callbackUrl = nextUrl.pathname;
+    callbackUrl = nextUrl.pathname;
 
     if (nextUrl.search) {
       callbackUrl += nextUrl.search;
