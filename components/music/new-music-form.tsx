@@ -132,6 +132,9 @@ export const NewMusicForm = () => {
           setSuccess(data?.success);
           setFormSubmitted(true);
 
+          setListName([]);
+          setAuthorNames([]);
+
           queryClient.invalidateQueries({
             predicate: (query) =>
               allQuery.includes(query.queryKey[0] as string),
