@@ -45,10 +45,6 @@ export const MusicSidebar = ({ className }: SidebarProps) => {
     queryFn: () => getAllPlay(),
   });
 
-  const [activeId, setActiveId] = useState<string>("");
-
-  // console.log(currentUrl);
-
   const pathname = usePathname();
 
   // const handleClick = (id: string) => {
@@ -133,8 +129,8 @@ export const MusicSidebar = ({ className }: SidebarProps) => {
               <Dialog>
                 <TooltipProvider>
                   <Tooltip>
-                    <TooltipTrigger asChild>
-                      <DialogTrigger asChild>
+                    <DialogTrigger asChild>
+                      <TooltipTrigger asChild>
                         <Button
                           variant="ghost"
                           type="button"
@@ -142,13 +138,17 @@ export const MusicSidebar = ({ className }: SidebarProps) => {
                         >
                           <PlusCircle />
                         </Button>
-                      </DialogTrigger>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Add New Playlist</p>
+                      </TooltipTrigger>
+                    </DialogTrigger>
+
+                    <TooltipContent align="end">
+                      <p className="text-[10px] italic font-medium">
+                        Add New Playlist
+                      </p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
+
                 <DialogContent>
                   <DialogHeader>
                     <DialogTitle>New Playlist</DialogTitle>

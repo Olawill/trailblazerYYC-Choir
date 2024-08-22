@@ -44,13 +44,18 @@ import { FormSuccess } from "@/components/form-success";
 import { getAllMusic } from "@/data/playlistData";
 import { newPlaylist } from "@/actions/playlist";
 import { allQuery } from "@/utils/constants";
+import { AlertDialogCancel, AlertDialogFooter } from "../ui/alert-dialog";
 
 type MusicType = {
   id: string;
   title: string;
 };
 
-export const NewPlaylistForm = () => {
+export const NewPlaylistForm = ({
+  addToAlert = false,
+}: {
+  addToAlert?: boolean;
+}) => {
   const queryClient = useQueryClient();
 
   const [isPending, startTransition] = useTransition();
@@ -258,13 +263,28 @@ export const NewPlaylistForm = () => {
         <FormError message={error} />
         <FormSuccess message={success} />
 
-        <Button disabled={isPending} type="submit" className="w-full">
-          {isPending ? (
-            <Loader2 className="animate-spin h-4 w-4" />
-          ) : (
-            "Add New Playlist"
-          )}
-        </Button>
+        {addToAlert ? (
+          <AlertDialogFooter>
+            <AlertDialogCancel className="focus-visible:ring-px w-1/2 hover:bg-gray-500 hover:border-none hover:text-white">
+              Cancel
+            </AlertDialogCancel>
+            <Button disabled={isPending} type="submit" className="w-1/2">
+              {isPending ? (
+                <Loader2 className="animate-spin h-4 w-4" />
+              ) : (
+                "Add New Playlist"
+              )}
+            </Button>
+          </AlertDialogFooter>
+        ) : (
+          <Button disabled={isPending} type="submit" className="w-full">
+            {isPending ? (
+              <Loader2 className="animate-spin h-4 w-4" />
+            ) : (
+              "Add New Playlist"
+            )}
+          </Button>
+        )}
       </form>
     </Form>
   );
