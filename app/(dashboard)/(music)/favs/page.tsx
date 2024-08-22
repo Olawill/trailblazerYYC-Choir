@@ -66,8 +66,8 @@ const FavsPage = ({
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>No Music Found</AlertTitle>
             <AlertDescription>
-              🎵 Looks like we’re out of tunes — this playlist's feeling a bit
-              off-key! 🎵
+              🎵 Looks like we&apos;re out of tunes — this playlist&apos;s
+              feeling a bit off-key! 🎵
             </AlertDescription>
           </Alert>
         )}

@@ -115,8 +115,8 @@ export default function Home() {
                     ))}
                   {!modlistenNow && (
                     <div className="w-full italic text-center text-base text-gray-300 border rounded-md p-2">
-                      🎵 The 'Listen Now' playlist is a bit too quiet — looks
-                      like it&apos;s taking a nap! 🎵
+                      🎵 The &apos;Listen Now&apos; playlist is a bit too quiet
+                      — looks like it&apos;s taking a nap! 🎵
                     </div>
                   )}
                 </Suspense>
@@ -158,8 +158,8 @@ export default function Home() {
                       ))}
                     {libTracks?.length === 0 && (
                       <div className="w-full italic text-center text-base text-gray-300 border rounded-md p-2">
-                        🎵 The 'Made for You' playlist must be on a break —
-                        it&apos;s still finding its groove! 🎵
+                        🎵 The &apos;Made for You&apos; playlist must be on a
+                        break — it&apos;s still finding its groove! 🎵
                       </div>
                     )}
                   </Suspense>
