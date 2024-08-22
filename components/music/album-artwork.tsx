@@ -76,10 +76,10 @@ export const AlbumArtWork = ({
       queryClient.invalidateQueries({
         predicate: (query) => allQuery.includes(query.queryKey[0] as string),
       });
-      toast.success("Music status updated successfully!");
+      toast.success(data?.success || "Music status updated successfully!");
     },
     onError: () => {
-      toast.error("Something went wrong. Please try again!");
+      toast.error(data?.error || "Something went wrong. Please try again!");
     },
   });
 
@@ -91,29 +91,30 @@ export const AlbumArtWork = ({
       queryClient.invalidateQueries({
         predicate: (query) => allQuery.includes(query.queryKey[0] as string),
       });
-      toast.success("Music library updated successfully!");
+      toast.success(libData?.success || "Music library updated successfully!");
     },
     onError: () => {
-      toast.error("Something went wrong. Please try again!");
+      toast.error(libData?.error || "Something went wrong. Please try again!");
     },
   });
 
   // DELETE MUSIC LOGIC
-  const { mutateAsync: DeleteMusic } = useMutation({
+  const { data: deleteData, mutateAsync: DeleteMusic } = useMutation({
     mutationFn: (params: { id: string }) =>
       fromLibrary ? deleteMusicFromLibrary(params.id) : deleteMusic(params.id),
     onSuccess: () => {
       queryClient.invalidateQueries({
         predicate: (query) => allQuery.includes(query.queryKey[0] as string),
       });
-      toast.success(
-        fromLibrary
-          ? "Library updated successfully!"
-          : "Music deleted successfully!"
-      );
+      const toastMessage = fromLibrary
+        ? "Library updated successfully!"
+        : "Music deleted successfully!";
+      toast.success(deleteData?.success || toastMessage);
     },
     onError: () => {
-      toast.error("Something went wrong. Please try again!");
+      toast.error(
+        deleteData?.error || "Something went wrong. Please try again!"
+      );
     },
   });
 

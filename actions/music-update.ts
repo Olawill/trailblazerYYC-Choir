@@ -161,11 +161,11 @@ export const changeMusicStatus = async (userId: string, musicId: string) => {
     return { error: "You are not authorized to perform this action" };
   }
 
-  const hasPermission = user.role !== "USER";
+  // const hasPermission = user.role !== "USER";
 
-  if (!hasPermission) {
-    return { error: "Unauthorized" };
-  }
+  // if (!hasPermission) {
+  //   return { error: "Unauthorized" };
+  // }
 
   try {
     const existingMusic = await prisma.music.findFirst({
