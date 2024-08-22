@@ -86,7 +86,7 @@ export const NewMusicForm = () => {
     resolver: zodResolver(NewMusicSchema),
     defaultValues: {
       title: "",
-      link: "",
+      link: undefined,
       playlistIds: [],
       authorIds: [],
       content: [],
@@ -134,11 +134,14 @@ export const NewMusicForm = () => {
 
           setListName([]);
           setAuthorNames([]);
+          form.setValue("content", []);
 
           queryClient.invalidateQueries({
             predicate: (query) =>
               allQuery.includes(query.queryKey[0] as string),
           });
+
+          console.log(form.getValues());
         }
 
         if (!data) {

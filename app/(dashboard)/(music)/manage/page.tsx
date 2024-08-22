@@ -390,7 +390,11 @@ const ManageMusicPage = () => {
                                 <div className="grid gap-1">
                                   <div className="flex items-center gap-2">
                                     <Image
-                                      src={`https://img.youtube.com/vi/${c.videoId}/0.jpg`}
+                                      src={
+                                        c.videoId
+                                          ? `https://img.youtube.com/vi/${c.videoId}/0.jpg`
+                                          : "/noWallpaper.jpg"
+                                      }
                                       alt="music-image"
                                       width={32}
                                       height={32}

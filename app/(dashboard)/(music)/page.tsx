@@ -42,7 +42,9 @@ export default function Home() {
     return {
       id: l.id,
       name: l.title.split(" - ")[0],
-      cover: `https://img.youtube.com/vi/${l.videoId}/0.jpg`,
+      cover: l.videoId
+        ? `https://img.youtube.com/vi/${l.videoId}/0.jpg`
+        : "/noWallpaper.jpg",
       artist: l.authors.map((a) => a.name).join(", "),
       isLiked: user ? l.favorite.includes(user?.id as string) : false,
       playlistIDs: l.playlistIDs,
@@ -59,7 +61,9 @@ export default function Home() {
     return {
       id: l.id,
       name: l.title.split(" - ")[0],
-      cover: `https://img.youtube.com/vi/${l.videoId}/0.jpg`,
+      cover: l.videoId
+        ? `https://img.youtube.com/vi/${l.videoId}/0.jpg`
+        : "/noWallpaper.jpg",
       artist: l.artists,
       isLiked: user ? l.favorite.includes(user?.id as string) : false,
       playlistIDs: l.playlistIDs,

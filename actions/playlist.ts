@@ -159,18 +159,20 @@ export const newMusic = async (values: z.infer<typeof NewMusicSchema>) => {
     return { error: "Unauthorized" };
   }
 
-  const music = await prisma.music.findFirst({
-    where: {
-      link,
-    },
-  });
+  if (link) {
+    const music = await prisma.music.findFirst({
+      where: {
+        link,
+      },
+    });
 
-  if (music) {
-    return { error: "Music already added!!" };
+    if (music) {
+      return { error: "Music already added!!" };
+    }
   }
 
   try {
-    const videoId = link?.split("?")[0].split("/").slice(-1)[0];
+    const videoId = link ? link?.split("?")[0].split("/").slice(-1)[0] : "";
 
     const existingTitle = await prisma.music.findFirst({
       where: {
