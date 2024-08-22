@@ -1,5 +1,6 @@
 "use client";
 
+import { deleteMusic, deleteMusicFromPlaylist } from "@/actions/music-update";
 import { updatePlaylist } from "@/actions/playlist";
 import { RoleGate } from "@/components/auth/role-gate";
 import { EditPlaylistForm } from "@/components/music/edit-playlist-form";
@@ -59,7 +60,7 @@ import { allQuery } from "@/utils/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Playlist, UserRole } from "@prisma/client";
 
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { FilePen, Loader, Trash } from "lucide-react";
 
 import Image from "next/image";
@@ -182,6 +183,32 @@ const ManageMusicPage = () => {
         toast.error("Something went wrong. Please try again!");
       }
     });
+  };
+
+  // DELETE MUSIC LOGIC
+  const { data: deleteOption, mutateAsync: DeleteOption } = useMutation({
+    mutationFn: (params: { musicId: string; playlistId: string }) =>
+      currentList
+        ? deleteMusicFromPlaylist(params.musicId, params.playlistId)
+        : deleteMusic(params.musicId),
+    onSuccess: () => {
+      qc.invalidateQueries({
+        predicate: (query) => allQuery.includes(query.queryKey[0] as string),
+      });
+      const toastMessage = currentList
+        ? "Playlist updated successfully!"
+        : "Music deleted successfully!";
+      toast.success(deleteOption?.success || toastMessage);
+    },
+    onError: () => {
+      toast.error(
+        deleteOption?.error || "Something went wrong. Please try again!"
+      );
+    },
+  });
+
+  const handleTrackDelete = async (musicId: string, playlistId: string) => {
+    await DeleteOption({ musicId, playlistId });
   };
 
   return (
@@ -409,7 +436,9 @@ const ManageMusicPage = () => {
                               <TableCell className="truncate">
                                 {c.artists}
                               </TableCell>
-                              <TableCell>{c.count}</TableCell>
+                              <TableCell className="text-center">
+                                {c.count}
+                              </TableCell>
                               <TableCell className="flex justify-end my-auto space-x-1">
                                 <Button
                                   size="icon"
@@ -423,6 +452,12 @@ const ManageMusicPage = () => {
                                   size="icon"
                                   variant="destructive"
                                   className="hover:bg-rose-700"
+                                  onClick={() =>
+                                    handleTrackDelete(
+                                      c.id,
+                                      currentList?.id as string
+                                    )
+                                  }
                                 >
                                   <Trash className="w-5 h-5" />
                                   <span className="sr-only">Delete</span>

@@ -71,6 +71,69 @@ export const deleteMusicFromLibrary = async (musicId: string) => {
   }
 };
 
+export const deleteMusicFromPlaylist = async (
+  musicId: string,
+  playlistId: string
+) => {
+  const user = await currentUser();
+
+  if (!user) {
+    return { error: "You are not authorized to perform this action" };
+  }
+
+  try {
+    const existingPlaylist = await prisma.playlist.findFirst({
+      where: {
+        id: playlistId,
+      },
+    });
+
+    if (!existingPlaylist) {
+      return { error: "Playlist not found!" };
+    }
+
+    const existingMusic = await prisma.music.findFirst({
+      where: {
+        id: musicId,
+      },
+    });
+
+    if (!existingMusic) {
+      return { error: "Music not found!" };
+    }
+
+    await prisma.music.update({
+      where: {
+        id: existingMusic.id,
+      },
+      data: {
+        playlistIDs: {
+          set: existingMusic.playlistIDs.filter(
+            (pId) => pId !== existingPlaylist.id
+          ),
+        },
+      },
+    });
+
+    await prisma.playlist.update({
+      where: {
+        id: existingPlaylist.id,
+      },
+      data: {
+        musicIDs: {
+          set: existingPlaylist.musicIDs.filter((mId) => mId !== musicId),
+        },
+      },
+    });
+
+    return { success: "Playlist updated successfully!" };
+  } catch (err) {
+    // Handle errors appropriately
+    console.log("error", err);
+    return { error: "Something went wrong. Please try again!" };
+  }
+};
+
 export const deleteMusic = async (musicId: string) => {
   const user = await currentUser();
 

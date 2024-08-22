@@ -143,7 +143,7 @@ model Music {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   title   String
-  link    String? @unique
+  link    String?
   videoId String?
 
   favorite String[] @db.ObjectId // All users ID who like the music
