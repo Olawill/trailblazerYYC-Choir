@@ -52,6 +52,7 @@ export default function Home() {
       isLiked: user ? l.favorite.includes(user?.id as string) : false,
       playlistIDs: l.playlistIDs,
       libraryIDs: l.libraryIDs,
+      link: l.link,
     };
   });
 
@@ -71,6 +72,7 @@ export default function Home() {
       artist: l.artists,
       isLiked: user ? l.favorite.includes(user?.id as string) : false,
       playlistIDs: l.playlistIDs,
+      link: l.link,
     };
   });
 
@@ -104,6 +106,7 @@ export default function Home() {
         artist: l.artists,
         isLiked: user ? l.favorite.includes(user?.id as string) : false,
         playlistIDs: l.playlistIDs,
+        link: l.link,
       };
     });
 

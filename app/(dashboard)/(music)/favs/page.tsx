@@ -6,7 +6,6 @@ import {
   getAllPlay,
   getFavListForSearchTerm,
   getFavPlaylistMusic,
-  getMusicListForSearchTerm,
 } from "@/data/playlistData";
 import { useQuery } from "@tanstack/react-query";
 import BrowsePage from "../browse/page";
@@ -51,6 +50,7 @@ const FavsPage = ({
       isLiked: user ? l.favorite.includes(user?.id as string) : false,
       playlistIDs: l.playlistIDs,
       libraryIDs: l.libraryIDs,
+      link: l.link,
     };
   });
 

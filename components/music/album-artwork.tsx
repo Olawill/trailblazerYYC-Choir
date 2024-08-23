@@ -47,6 +47,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { AlertDialogCancel } from "@radix-ui/react-alert-dialog";
+import { MusicCopy } from "./music-copy";
 
 interface AlbumArtworkProps extends React.HTMLAttributes<HTMLDivElement> {
   album: Album;
@@ -303,6 +304,7 @@ export const AlbumArtWork = ({
             </DialogDescription>
           </DialogHeader>
           <Separator />
+          <MusicCopy link={album.link as string} />
         </DialogContent>
       </Dialog>
     </AlertDialog>

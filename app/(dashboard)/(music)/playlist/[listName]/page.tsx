@@ -2,12 +2,7 @@
 
 import { AlbumArtWork } from "@/components/music/album-artwork";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  getAllMusicList,
-  getAllPlay,
-  getMusicListForSearchTerm,
-  getPlaylistMusic,
-} from "@/data/playlistData";
+import { getAllPlay, getPlaylistMusic } from "@/data/playlistData";
 import { Playlist } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import { Suspense } from "react";
@@ -15,7 +10,6 @@ import { Suspense } from "react";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { BrowseSearch } from "../../browse/_components/browse-search";
 import { convertToSentenceCase } from "@/utils/helper";
 import { genericPlaylistFunction } from "@/utils/constants";
 
@@ -55,6 +49,7 @@ const ListPage = ({
       isLiked: user ? l.favorite.includes(user?.id as string) : false,
       playlistIDs: l.playlistIDs,
       libraryIDs: l.libraryIDs,
+      link: l.link,
     };
   });
   return (

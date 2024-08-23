@@ -1,7 +1,6 @@
 "use server";
 
 import { prisma } from "@/lib/client";
-import { equal } from "assert";
 import { endOfDay, startOfDay, subDays } from "date-fns";
 
 export const getAllMusic = async () => {
@@ -121,6 +120,7 @@ export const getCurrentList = async () => {
           playlistIDs: true,
           favorite: true,
           libraryIDs: true,
+          link: true,
         },
       });
 
@@ -147,6 +147,7 @@ export const getAllMusicList = async () => {
         playlistIDs: true,
         favorite: true,
         libraryIDs: true,
+        link: true,
       },
     });
 
@@ -202,6 +203,7 @@ export const getMusicListForSearchTerm = async (term: string) => {
         playlistIDs: true,
         favorite: true,
         libraryIDs: true,
+        link: true,
       },
     });
 
@@ -359,6 +361,7 @@ export const getFavPlaylistMusic = async (id: string) => {
         playlistIDs: true,
         libraryIDs: true,
         favorite: true,
+        link: true,
       },
     });
 
@@ -371,6 +374,7 @@ export const getFavPlaylistMusic = async (id: string) => {
         playlistIDs: c.playlistIDs,
         favorite: c.favorite,
         libraryIDs: c.libraryIDs,
+        link: c.link,
       };
     });
 
@@ -435,6 +439,7 @@ export const getFavListForSearchTerm = async (term: string, id: string) => {
         playlistIDs: true,
         favorite: true,
         libraryIDs: true,
+        link: true,
       },
     });
 
@@ -447,6 +452,7 @@ export const getFavListForSearchTerm = async (term: string, id: string) => {
         playlistIDs: c.playlistIDs,
         favorite: c.favorite,
         libraryIDs: c.libraryIDs,
+        link: c.link,
       };
     });
 
@@ -475,6 +481,7 @@ export const getLibraryMusic = async (id: string) => {
         },
         playlistIDs: true,
         favorite: true,
+        link: true,
       },
     });
 
@@ -486,6 +493,7 @@ export const getLibraryMusic = async (id: string) => {
         artists: c.authors.map((a) => a.name).join(", "),
         playlistIDs: c.playlistIDs,
         favorite: c.favorite,
+        link: c.link,
       };
     });
 
@@ -514,6 +522,7 @@ export const getPlaylistMusic = async (name: string) => {
             },
             playlistIDs: true,
             favorite: true,
+            link: true,
           },
         },
       },
@@ -527,6 +536,7 @@ export const getPlaylistMusic = async (name: string) => {
         artists: c.authors.map((a) => a.name).join(", "),
         playlistIDs: c.playlistIDs,
         favorite: c.favorite,
+        link: c.link,
       };
     });
 
@@ -555,6 +565,7 @@ export const getTopSongs = async () => {
         },
         playlistIDs: true,
         favorite: true,
+        link: true,
       },
     });
 
@@ -573,6 +584,7 @@ export const getTopSongs = async () => {
         artists: c.authors.map((a) => a.name).join(", "),
         playlistIDs: c.playlistIDs,
         favorite: c.favorite,
+        link: c.link,
       };
     });
 
@@ -606,6 +618,7 @@ export const getRecentlyAdded = async () => {
         },
         playlistIDs: true,
         favorite: true,
+        link: true,
       },
     });
 
@@ -617,6 +630,7 @@ export const getRecentlyAdded = async () => {
         artists: c.authors.map((a) => a.name).join(", "),
         playlistIDs: c.playlistIDs,
         favorite: c.favorite,
+        link: c.link,
       };
     });
 
@@ -650,6 +664,7 @@ export const getRecentlyPlayed = async () => {
         },
         playlistIDs: true,
         favorite: true,
+        link: true,
       },
     });
 
@@ -661,6 +676,7 @@ export const getRecentlyPlayed = async () => {
         artists: c.authors.map((a) => a.name).join(", "),
         playlistIDs: c.playlistIDs,
         favorite: c.favorite,
+        link: c.link,
       };
     });
 

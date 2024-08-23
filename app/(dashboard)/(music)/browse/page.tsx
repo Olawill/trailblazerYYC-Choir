@@ -48,6 +48,7 @@ const BrowsePage = ({
       isLiked: user ? l.favorite.includes(user?.id as string) : false,
       playlistIDs: l.playlistIDs,
       libraryIDs: l.libraryIDs,
+      link: l.link,
     };
   });
   return (

@@ -6,6 +6,7 @@ export interface Album {
   playlistIDs?: string[];
   libraryIDs?: string[];
   isLiked?: boolean;
+  link?: string | null;
 }
 
 export const listenNowAlbums: Album[] = [
