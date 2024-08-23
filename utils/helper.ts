@@ -43,3 +43,11 @@ export const amountOwing = (
 
   return totalOwed - paid;
 };
+
+export const convertToSentenceCase = (val: string) => {
+  const splittedVal = val.split(" ");
+
+  return splittedVal
+    .map((v) => v.slice(0, 1).toUpperCase() + v.slice(1).toLowerCase())
+    .join(" ");
+};

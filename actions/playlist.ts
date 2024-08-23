@@ -32,10 +32,12 @@ export const newPlaylist = async (
   if (!hasPermission) {
     return { error: "Unauthorized" };
   }
+  // Remove all comma in name
+  const modName = name.replaceAll(",", "");
 
   const playlist = await prisma.playlist.findFirst({
     where: {
-      name,
+      name: modName,
     },
   });
 
@@ -46,7 +48,7 @@ export const newPlaylist = async (
   try {
     await prisma.playlist.create({
       data: {
-        name,
+        name: modName,
         canAddTo: canAddTo === "yes",
         musicIDs: musicIds,
       },
@@ -95,12 +97,15 @@ export const editPlaylist = async (
   }
 
   try {
+    // Remove all comma in name
+    const modName = name.replaceAll(",", "");
+
     await prisma.playlist.update({
       where: {
         id,
       },
       data: {
-        name,
+        name: modName,
         musicIDs: musicIds,
       },
     });
@@ -278,12 +283,15 @@ export const updatePlaylist = async (
   }
 
   try {
+    // Remove all comma in name
+    const modName = name.replaceAll(",", "");
+
     const playlist = await prisma.playlist.update({
       where: {
         id,
       },
       data: {
-        name,
+        name: modName,
         current: current === "yes",
       },
     });

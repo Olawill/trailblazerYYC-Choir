@@ -191,19 +191,30 @@ export const MusicSidebar = ({ className }: SidebarProps) => {
               {isLoading && <MusicSidebar.Skeleton />}
 
               <Suspense fallback={<MusicSidebar.Skeleton />}>
-                {playlists?.map(
-                  (playlist, i) =>
-                    !playlist.current && (
-                      <Button
+                {playlists?.map((playlist, i) => {
+                  if (!playlist.current) {
+                    const listPath = `/playlist/${playlist.name
+                      .split(" ")
+                      .join("_")
+                      .toLowerCase()}`;
+                    return (
+                      <Link
+                        href={listPath}
                         key={`${playlist.name}-${i}`}
-                        variant="ghost"
-                        className="w-full justify-start font-normal"
+                        className={cn(
+                          buttonVariants({ variant: "ghost" }),
+                          pathname === listPath
+                            ? "bg-muted hover:bg-muted"
+                            : "hover:bg-background",
+                          "w-full justify-start"
+                        )}
                       >
                         <ListMusic className="mr-2 h-4 w-4" />
                         {playlist.name}
-                      </Button>
-                    )
-                )}
+                      </Link>
+                    );
+                  }
+                })}
               </Suspense>
             </div>
           </ScrollArea>

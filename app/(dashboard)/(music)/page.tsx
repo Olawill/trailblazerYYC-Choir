@@ -88,9 +88,7 @@ export default function Home() {
       return {
         queryKey: ["listMusic", playlist.name],
         queryFn,
-        // queryFn: () => genericPlaylistFunction[playlist.name] || getPlaylistMusic(playlist.name as string),
       };
-      // staleTime: Infinity,
     }),
   });
 
