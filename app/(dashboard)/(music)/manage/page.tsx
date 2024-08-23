@@ -433,7 +433,7 @@ const ManageMusicPage = () => {
                                   </div>
                                 </div>
                               </TableCell>
-                              <TableCell className="truncate">
+                              <TableCell className="truncate text-wrap">
                                 {c.artists}
                               </TableCell>
                               <TableCell className="text-center">

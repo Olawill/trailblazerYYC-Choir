@@ -1,6 +1,8 @@
 "use server";
 
 import { prisma } from "@/lib/client";
+import { equal } from "assert";
+import { endOfDay, startOfDay, subDays } from "date-fns";
 
 export const getAllMusic = async () => {
   try {
@@ -477,6 +479,181 @@ export const getLibraryMusic = async (id: string) => {
     });
 
     const modifiedList = libraryList.map((c) => {
+      return {
+        title: c.title,
+        id: c.id,
+        videoId: c.videoId,
+        artists: c.authors.map((a) => a.name).join(", "),
+        playlistIDs: c.playlistIDs,
+        favorite: c.favorite,
+      };
+    });
+
+    return modifiedList;
+  } catch {
+    return null;
+  }
+};
+
+export const getPlaylistMusic = async (name: string) => {
+  try {
+    const list = await prisma.playlist.findFirst({
+      where: {
+        name,
+      },
+      select: {
+        music: {
+          select: {
+            id: true,
+            title: true,
+            videoId: true,
+            authors: {
+              select: {
+                name: true,
+              },
+            },
+            playlistIDs: true,
+            favorite: true,
+          },
+        },
+      },
+    });
+
+    const modifiedList = list?.music.map((c) => {
+      return {
+        title: c.title,
+        id: c.id,
+        videoId: c.videoId,
+        artists: c.authors.map((a) => a.name).join(", "),
+        playlistIDs: c.playlistIDs,
+        favorite: c.favorite,
+      };
+    });
+
+    return modifiedList;
+  } catch {
+    return null;
+  }
+};
+
+export const getTopSongs = async () => {
+  try {
+    const list = await prisma.music.findMany({
+      where: {
+        playlistIDs: {
+          isEmpty: false,
+        },
+      },
+      select: {
+        id: true,
+        title: true,
+        videoId: true,
+        authors: {
+          select: {
+            name: true,
+          },
+        },
+        playlistIDs: true,
+        favorite: true,
+      },
+    });
+
+    const sortedList = list
+      .map((music) => ({
+        ...music,
+        playlistCount: music.playlistIDs.length,
+      }))
+      .sort((a, b) => b.playlistCount - a.playlistCount);
+
+    const modifiedList = sortedList?.map((c) => {
+      return {
+        title: c.title,
+        id: c.id,
+        videoId: c.videoId,
+        artists: c.authors.map((a) => a.name).join(", "),
+        playlistIDs: c.playlistIDs,
+        favorite: c.favorite,
+      };
+    });
+
+    return modifiedList;
+  } catch {
+    return null;
+  }
+};
+
+export const getRecentlyAdded = async () => {
+  try {
+    const today = new Date();
+    const startOfWeek = startOfDay(subDays(today, 7));
+    const endOfWeek = endOfDay(today);
+
+    const list = await prisma.music.findMany({
+      where: {
+        createdAt: {
+          gte: startOfWeek,
+          lte: endOfWeek,
+        },
+      },
+      select: {
+        id: true,
+        title: true,
+        videoId: true,
+        authors: {
+          select: {
+            name: true,
+          },
+        },
+        playlistIDs: true,
+        favorite: true,
+      },
+    });
+
+    const modifiedList = list?.map((c) => {
+      return {
+        title: c.title,
+        id: c.id,
+        videoId: c.videoId,
+        artists: c.authors.map((a) => a.name).join(", "),
+        playlistIDs: c.playlistIDs,
+        favorite: c.favorite,
+      };
+    });
+
+    return modifiedList;
+  } catch {
+    return null;
+  }
+};
+
+export const getRecentlyPlayed = async () => {
+  try {
+    const today = new Date();
+    const startOfWeek = startOfDay(subDays(today, 7));
+    const endOfWeek = endOfDay(today);
+
+    const list = await prisma.music.findMany({
+      where: {
+        lastTimePlayed: {
+          gte: startOfWeek,
+          lte: endOfWeek,
+        },
+      },
+      select: {
+        id: true,
+        title: true,
+        videoId: true,
+        authors: {
+          select: {
+            name: true,
+          },
+        },
+        playlistIDs: true,
+        favorite: true,
+      },
+    });
+
+    const modifiedList = list?.map((c) => {
       return {
         title: c.title,
         id: c.id,

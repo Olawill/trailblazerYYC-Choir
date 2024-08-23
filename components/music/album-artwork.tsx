@@ -157,6 +157,7 @@ export const AlbumArtWork = ({
                   alt={album.name}
                   fill
                   sizes="100%"
+                  priority
                   className={cn(
                     "object-cover transition-all hover:scale-105",
                     aspectRatio === "portrait"

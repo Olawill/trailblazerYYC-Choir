@@ -12,13 +12,15 @@ import {
   getAllPlay,
   getCurrentList,
   getLibraryMusic,
+  getPlaylistMusic,
 } from "@/data/playlistData";
 
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils";
+import { genericPlaylistFunction, PlaylistFunction } from "@/utils/constants";
 
 import { Playlist } from "@prisma/client";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Settings } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -33,6 +35,7 @@ export default function Home() {
     queryFn: () => getAllPlay(),
   });
 
+  // FOR THE CURRENT LIST
   const { data: listenNow, isLoading: listenLoading } = useQuery({
     queryKey: ["listen"],
     queryFn: () => getCurrentList(),
@@ -52,6 +55,7 @@ export default function Home() {
     };
   });
 
+  // FOR THE LIBRARY LIST
   const { data: libMusic, isLoading: libLoading } = useQuery({
     queryKey: ["library"],
     queryFn: () => getLibraryMusic(user?.id as string),
@@ -67,6 +71,48 @@ export default function Home() {
       artist: l.artists,
       isLiked: user ? l.favorite.includes(user?.id as string) : false,
       playlistIDs: l.playlistIDs,
+    };
+  });
+
+  // FOR ALL OTHER PLAYLISTS
+  const filteredList = playlists?.filter((playlist) => !playlist.current);
+
+  const playlistQueries = useQueries({
+    queries: (filteredList || []).map((playlist) => {
+      const playlistName = playlist.name as keyof PlaylistFunction;
+
+      const queryFn =
+        genericPlaylistFunction[playlistName] ||
+        (() => getPlaylistMusic(playlist.name as string));
+
+      return {
+        queryKey: ["listMusic", playlist.name],
+        queryFn,
+        // queryFn: () => genericPlaylistFunction[playlist.name] || getPlaylistMusic(playlist.name as string),
+      };
+      // staleTime: Infinity,
+    }),
+  });
+
+  // Map through playlistQueries to extract data
+  const playlistData = playlistQueries.map((query, index) => {
+    const listTracks = query.data?.map((l) => {
+      return {
+        id: l.id,
+        name: l.title.split(" - ")[0],
+        cover: l.videoId
+          ? `https://img.youtube.com/vi/${l.videoId}/0.jpg`
+          : "/noWallpaper.jpg",
+        artist: l.artists,
+        isLiked: user ? l.favorite.includes(user?.id as string) : false,
+        playlistIDs: l.playlistIDs,
+      };
+    });
+
+    return {
+      isLoading: query.isLoading,
+      data: listTracks,
+      name: filteredList?.[index].name,
     };
   });
 
@@ -176,37 +222,48 @@ export default function Home() {
 
         <div className="lg:hidden">
           {playlists &&
-            playlists.map((playlist, index) => (
-              <div key={index}>
-                <div className="space-y-1">
-                  <h2 className="text-2xl font-semibold tracking-light">
-                    {playlist.name}
-                  </h2>
-                  <p className="text-sm text-gray-300">{playlist.name}</p>
+            playlistData &&
+            playlistData.map((playlist, index) => {
+              return (
+                <div key={index}>
+                  <div className="space-y-1">
+                    <h2 className="text-2xl font-semibold tracking-light">
+                      {playlist.name}
+                    </h2>
+                    <p className="text-sm text-gray-300">{playlist.name}</p>
+                  </div>
+                  <Separator className="my-4" />
+                  <div className="relative">
+                    <ScrollArea>
+                      <div className="flex space-x-4 pb-4">
+                        {playlist.isLoading && <Home.Skeleton />}
+                        <Suspense fallback={<Home.Skeleton />}>
+                          {playlist?.data?.map((album) => (
+                            <AlbumArtWork
+                              key={album.name}
+                              playlists={playlists}
+                              album={album}
+                              className="w-[250px]"
+                              aspectRatio="portrait"
+                              width={250}
+                              height={330}
+                            />
+                          ))}
+
+                          {(!playlist.data || playlist.data?.length === 0) && (
+                            <div className="w-full italic text-center text-base text-gray-300 border rounded-md p-2">
+                              {`🎵 The '${playlist?.name}' playlist must be on a
+                        break — it's still finding its groove! 🎵`}
+                            </div>
+                          )}
+                        </Suspense>
+                      </div>
+                      <ScrollBar orientation="horizontal" />
+                    </ScrollArea>
+                  </div>
                 </div>
-                <Separator className="my-4" />
-                <div className="relative">
-                  <ScrollArea>
-                    <div className="flex space-x-4 pb-4">
-                      <Suspense fallback={<Home.Skeleton />}>
-                        {madeForYouAlbums.map((album) => (
-                          <AlbumArtWork
-                            key={album.name}
-                            playlists={playlists}
-                            album={album}
-                            className="w-[250px]"
-                            aspectRatio="portrait"
-                            width={250}
-                            height={330}
-                          />
-                        ))}
-                      </Suspense>
-                    </div>
-                    <ScrollBar orientation="horizontal" />
-                  </ScrollArea>
-                </div>
-              </div>
-            ))}
+              );
+            })}
         </div>
       </div>
     </div>
