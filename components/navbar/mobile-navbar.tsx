@@ -17,6 +17,7 @@ import { LogoutButton } from "@/components/auth/logout-button";
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -79,6 +80,9 @@ const MobileNavbar = () => {
                   TrailBlazer YYC 🎶
                 </h1>
               </SheetTitle>
+              <SheetDescription className="sr-only">
+                Mobile Nav Bar
+              </SheetDescription>
             </SheetHeader>
             <Separator className="my-4 bg-gray-400" />
 
