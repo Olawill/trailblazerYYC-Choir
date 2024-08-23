@@ -30,6 +30,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import {
   addMusicToLibrary,
+  addMusicToPlaylist,
   changeMusicStatus,
   deleteMusic,
   deleteMusicFromLibrary,
@@ -128,6 +129,23 @@ export const AlbumArtWork = ({
     },
   });
 
+  // ADD MUSIC TO PLAYLIST LOGIC
+  const { data: addData, mutateAsync: addMusicPlaylist } = useMutation({
+    mutationFn: (params: { playlistId: string; musicId: string }) =>
+      addMusicToPlaylist(params.playlistId, params.musicId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        predicate: (query) => allQuery.includes(query.queryKey[0] as string),
+      });
+      toast.success(
+        addData?.success || "Music added to playlist successfully!"
+      );
+    },
+    onError: () => {
+      toast.error(addData?.error || "Something went wrong. Please try again!");
+    },
+  });
+
   const handleClick = async (id: string, musicId: string) => {
     await changeStatus({ id, musicId });
   };
@@ -138,6 +156,10 @@ export const AlbumArtWork = ({
 
   const handleDelete = async (id: string) => {
     await DeleteMusic({ id });
+  };
+
+  const handleAddToPlaylist = async (playlistId: string, musicId: string) => {
+    await addMusicPlaylist({ playlistId, musicId });
   };
 
   return (
@@ -207,7 +229,15 @@ export const AlbumArtWork = ({
                       (playlist) =>
                         !playlist.canAddTo &&
                         !album.playlistIDs?.includes(playlist.id) && (
-                          <ContextMenuItem key={playlist.name}>
+                          <ContextMenuItem
+                            key={playlist.name}
+                            onClick={() =>
+                              handleAddToPlaylist(
+                                playlist.id,
+                                album.id as string
+                              )
+                            }
+                          >
                             <ListMusic className="mr-2 h-4 w-4" />
                             {playlist.name}
                           </ContextMenuItem>

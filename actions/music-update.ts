@@ -320,3 +320,75 @@ export const addMusicToLibrary = async (userId: string, musicId: string) => {
     return { error: "Something went wrong. Please try again!" };
   }
 };
+
+export const addMusicToPlaylist = async (
+  playlistId: string,
+  musicId: string
+) => {
+  const user = await currentUser();
+
+  if (!user) {
+    return { error: "You are not authorized to perform this action" };
+  }
+
+  const hasPermission = user.role !== "USER";
+
+  if (!hasPermission) {
+    return { error: "Unauthorized" };
+  }
+
+  try {
+    const existingMusic = await prisma.music.findFirst({
+      where: {
+        id: musicId,
+      },
+    });
+
+    if (!existingMusic) {
+      return { error: "Music not found!" };
+    }
+
+    const existingPlaylist = await prisma.playlist.findFirst({
+      where: {
+        id: playlistId,
+      },
+    });
+
+    if (!existingPlaylist) {
+      return { error: "Playlist not found!" };
+    }
+
+    // Check if music is already part of the playlist
+    if (existingPlaylist.musicIDs.includes(existingMusic.id)) {
+      return { error: "Music already in playlist" };
+    }
+
+    await prisma.playlist.update({
+      where: {
+        id: existingPlaylist.id,
+      },
+      data: {
+        musicIDs: {
+          push: existingMusic.id,
+        },
+      },
+    });
+
+    await prisma.music.update({
+      where: {
+        id: existingMusic.id,
+      },
+      data: {
+        playlistIDs: {
+          push: existingPlaylist.id,
+        },
+      },
+    });
+
+    return { success: "Music added to playlist successfully!" };
+  } catch (err) {
+    // Handle errors appropriately
+    console.log("error", err);
+    return { error: "Something went wrong. Please try again!" };
+  }
+};
