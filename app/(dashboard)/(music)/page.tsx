@@ -175,94 +175,97 @@ export default function Home() {
         </div>
 
         {user && (
-          <div id="made-for-you">
-            <div className="space-y-1">
-              <h2 className="text-2xl font-semibold tracking-light">
-                Made For You
-              </h2>
-              <p className="text-sm text-gray-300">
-                Your Personal Playlist. Updated Daily.
-              </p>
-            </div>
-            <Separator className="my-4" />
-            <div className="relative">
-              <ScrollArea>
-                <div className="flex space-x-4 pb-4">
-                  {libLoading && <Home.Skeleton />}
-                  <Suspense fallback={<Home.Skeleton />}>
-                    {libTracks &&
-                      libTracks?.map((album) => (
-                        <AlbumArtWork
-                          key={album.name}
-                          playlists={playlists as Playlist[]}
-                          album={album}
-                          className="w-[250px]"
-                          aspectRatio="portrait"
-                          removeFromLibrary
-                          fromLibrary
-                          width={250}
-                          height={330}
-                        />
-                      ))}
-                    {(!libTracks || libTracks?.length === 0) && (
-                      <div className="w-full italic text-center text-base text-gray-300 border rounded-md p-2">
-                        🎵 The &apos;Made for You&apos; playlist must be on a
-                        break — it&apos;s still finding its groove! 🎵
-                      </div>
-                    )}
-                  </Suspense>
-                </div>
-                <ScrollBar orientation="horizontal" />
-              </ScrollArea>
-            </div>
-          </div>
-        )}
-
-        <div className="lg:hidden">
-          {playlists &&
-            playlistData &&
-            playlistData.map((playlist, index) => {
-              return (
-                <div key={index}>
-                  <div className="space-y-1">
-                    <h2 className="text-2xl font-semibold tracking-light">
-                      {playlist.name}
-                    </h2>
-                    <p className="text-sm text-gray-300">{playlist.name}</p>
+          <>
+            <div id="made-for-you">
+              <div className="space-y-1">
+                <h2 className="text-2xl font-semibold tracking-light">
+                  Made For You
+                </h2>
+                <p className="text-sm text-gray-300">
+                  Your Personal Playlist. Updated Daily.
+                </p>
+              </div>
+              <Separator className="my-4" />
+              <div className="relative">
+                <ScrollArea>
+                  <div className="flex space-x-4 pb-4">
+                    {libLoading && <Home.Skeleton />}
+                    <Suspense fallback={<Home.Skeleton />}>
+                      {libTracks &&
+                        libTracks?.map((album) => (
+                          <AlbumArtWork
+                            key={album.name}
+                            playlists={playlists as Playlist[]}
+                            album={album}
+                            className="w-[250px]"
+                            aspectRatio="portrait"
+                            removeFromLibrary
+                            fromLibrary
+                            width={250}
+                            height={330}
+                          />
+                        ))}
+                      {(!libTracks || libTracks?.length === 0) && (
+                        <div className="w-full italic text-center text-base text-gray-300 border rounded-md p-2">
+                          🎵 The &apos;Made for You&apos; playlist must be on a
+                          break — it&apos;s still finding its groove! 🎵
+                        </div>
+                      )}
+                    </Suspense>
                   </div>
-                  <Separator className="my-4" />
-                  <div className="relative">
-                    <ScrollArea>
-                      <div className="flex space-x-4 pb-4">
-                        {playlist.isLoading && <Home.Skeleton />}
-                        <Suspense fallback={<Home.Skeleton />}>
-                          {playlist?.data?.map((album) => (
-                            <AlbumArtWork
-                              key={album.name}
-                              playlists={playlists}
-                              album={album}
-                              className="w-[250px]"
-                              aspectRatio="portrait"
-                              width={250}
-                              height={330}
-                            />
-                          ))}
+                  <ScrollBar orientation="horizontal" />
+                </ScrollArea>
+              </div>
+            </div>
 
-                          {(!playlist.data || playlist.data?.length === 0) && (
-                            <div className="w-full italic text-center text-base text-gray-300 border rounded-md p-2">
-                              {`🎵 The '${playlist?.name}' playlist must be on a
+            <div className="lg:hidden">
+              {playlists &&
+                playlistData &&
+                playlistData.map((playlist, index) => {
+                  return (
+                    <div key={index}>
+                      <div className="space-y-1">
+                        <h2 className="text-2xl font-semibold tracking-light">
+                          {playlist.name}
+                        </h2>
+                        <p className="text-sm text-gray-300">{playlist.name}</p>
+                      </div>
+                      <Separator className="my-4" />
+                      <div className="relative">
+                        <ScrollArea>
+                          <div className="flex space-x-4 pb-4">
+                            {playlist.isLoading && <Home.Skeleton />}
+                            <Suspense fallback={<Home.Skeleton />}>
+                              {playlist?.data?.map((album) => (
+                                <AlbumArtWork
+                                  key={album.name}
+                                  playlists={playlists}
+                                  album={album}
+                                  className="w-[250px]"
+                                  aspectRatio="portrait"
+                                  width={250}
+                                  height={330}
+                                />
+                              ))}
+
+                              {(!playlist.data ||
+                                playlist.data?.length === 0) && (
+                                <div className="w-full italic text-center text-base text-gray-300 border rounded-md p-2">
+                                  {`🎵 The '${playlist?.name}' playlist must be on a
                         break — it's still finding its groove! 🎵`}
-                            </div>
-                          )}
-                        </Suspense>
+                                </div>
+                              )}
+                            </Suspense>
+                          </div>
+                          <ScrollBar orientation="horizontal" />
+                        </ScrollArea>
                       </div>
-                      <ScrollBar orientation="horizontal" />
-                    </ScrollArea>
-                  </div>
-                </div>
-              );
-            })}
-        </div>
+                    </div>
+                  );
+                })}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
