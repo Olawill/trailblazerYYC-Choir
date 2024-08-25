@@ -1,6 +1,6 @@
 "use client";
 
-import { ListMusic, PlusCircle } from "lucide-react";
+import { ListMusic, PlusCircle, Star, X } from "lucide-react";
 import { Album } from "./cc";
 import { cn } from "@/lib/utils";
 import {
@@ -41,13 +41,23 @@ import {
   AlertDialog,
   AlertDialogContent,
   AlertDialogDescription,
-  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { AlertDialogCancel } from "@radix-ui/react-alert-dialog";
-import { MusicCopy } from "./music-copy";
+import { MusicCopy } from "@/components/music/music-copy";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+import { Button } from "../ui/button";
+import { useState } from "react";
 
 interface AlbumArtworkProps extends React.HTMLAttributes<HTMLDivElement> {
   album: Album;
@@ -77,6 +87,12 @@ export const AlbumArtWork = ({
   ...props
 }: AlbumArtworkProps) => {
   const user = useCurrentUser();
+
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const handleDrawer = () => {
+    setDrawerOpen((prev) => !prev);
+  };
 
   const queryClient = useQueryClient();
 
@@ -164,17 +180,208 @@ export const AlbumArtWork = ({
   };
 
   return (
-    <AlertDialog>
-      <Dialog>
-        <div className={cn("space-y-3 cursor-pointer", className)} {...props}>
-          <ContextMenu>
-            <ContextMenuTrigger>
-              <div
-                className={cn(
-                  "relative overflow-hidden rounded-md",
-                  `h-[${height}px] w-full sm:w-[220px] md:w-[${width}px]`
+    <>
+      <AlertDialog>
+        <Dialog>
+          <div className={cn("space-y-3 cursor-pointer", className)} {...props}>
+            <ContextMenu>
+              <ContextMenuTrigger>
+                <div
+                  className={cn(
+                    "relative overflow-hidden rounded-md",
+                    `h-[${height}px] w-full sm:w-[220px] md:w-[${width}px]`
+                  )}
+                >
+                  <Image
+                    src={album.cover}
+                    alt={album.name}
+                    fill
+                    sizes="100%"
+                    priority
+                    className={cn(
+                      "object-cover transition-all hover:scale-105",
+                      aspectRatio === "portrait"
+                        ? "aspect-[3/4]"
+                        : "aspect-square"
+                    )}
+                  />
+                </div>
+              </ContextMenuTrigger>
+              <ContextMenuContent className="w-40">
+                {addToLibrary && user && (
+                  <ContextMenuItem
+                    onClick={() =>
+                      handleLibrary(user.id as string, album.id as string)
+                    }
+                    className={
+                      album.libraryIDs &&
+                      album?.libraryIDs.includes(user?.id as string)
+                        ? "text-red-600"
+                        : ""
+                    }
+                  >
+                    {album.libraryIDs &&
+                    album?.libraryIDs.includes(user?.id as string)
+                      ? "Delete from Library"
+                      : "Add to Library"}
+                  </ContextMenuItem>
                 )}
-              >
+
+                <ContextMenuSub>
+                  {addToPlaylist && user && user.role !== "USER" && (
+                    <ContextMenuSubTrigger>
+                      Add to Playlist
+                    </ContextMenuSubTrigger>
+                  )}
+
+                  <ContextMenuSubContent className="w-48">
+                    {user && user.role !== "USER" && (
+                      <AlertDialogTrigger asChild>
+                        <ContextMenuItem>
+                          <PlusCircle className="mr-2 h-4 w-4" />
+                          New Playlist
+                        </ContextMenuItem>
+                      </AlertDialogTrigger>
+                    )}
+                    <ContextMenuSeparator />
+                    {playlists &&
+                      playlists.map(
+                        (playlist) =>
+                          !playlist.canAddTo &&
+                          !album.playlistIDs?.includes(playlist.id) && (
+                            <ContextMenuItem
+                              key={playlist.name}
+                              onClick={() =>
+                                handleAddToPlaylist(
+                                  playlist.id,
+                                  album.id as string
+                                )
+                              }
+                            >
+                              <ListMusic className="mr-2 h-4 w-4" />
+                              {playlist.name}
+                            </ContextMenuItem>
+                          )
+                      )}
+                  </ContextMenuSubContent>
+                </ContextMenuSub>
+                {!addToLibrary ||
+                  !addToPlaylist ||
+                  !user ||
+                  (user.role !== "USER" && <ContextMenuSeparator />)}
+
+                <ContextMenuItem onClick={handleDrawer}>
+                  Play Next
+                </ContextMenuItem>
+                <ContextMenuItem>Play Later</ContextMenuItem>
+                <ContextMenuSeparator />
+                {user && user.role && (
+                  <ContextMenuItem
+                    onClick={() =>
+                      handleClick(user.id as string, album.id as string)
+                    }
+                  >
+                    {album.isLiked ? "Undo Like" : "Like"}
+                  </ContextMenuItem>
+                )}
+                <DialogTrigger asChild>
+                  <ContextMenuItem>Share</ContextMenuItem>
+                </DialogTrigger>
+
+                {user && removeFromLibrary && (
+                  <ContextMenuItem
+                    className="bg-destructive hover:bg-destructive"
+                    onClick={() => handleDelete(album.id as string)}
+                  >
+                    Delete
+                  </ContextMenuItem>
+                )}
+              </ContextMenuContent>
+            </ContextMenu>
+            <div className="space-y-1 text-sm">
+              <h3 className="font-medium leading-none">{album.name}</h3>
+              <p className="text-xs text-gray-300">{album.artist}</p>
+            </div>
+          </div>
+
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>New Playlist</AlertDialogTitle>
+              <AlertDialogDescription>
+                Create new playlist and add songs here. Click save when
+                you&apos;re done.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <Separator className="my-2" />
+            <NewPlaylistForm addToAlert />
+          </AlertDialogContent>
+
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle className="text-center text-sm">
+                Share Music
+              </DialogTitle>
+              <DialogDescription className="sr-only">
+                Music Sharing Link
+              </DialogDescription>
+            </DialogHeader>
+            <Separator />
+            <MusicCopy link={album.link as string} />
+          </DialogContent>
+        </Dialog>
+      </AlertDialog>
+
+      {/* MUSIC PLAYER AND LYRICS */}
+      <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
+        {/* <DrawerTrigger asChild>
+        <ContextMenuItem>Play Next</ContextMenuItem>
+      </DrawerTrigger> */}
+        <DrawerContent className="h-[90%] md:h-4/5 bg-sky-500 border-none">
+          <DrawerHeader className="text-right">
+            <DrawerTitle className="ml-auto -mt-10">
+              <DrawerClose asChild>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="border-none focus-visible:ring-px bg-transparent"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </DrawerClose>
+            </DrawerTitle>
+            <DrawerDescription className="sr-only">
+              Music Lyrics and Youtube Link.
+            </DrawerDescription>
+          </DrawerHeader>
+          <div className="hidden md:block space-y-3 cursor pointer px-4">
+            <div
+              className={cn(
+                "relative overflow-hidden rounded-md",
+                `h-[${height}px] w-full sm:w-[220px] md:w-[${width}px]`
+              )}
+            >
+              <Image
+                src={album.cover}
+                alt={album.name}
+                fill
+                sizes="100%"
+                priority
+                className={cn(
+                  "object-cover transition-all hover:scale-105",
+                  aspectRatio === "portrait" ? "aspect-[3/4]" : "aspect-square"
+                )}
+              />
+            </div>
+
+            <div className="space-y-1 text-sm">
+              <h3 className="font-medium leading-none">{album.name}</h3>
+              <p className="text-xs text-gray-300">{album.artist}</p>
+            </div>
+          </div>
+
+          <div className="md:hidden space-y-3 cursor pointer px-4">
+            <div className="flex gap-4">
+              <div className="relative overflow-hidden h-20 w-20 rounded-full">
                 <Image
                   src={album.cover}
                   alt={album.name}
@@ -189,124 +396,43 @@ export const AlbumArtWork = ({
                   )}
                 />
               </div>
-            </ContextMenuTrigger>
-            <ContextMenuContent className="w-40">
-              {addToLibrary && user && (
-                <ContextMenuItem
-                  onClick={() =>
-                    handleLibrary(user.id as string, album.id as string)
-                  }
-                  className={
-                    album.libraryIDs &&
-                    album?.libraryIDs.includes(user?.id as string)
-                      ? "text-red-600"
-                      : ""
-                  }
-                >
-                  {album.libraryIDs &&
-                  album?.libraryIDs.includes(user?.id as string)
-                    ? "Delete from Library"
-                    : "Add to Library"}
-                </ContextMenuItem>
-              )}
-
-              <ContextMenuSub>
-                {addToPlaylist && user && user.role !== "USER" && (
-                  <ContextMenuSubTrigger>Add to Playlist</ContextMenuSubTrigger>
+              <div className="flex-1 flex justify-between">
+                <div className="flex-1 space-y-1 text-sm mt-2">
+                  <h3 className="font-medium leading-none">{album.name}</h3>
+                  <p className="text-xs text-gray-300">{album.artist}</p>
+                </div>
+                {user && (
+                  <Star
+                    className={`h-5 w-5 cursor-pointer ${
+                      album.isLiked ? "text-red-500" : "text-gray-300"
+                    }`}
+                    fill={album.isLiked ? "red" : "transparent"}
+                    onClick={() =>
+                      handleClick(user?.id as string, album.id as string)
+                    }
+                  />
                 )}
+              </div>
+            </div>
 
-                <ContextMenuSubContent className="w-48">
-                  {user && user.role !== "USER" && (
-                    <AlertDialogTrigger asChild>
-                      <ContextMenuItem>
-                        <PlusCircle className="mr-2 h-4 w-4" />
-                        New Playlist
-                      </ContextMenuItem>
-                    </AlertDialogTrigger>
-                  )}
-                  <ContextMenuSeparator />
-                  {playlists &&
-                    playlists.map(
-                      (playlist) =>
-                        !playlist.canAddTo &&
-                        !album.playlistIDs?.includes(playlist.id) && (
-                          <ContextMenuItem
-                            key={playlist.name}
-                            onClick={() =>
-                              handleAddToPlaylist(
-                                playlist.id,
-                                album.id as string
-                              )
-                            }
-                          >
-                            <ListMusic className="mr-2 h-4 w-4" />
-                            {playlist.name}
-                          </ContextMenuItem>
-                        )
-                    )}
-                </ContextMenuSubContent>
-              </ContextMenuSub>
-              {!addToLibrary ||
-                !addToPlaylist ||
-                !user ||
-                (user.role !== "USER" && <ContextMenuSeparator />)}
-              <ContextMenuItem>Play Next</ContextMenuItem>
-              <ContextMenuItem>Play Later</ContextMenuItem>
-              <ContextMenuSeparator />
-              {user && user.role && (
-                <ContextMenuItem
-                  onClick={() =>
-                    handleClick(user.id as string, album.id as string)
-                  }
-                >
-                  {album.isLiked ? "Undo Like" : "Like"}
-                </ContextMenuItem>
-              )}
-              <DialogTrigger asChild>
-                <ContextMenuItem>Share</ContextMenuItem>
-              </DialogTrigger>
+            <div className="">{album.cover}</div>
 
-              {user && removeFromLibrary && (
-                <ContextMenuItem
-                  className="bg-destructive hover:bg-destructive"
-                  onClick={() => handleDelete(album.id as string)}
-                >
-                  Delete
-                </ContextMenuItem>
-              )}
-            </ContextMenuContent>
-          </ContextMenu>
-          <div className="space-y-1 text-sm">
-            <h3 className="font-medium leading-none">{album.name}</h3>
-            <p className="text-xs text-gray-300">{album.artist}</p>
+            <div className="relative bg-red-500 w-full">
+              <iframe
+                width="380"
+                height="315"
+                // className=""
+                src={`https://www.youtube.com/embed/${album.videoId}`}
+                title={album.name}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                loading="lazy"
+                allowFullScreen
+                referrerPolicy="strict-origin-when-cross-origin"
+              />
+            </div>
           </div>
-        </div>
-
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>New Playlist</AlertDialogTitle>
-            <AlertDialogDescription>
-              Create new playlist and add songs here. Click save when
-              you&apos;re done.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <Separator className="my-2" />
-          <NewPlaylistForm addToAlert />
-        </AlertDialogContent>
-
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle className="text-center text-sm">
-              Share Music
-            </DialogTitle>
-            <DialogDescription className="sr-only">
-              Music Sharing Link
-            </DialogDescription>
-          </DialogHeader>
-          <Separator />
-          <MusicCopy link={album.link as string} />
-        </DialogContent>
-      </Dialog>
-    </AlertDialog>
+        </DrawerContent>
+      </Drawer>
+    </>
   );
 };

@@ -45,6 +45,7 @@ const ListPage = ({
       cover: l.videoId
         ? `https://img.youtube.com/vi/${l.videoId}/0.jpg`
         : "/noWallpaper.jpg",
+      videoId: l.videoId,
       artist: l.artists,
       isLiked: user ? l.favorite.includes(user?.id as string) : false,
       playlistIDs: l.playlistIDs,

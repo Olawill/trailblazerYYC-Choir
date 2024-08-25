@@ -3,6 +3,7 @@ export interface Album {
   name: string;
   artist: string;
   cover: string;
+  videoId?: string | null;
   playlistIDs?: string[];
   libraryIDs?: string[];
   isLiked?: boolean;
