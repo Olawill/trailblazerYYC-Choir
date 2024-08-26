@@ -351,12 +351,12 @@ export const AlbumArtWork = ({
               Music Lyrics and Youtube Link.
             </DrawerDescription>
           </DrawerHeader>
-          <div className="hidden md:grid grid-cols-3 space-y-3 cursor pointer px-4">
-            <div className="col-span-1">
+          <div className="hidden md:flex gap-8 space-y-3 px-4">
+            <div className="col-span-1 cursor-pointer">
               <div
                 className={cn(
                   "relative overflow-hidden rounded-md",
-                  `h-[${height}px] md:w-[300px]`
+                  `h-[${height}px] md:w-[280px] mt-3`
                 )}
               >
                 <Image
@@ -375,7 +375,7 @@ export const AlbumArtWork = ({
               </div>
 
               <div className="text-sm mt-1">
-                <div className="flex items-center gap-4">
+                <div className="flex items-center justify-between gap-4">
                   <h3 className="font-medium leading-none">{album.name}</h3>
                   {user && (
                     <Star
@@ -393,57 +393,59 @@ export const AlbumArtWork = ({
               </div>
             </div>
 
-            <ScrollArea className="-ml-24 col-span-1 h-[700px] w-full border rounded-md p-2">
-              <h2 className="italic uppercase font-semibold text-sm mb-2">
-                Lyrics
-              </h2>
-              {album &&
-                album.contents &&
-                album?.contents?.map((content, index) => {
-                  if (index < album?.contents?.length! - 1) {
-                    return (
-                      <div
-                        className="bg-sky-200 text-sm p-2 rounded-sm mb-2"
-                        key={index}
-                      >
-                        <h4 className="italic uppercase font-semibold text-xs mb-1 bg-gray-300 p-1 rounded-md">
-                          {content?.type as string}
-                        </h4>
-                        <p className="whitespace-pre-wrap">
-                          {content?.content as string}
-                        </p>
-                      </div>
-                    );
-                  } else {
-                    return (
-                      <div
-                        className="bg-sky-200 text-sm p-2 rounded-sm"
-                        key={index}
-                      >
-                        <h4 className="italic uppercase font-semibold text-xs mb-1 bg-gray-300 p-1 rounded-md">
-                          {content?.type as string}
-                        </h4>
-                        <p className="whitespace-pre-wrap">
-                          {content?.content as string}
-                        </p>
-                      </div>
-                    );
-                  }
-                })}
-            </ScrollArea>
+            <div className="flex-1 grid grid-cols-2 gap-8">
+              <ScrollArea className="col-span-1 h-[600px] w-full border rounded-md p-2">
+                <h2 className="italic uppercase font-semibold text-sm mb-2">
+                  Lyrics
+                </h2>
+                {album &&
+                  album.contents &&
+                  album?.contents?.map((content, index) => {
+                    if (index < album?.contents?.length! - 1) {
+                      return (
+                        <div
+                          className="bg-sky-200 text-sm p-2 rounded-sm mb-2"
+                          key={index}
+                        >
+                          <h4 className="italic uppercase font-semibold text-xs mb-1 bg-gray-300 p-1 rounded-md">
+                            {content?.type as string}
+                          </h4>
+                          <p className="whitespace-pre-wrap">
+                            {content?.content as string}
+                          </p>
+                        </div>
+                      );
+                    } else {
+                      return (
+                        <div
+                          className="bg-sky-200 text-sm p-2 rounded-sm"
+                          key={index}
+                        >
+                          <h4 className="italic uppercase font-semibold text-xs mb-1 bg-gray-300 p-1 rounded-md">
+                            {content?.type as string}
+                          </h4>
+                          <p className="whitespace-pre-wrap">
+                            {content?.content as string}
+                          </p>
+                        </div>
+                      );
+                    }
+                  })}
+              </ScrollArea>
 
-            <div className="col-span-1 relative h-96 w-full overflow-hidden rounded-md">
-              <iframe
-                width={"100%"}
-                height={"100%"}
-                className="absolute top-0 left-0"
-                src={`https://www.youtube.com/embed/${album.videoId}`}
-                title={album.name}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                loading="lazy"
-                allowFullScreen
-                referrerPolicy="strict-origin-when-cross-origin"
-              />
+              <div className="col-span-1 relative h-[450px] w-full overflow-hidden rounded-md">
+                <iframe
+                  width={"100%"}
+                  height={"100%"}
+                  className="absolute top-0 left-0"
+                  src={`https://www.youtube.com/embed/${album.videoId}`}
+                  title={album.name}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  loading="lazy"
+                  allowFullScreen
+                  referrerPolicy="strict-origin-when-cross-origin"
+                />
+              </div>
             </div>
           </div>
 
@@ -483,7 +485,7 @@ export const AlbumArtWork = ({
               </div>
             </div>
 
-            <ScrollArea className="h-[300px] border rounded-md p-2">
+            <ScrollArea className="h-[550px] border rounded-md p-2">
               <h2 className="italic uppercase font-semibold text-sm mb-2">
                 Lyrics
               </h2>
@@ -520,21 +522,21 @@ export const AlbumArtWork = ({
                     );
                   }
                 })}
-            </ScrollArea>
 
-            <div className="relative h-72 w-full overflow-hidden rounded-md">
-              <iframe
-                width={"100%"}
-                height={"100%"}
-                className="absolute top-0 left-0"
-                src={`https://www.youtube.com/embed/${album.videoId}`}
-                title={album.name}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                loading="lazy"
-                allowFullScreen
-                referrerPolicy="strict-origin-when-cross-origin"
-              />
-            </div>
+              <div className="relative h-72 w-full overflow-hidden rounded-md mt-2">
+                <iframe
+                  width={"100%"}
+                  height={"100%"}
+                  className="absolute top-0 left-0"
+                  src={`https://www.youtube.com/embed/${album.videoId}`}
+                  title={album.name}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  loading="lazy"
+                  allowFullScreen
+                  referrerPolicy="strict-origin-when-cross-origin"
+                />
+              </div>
+            </ScrollArea>
           </div>
         </DrawerContent>
       </Drawer>
