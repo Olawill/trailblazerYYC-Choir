@@ -449,7 +449,7 @@ export const AlbumArtWork = ({
             </div>
           </div>
 
-          <div className="md:hidden space-y-3 cursor pointer px-4">
+          <div className="md:hidden space-y-3 cursor pointer px-4 -mt-4">
             <div className="flex gap-4">
               <div className="relative overflow-hidden h-20 w-20 rounded-full">
                 <Image
