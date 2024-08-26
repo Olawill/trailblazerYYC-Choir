@@ -485,7 +485,7 @@ export const AlbumArtWork = ({
               </div>
             </div>
 
-            <ScrollArea className="h-[550px] border rounded-md p-2">
+            <ScrollArea className="h-[500px] border rounded-md p-2">
               <h2 className="italic uppercase font-semibold text-sm mb-2">
                 Lyrics
               </h2>
