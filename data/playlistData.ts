@@ -121,6 +121,13 @@ export const getCurrentList = async () => {
           favorite: true,
           libraryIDs: true,
           link: true,
+          contents: {
+            select: {
+              id: true,
+              type: true,
+              content: true,
+            },
+          },
         },
       });
 
@@ -148,6 +155,13 @@ export const getAllMusicList = async () => {
         favorite: true,
         libraryIDs: true,
         link: true,
+        contents: {
+          select: {
+            id: true,
+            type: true,
+            content: true,
+          },
+        },
       },
     });
 
@@ -204,6 +218,13 @@ export const getMusicListForSearchTerm = async (term: string) => {
         favorite: true,
         libraryIDs: true,
         link: true,
+        contents: {
+          select: {
+            id: true,
+            type: true,
+            content: true,
+          },
+        },
       },
     });
 
@@ -362,6 +383,13 @@ export const getFavPlaylistMusic = async (id: string) => {
         libraryIDs: true,
         favorite: true,
         link: true,
+        contents: {
+          select: {
+            id: true,
+            type: true,
+            content: true,
+          },
+        },
       },
     });
 
@@ -375,6 +403,7 @@ export const getFavPlaylistMusic = async (id: string) => {
         favorite: c.favorite,
         libraryIDs: c.libraryIDs,
         link: c.link,
+        contents: c.contents,
       };
     });
 
@@ -440,6 +469,13 @@ export const getFavListForSearchTerm = async (term: string, id: string) => {
         favorite: true,
         libraryIDs: true,
         link: true,
+        contents: {
+          select: {
+            id: true,
+            type: true,
+            content: true,
+          },
+        },
       },
     });
 
@@ -453,6 +489,7 @@ export const getFavListForSearchTerm = async (term: string, id: string) => {
         favorite: c.favorite,
         libraryIDs: c.libraryIDs,
         link: c.link,
+        contents: c.contents,
       };
     });
 
@@ -482,6 +519,13 @@ export const getLibraryMusic = async (id: string) => {
         playlistIDs: true,
         favorite: true,
         link: true,
+        contents: {
+          select: {
+            id: true,
+            type: true,
+            content: true,
+          },
+        },
       },
     });
 
@@ -494,6 +538,7 @@ export const getLibraryMusic = async (id: string) => {
         playlistIDs: c.playlistIDs,
         favorite: c.favorite,
         link: c.link,
+        contents: c.contents,
       };
     });
 
@@ -523,6 +568,13 @@ export const getPlaylistMusic = async (name: string) => {
             playlistIDs: true,
             favorite: true,
             link: true,
+            contents: {
+              select: {
+                id: true,
+                type: true,
+                content: true,
+              },
+            },
           },
         },
       },
@@ -537,6 +589,7 @@ export const getPlaylistMusic = async (name: string) => {
         playlistIDs: c.playlistIDs,
         favorite: c.favorite,
         link: c.link,
+        contents: c.contents,
       };
     });
 
@@ -566,6 +619,13 @@ export const getTopSongs = async () => {
         playlistIDs: true,
         favorite: true,
         link: true,
+        contents: {
+          select: {
+            id: true,
+            type: true,
+            content: true,
+          },
+        },
       },
     });
 
@@ -585,6 +645,7 @@ export const getTopSongs = async () => {
         playlistIDs: c.playlistIDs,
         favorite: c.favorite,
         link: c.link,
+        contents: c.contents,
       };
     });
 
@@ -619,6 +680,13 @@ export const getRecentlyAdded = async () => {
         playlistIDs: true,
         favorite: true,
         link: true,
+        contents: {
+          select: {
+            id: true,
+            type: true,
+            content: true,
+          },
+        },
       },
     });
 
@@ -631,6 +699,7 @@ export const getRecentlyAdded = async () => {
         playlistIDs: c.playlistIDs,
         favorite: c.favorite,
         link: c.link,
+        contents: c.contents,
       };
     });
 
@@ -665,6 +734,13 @@ export const getRecentlyPlayed = async () => {
         playlistIDs: true,
         favorite: true,
         link: true,
+        contents: {
+          select: {
+            id: true,
+            type: true,
+            content: true,
+          },
+        },
       },
     });
 
@@ -677,6 +753,7 @@ export const getRecentlyPlayed = async () => {
         playlistIDs: c.playlistIDs,
         favorite: c.favorite,
         link: c.link,
+        contents: c.contents,
       };
     });
 

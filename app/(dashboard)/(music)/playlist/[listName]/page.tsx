@@ -12,6 +12,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { convertToSentenceCase } from "@/utils/helper";
 import { genericPlaylistFunction } from "@/utils/constants";
+import { Album } from "@/components/music/cc";
 
 const ListPage = ({
   params,
@@ -51,6 +52,7 @@ const ListPage = ({
       playlistIDs: l.playlistIDs,
       libraryIDs: l.libraryIDs,
       link: l.link,
+      contents: l.contents,
     };
   });
   return (

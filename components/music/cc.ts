@@ -8,6 +8,11 @@ export interface Album {
   libraryIDs?: string[];
   isLiked?: boolean;
   link?: string | null;
+  contents?: {
+    id: string;
+    type: string;
+    content: string;
+  }[];
 }
 
 export const listenNowAlbums: Album[] = [

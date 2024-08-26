@@ -54,6 +54,7 @@ export default function Home() {
       playlistIDs: l.playlistIDs,
       libraryIDs: l.libraryIDs,
       link: l.link,
+      contents: l.contents,
     };
   });
 
@@ -75,6 +76,7 @@ export default function Home() {
       isLiked: user ? l.favorite.includes(user?.id as string) : false,
       playlistIDs: l.playlistIDs,
       link: l.link,
+      contents: l.contents,
     };
   });
 
@@ -110,6 +112,7 @@ export default function Home() {
         isLiked: user ? l.favorite.includes(user?.id as string) : false,
         playlistIDs: l.playlistIDs,
         link: l.link,
+        contents: l.contents,
       };
     });
 

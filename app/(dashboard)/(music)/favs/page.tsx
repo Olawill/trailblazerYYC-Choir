@@ -52,6 +52,7 @@ const FavsPage = ({
       playlistIDs: l.playlistIDs,
       libraryIDs: l.libraryIDs,
       link: l.link,
+      contents: l.contents,
     };
   });
 

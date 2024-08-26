@@ -50,6 +50,7 @@ const BrowsePage = ({
       playlistIDs: l.playlistIDs,
       libraryIDs: l.libraryIDs,
       link: l.link,
+      contents: l.contents,
     };
   });
   return (

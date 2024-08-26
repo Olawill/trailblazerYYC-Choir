@@ -58,6 +58,7 @@ import {
 } from "@/components/ui/drawer";
 import { Button } from "../ui/button";
 import { useState } from "react";
+import { ScrollArea } from "../ui/scroll-area";
 
 interface AlbumArtworkProps extends React.HTMLAttributes<HTMLDivElement> {
   album: Album;
@@ -333,17 +334,14 @@ export const AlbumArtWork = ({
 
       {/* MUSIC PLAYER AND LYRICS */}
       <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
-        {/* <DrawerTrigger asChild>
-        <ContextMenuItem>Play Next</ContextMenuItem>
-      </DrawerTrigger> */}
         <DrawerContent className="h-[90%] md:h-4/5 bg-sky-500 border-none">
           <DrawerHeader className="text-right">
-            <DrawerTitle className="ml-auto -mt-10">
+            <DrawerTitle className="ml-auto -mt-6">
               <DrawerClose asChild>
                 <Button
                   variant="outline"
                   size="icon"
-                  className="border-none focus-visible:ring-px bg-transparent"
+                  className="border-none hover:bg-transparent focus-visible:ring-px bg-transparent -mr-4"
                 >
                   <X className="h-4 w-4" />
                 </Button>
@@ -353,29 +351,99 @@ export const AlbumArtWork = ({
               Music Lyrics and Youtube Link.
             </DrawerDescription>
           </DrawerHeader>
-          <div className="hidden md:block space-y-3 cursor pointer px-4">
-            <div
-              className={cn(
-                "relative overflow-hidden rounded-md",
-                `h-[${height}px] w-full sm:w-[220px] md:w-[${width}px]`
-              )}
-            >
-              <Image
-                src={album.cover}
-                alt={album.name}
-                fill
-                sizes="100%"
-                priority
+          <div className="hidden md:grid grid-cols-3 space-y-3 cursor pointer px-4">
+            <div className="col-span-1">
+              <div
                 className={cn(
-                  "object-cover transition-all hover:scale-105",
-                  aspectRatio === "portrait" ? "aspect-[3/4]" : "aspect-square"
+                  "relative overflow-hidden rounded-md",
+                  `h-[${height}px] md:w-[300px]`
                 )}
-              />
+              >
+                <Image
+                  src={album.cover}
+                  alt={album.name}
+                  fill
+                  sizes="100%"
+                  priority
+                  className={cn(
+                    "object-cover transition-all hover:scale-105",
+                    aspectRatio === "portrait"
+                      ? "aspect-[3/4]"
+                      : "aspect-square"
+                  )}
+                />
+              </div>
+
+              <div className="text-sm mt-1">
+                <div className="flex items-center gap-4">
+                  <h3 className="font-medium leading-none">{album.name}</h3>
+                  {user && (
+                    <Star
+                      className={`h-5 w-5 cursor-pointer ${
+                        album.isLiked ? "text-red-500" : "text-gray-300"
+                      }`}
+                      fill={album.isLiked ? "red" : "transparent"}
+                      onClick={() =>
+                        handleClick(user?.id as string, album.id as string)
+                      }
+                    />
+                  )}
+                </div>
+                <p className="text-xs text-gray-300">{album.artist}</p>
+              </div>
             </div>
 
-            <div className="space-y-1 text-sm">
-              <h3 className="font-medium leading-none">{album.name}</h3>
-              <p className="text-xs text-gray-300">{album.artist}</p>
+            <ScrollArea className="-ml-24 col-span-1 h-[700px] w-full border rounded-md p-2">
+              <h2 className="italic uppercase font-semibold text-sm mb-2">
+                Lyrics
+              </h2>
+              {album &&
+                album.contents &&
+                album?.contents?.map((content, index) => {
+                  if (index < album?.contents?.length! - 1) {
+                    return (
+                      <div
+                        className="bg-sky-200 text-sm p-2 rounded-sm mb-2"
+                        key={index}
+                      >
+                        <h4 className="italic uppercase font-semibold text-xs mb-1 bg-gray-300 p-1 rounded-md">
+                          {content?.type as string}
+                        </h4>
+                        <p className="whitespace-pre-wrap">
+                          {content?.content as string}
+                        </p>
+                      </div>
+                    );
+                  } else {
+                    return (
+                      <div
+                        className="bg-sky-200 text-sm p-2 rounded-sm"
+                        key={index}
+                      >
+                        <h4 className="italic uppercase font-semibold text-xs mb-1 bg-gray-300 p-1 rounded-md">
+                          {content?.type as string}
+                        </h4>
+                        <p className="whitespace-pre-wrap">
+                          {content?.content as string}
+                        </p>
+                      </div>
+                    );
+                  }
+                })}
+            </ScrollArea>
+
+            <div className="col-span-1 relative h-96 w-full overflow-hidden rounded-md">
+              <iframe
+                width={"100%"}
+                height={"100%"}
+                className="absolute top-0 left-0"
+                src={`https://www.youtube.com/embed/${album.videoId}`}
+                title={album.name}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                loading="lazy"
+                allowFullScreen
+                referrerPolicy="strict-origin-when-cross-origin"
+              />
             </div>
           </div>
 
@@ -415,13 +483,50 @@ export const AlbumArtWork = ({
               </div>
             </div>
 
-            <div className="">{album.cover}</div>
+            <ScrollArea className="h-[300px] border rounded-md p-2">
+              <h2 className="italic uppercase font-semibold text-sm mb-2">
+                Lyrics
+              </h2>
+              {album &&
+                album.contents &&
+                album?.contents?.map((content, index) => {
+                  if (index < album?.contents?.length! - 1) {
+                    return (
+                      <div
+                        className="bg-sky-200 text-sm p-2 rounded-sm mb-2"
+                        key={index}
+                      >
+                        <h4 className="italic uppercase font-semibold text-xs mb-1 bg-gray-300 p-1 rounded-md">
+                          {content?.type as string}
+                        </h4>
+                        <p className="whitespace-pre-wrap">
+                          {content?.content as string}
+                        </p>
+                      </div>
+                    );
+                  } else {
+                    return (
+                      <div
+                        className="bg-sky-200 text-sm p-2 rounded-sm"
+                        key={index}
+                      >
+                        <h4 className="italic uppercase font-semibold text-xs mb-1 bg-gray-300 p-1 rounded-md">
+                          {content?.type as string}
+                        </h4>
+                        <p className="whitespace-pre-wrap">
+                          {content?.content as string}
+                        </p>
+                      </div>
+                    );
+                  }
+                })}
+            </ScrollArea>
 
-            <div className="relative bg-red-500 w-full">
+            <div className="relative h-72 w-full overflow-hidden rounded-md">
               <iframe
-                width="380"
-                height="315"
-                // className=""
+                width={"100%"}
+                height={"100%"}
+                className="absolute top-0 left-0"
                 src={`https://www.youtube.com/embed/${album.videoId}`}
                 title={album.name}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
