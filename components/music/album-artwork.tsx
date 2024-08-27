@@ -351,6 +351,7 @@ export const AlbumArtWork = ({
               Music Lyrics and Youtube Link.
             </DrawerDescription>
           </DrawerHeader>
+          {/* LARGE SCREENS */}
           <div className="hidden md:flex gap-8 space-y-3 px-4">
             <div className="col-span-1 cursor-pointer">
               <div
@@ -449,6 +450,7 @@ export const AlbumArtWork = ({
             </div>
           </div>
 
+          {/* MOBILE */}
           <div className="md:hidden space-y-3 cursor pointer px-4 -mt-4">
             <div className="flex gap-4">
               <div className="relative overflow-hidden h-20 w-20 rounded-full">
