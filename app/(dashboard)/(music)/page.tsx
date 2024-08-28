@@ -1,9 +1,6 @@
 "use client";
 
 import { AlbumArtWork } from "@/components/music/album-artwork";
-import { listenNowAlbums, madeForYouAlbums } from "@/components/music/cc";
-import { Header } from "@/components/music/header";
-import { MusicSidebar } from "@/components/music/music-sidebar";
 import { buttonVariants } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
