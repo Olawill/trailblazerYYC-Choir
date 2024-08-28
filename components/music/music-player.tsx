@@ -243,3 +243,6 @@ export const MusicPlayer = forwardRef(
     );
   }
 );
+
+// Set the display name for the component
+MusicPlayer.displayName = "MusicPlayer";
