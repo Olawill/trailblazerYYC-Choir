@@ -1,3 +1,4 @@
+import { FormSuccessProp } from "@/lib/types";
 import { CircleCheck } from "lucide-react";
 
 export const FormSuccess = ({ message }: FormSuccessProp) => {

@@ -1,3 +1,4 @@
+import { HeaderProp } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { Poppins } from "next/font/google";
 
