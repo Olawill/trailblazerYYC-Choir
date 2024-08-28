@@ -59,6 +59,8 @@ import {
 import { Button } from "../ui/button";
 import { useState } from "react";
 import { ScrollArea } from "../ui/scroll-area";
+import { MusicPlayer } from "./music-player";
+import { YoutubePlayer } from "./youtube-player";
 
 interface AlbumArtworkProps extends React.HTMLAttributes<HTMLDivElement> {
   album: Album;
@@ -395,7 +397,7 @@ export const AlbumArtWork = ({
             </div>
 
             <div className="flex-1 grid grid-cols-2 gap-8">
-              <ScrollArea className="col-span-1 h-[600px] w-full border rounded-md p-2">
+              <ScrollArea className="col-span-1 max-h-[600px] w-full border rounded-md p-2">
                 <h2 className="italic uppercase font-semibold text-sm mb-2">
                   Lyrics
                 </h2>
@@ -435,17 +437,11 @@ export const AlbumArtWork = ({
               </ScrollArea>
 
               <div className="col-span-1 relative h-[450px] w-full overflow-hidden rounded-md">
-                <iframe
-                  width={"100%"}
-                  height={"100%"}
-                  className="absolute top-0 left-0"
-                  src={`https://www.youtube.com/embed/${album.videoId}`}
-                  title={album.name}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  loading="lazy"
-                  allowFullScreen
-                  referrerPolicy="strict-origin-when-cross-origin"
-                />
+                {album.videoId ? (
+                  <YoutubePlayer album={album} />
+                ) : (
+                  <MusicPlayer title={album.name} />
+                )}
               </div>
             </div>
           </div>
@@ -526,17 +522,11 @@ export const AlbumArtWork = ({
                 })}
 
               <div className="relative h-72 w-full overflow-hidden rounded-md mt-2">
-                <iframe
-                  width={"100%"}
-                  height={"100%"}
-                  className="absolute top-0 left-0"
-                  src={`https://www.youtube.com/embed/${album.videoId}`}
-                  title={album.name}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  loading="lazy"
-                  allowFullScreen
-                  referrerPolicy="strict-origin-when-cross-origin"
-                />
+                {album.videoId ? (
+                  <YoutubePlayer album={album} />
+                ) : (
+                  <MusicPlayer title={album.name} />
+                )}
               </div>
             </ScrollArea>
           </div>
