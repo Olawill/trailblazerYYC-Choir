@@ -93,7 +93,10 @@ export const AlbumArtWork = ({
   const user = useCurrentUser();
 
   const sound = new Howl({
-    src: ["behrakha.mp3"],
+    // src: ["behrakha.mp3"],
+    src: [
+      "https://res.cloudinary.com/dy5p79uwl/video/upload/v1724853630/yyc/nw4dgwl7lexrphevhpis.mp3",
+    ],
     html5: true,
   });
 
