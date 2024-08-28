@@ -97,42 +97,35 @@ export const getCurrentList = async () => {
       },
       select: {
         id: true,
+        canAddTo: true,
+        music: {
+          select: {
+            id: true,
+            title: true,
+            videoId: true,
+            authors: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+            playlistIDs: true,
+            favorite: true,
+            libraryIDs: true,
+            link: true,
+            contents: {
+              select: {
+                id: true,
+                type: true,
+                content: true,
+              },
+            },
+          },
+        },
       },
     });
 
-    if (currentList) {
-      const currentListDetails = await prisma.music.findMany({
-        where: {
-          playlistIDs: {
-            has: currentList.id,
-          },
-        },
-        select: {
-          id: true,
-          title: true,
-          videoId: true,
-          authors: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
-          playlistIDs: true,
-          favorite: true,
-          libraryIDs: true,
-          link: true,
-          contents: {
-            select: {
-              id: true,
-              type: true,
-              content: true,
-            },
-          },
-        },
-      });
-
-      return currentListDetails;
-    }
+    return currentList;
   } catch {
     return null;
   }
@@ -555,6 +548,8 @@ export const getPlaylistMusic = async (name: string) => {
         name,
       },
       select: {
+        id: true,
+        canAddTo: true,
         music: {
           select: {
             id: true,
@@ -580,22 +575,31 @@ export const getPlaylistMusic = async (name: string) => {
       },
     });
 
-    const modifiedList = list?.music.map((c) => {
-      return {
-        title: c.title,
-        id: c.id,
-        videoId: c.videoId,
-        artists: c.authors.map((a) => a.name).join(", "),
-        playlistIDs: c.playlistIDs,
-        favorite: c.favorite,
-        link: c.link,
-        contents: c.contents,
-      };
-    });
+    const modifiedList =
+      list?.music.map((c) => {
+        return {
+          title: c.title,
+          id: c.id,
+          videoId: c.videoId,
+          artists: c.authors.map((a) => a.name).join(", "),
+          playlistIDs: c.playlistIDs,
+          favorite: c.favorite,
+          link: c.link,
+          contents: c.contents,
+        };
+      }) || [];
 
-    return modifiedList;
+    return {
+      playlistId: list?.id,
+      canAddTo: list?.canAddTo,
+      data: modifiedList,
+    };
   } catch {
-    return null;
+    return {
+      playlistId: undefined,
+      canAddTo: undefined,
+      data: [],
+    };
   }
 };
 
@@ -649,9 +653,9 @@ export const getTopSongs = async () => {
       };
     });
 
-    return modifiedList;
+    return { data: modifiedList };
   } catch {
-    return null;
+    return { data: [] };
   }
 };
 
@@ -703,9 +707,9 @@ export const getRecentlyAdded = async () => {
       };
     });
 
-    return modifiedList;
+    return { data: modifiedList };
   } catch {
-    return null;
+    return { data: [] };
   }
 };
 
@@ -757,8 +761,8 @@ export const getRecentlyPlayed = async () => {
       };
     });
 
-    return modifiedList;
+    return { data: modifiedList };
   } catch {
-    return null;
+    return { data: [] };
   }
 };

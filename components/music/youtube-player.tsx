@@ -1,6 +1,6 @@
 "use client";
 
-import { Album } from "./cc";
+import { Album } from "./music-constants";
 import Script from "next/script";
 
 export const YoutubePlayer = ({ album }: { album: Album }) => {

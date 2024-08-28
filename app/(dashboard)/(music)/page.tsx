@@ -1,6 +1,10 @@
 "use client";
 
 import { AlbumArtWork } from "@/components/music/album-artwork";
+import {
+  PlaylistData,
+  PlaylistQueryData,
+} from "@/components/music/music-constants";
 import { buttonVariants } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
@@ -38,22 +42,26 @@ export default function Home() {
     queryFn: () => getCurrentList(),
   });
 
-  const modlistenNow = listenNow?.map((l) => {
-    return {
-      id: l.id,
-      name: l.title.split(" - ")[0],
-      cover: l.videoId
-        ? `https://img.youtube.com/vi/${l.videoId}/0.jpg`
-        : "/noWallpaper.jpg",
-      videoId: l.videoId,
-      artist: l.authors.map((a) => a.name).join(", "),
-      isLiked: user ? l.favorite.includes(user?.id as string) : false,
-      playlistIDs: l.playlistIDs,
-      libraryIDs: l.libraryIDs,
-      link: l.link,
-      contents: l.contents,
-    };
-  });
+  const modlistenNow = {
+    playlistId: listenNow?.id,
+    canAddTo: listenNow?.canAddTo,
+    data: listenNow?.music?.map((l) => {
+      return {
+        id: l.id,
+        name: l.title.split(" - ")[0],
+        cover: l.videoId
+          ? `https://img.youtube.com/vi/${l.videoId}/0.jpg`
+          : "/noWallpaper.jpg",
+        videoId: l.videoId,
+        artist: l.authors.map((a) => a.name).join(", "),
+        isLiked: user ? l.favorite.includes(user?.id as string) : false,
+        playlistIDs: l.playlistIDs,
+        libraryIDs: l.libraryIDs,
+        link: l.link,
+        contents: l.contents,
+      };
+    }),
+  };
 
   // FOR THE LIBRARY LIST
   const { data: libMusic, isLoading: libLoading } = useQuery({
@@ -97,7 +105,9 @@ export default function Home() {
 
   // Map through playlistQueries to extract data
   const playlistData = playlistQueries.map((query, index) => {
-    const listTracks = query.data?.map((l) => {
+    // console.log(query.data);
+    const returnedData = query?.data as PlaylistData | undefined;
+    const listTracks = returnedData?.data?.map((l) => {
       return {
         id: l.id,
         name: l.title.split(" - ")[0],
@@ -116,7 +126,9 @@ export default function Home() {
     return {
       isLoading: query.isLoading,
       data: listTracks,
-      name: filteredList?.[index].name,
+      name: filteredList?.[index].name as string,
+      playlistId: returnedData?.playlistId,
+      canAddTo: returnedData?.canAddTo,
     };
   });
 
@@ -154,7 +166,7 @@ export default function Home() {
                 {listenLoading && <Home.Skeleton />}
                 <Suspense fallback={<Home.Skeleton />}>
                   {modlistenNow &&
-                    modlistenNow.map((album) => (
+                    modlistenNow?.data?.map((album) => (
                       <AlbumArtWork
                         key={album.name}
                         album={album}
@@ -163,11 +175,13 @@ export default function Home() {
                         aspectRatio="portrait"
                         addToLibrary
                         addToPlaylist
+                        playlistId={modlistenNow.playlistId}
+                        canAddTo={modlistenNow.canAddTo}
                         width={250}
                         height={330}
                       />
                     ))}
-                  {(!modlistenNow || modlistenNow.length === 0) && (
+                  {(!modlistenNow || modlistenNow?.data?.length === 0) && (
                     <div className="w-full italic text-center text-base text-gray-300 border rounded-md p-2">
                       🎵 The &apos;Listen Now&apos; playlist is a bit too quiet
                       — looks like it&apos;s taking a nap! 🎵
@@ -249,6 +263,8 @@ export default function Home() {
                                   album={album}
                                   className="w-[250px]"
                                   aspectRatio="portrait"
+                                  playlistId={playlist.playlistId as string}
+                                  canAddTo={playlist.canAddTo as boolean}
                                   width={250}
                                   height={330}
                                 />

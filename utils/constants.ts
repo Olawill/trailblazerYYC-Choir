@@ -5,40 +5,67 @@ import {
 } from "@/data/playlistData";
 
 export type PlaylistFunction = {
-  "Top Songs": () => Promise<
-    | {
-        title: string;
+  "Top Songs": () => Promise<{
+    playlistId?: string;
+    canAddTo?: boolean;
+    data: {
+      title: string;
+      id: string;
+      videoId: string | null;
+      artists: string;
+      playlistIDs: string[];
+      favorite: string[];
+      link: string | null;
+      contents: {
         id: string;
-        videoId: string | null;
-        artists: string;
-        playlistIDs: string[];
-        favorite: string[];
-      }[]
-    | null
-  >;
-  "Recently Added"?: () => Promise<
-    | {
-        title: string;
+        type: string;
+        content: string;
+      }[];
+    }[];
+  } | null>;
+  "Recently Added": () => Promise<{
+    playlistId?: string;
+    canAddTo?: boolean;
+    data: {
+      title: string;
+      id: string;
+      videoId: string | null;
+      artists: string;
+      playlistIDs: string[];
+      favorite: string[];
+      link: string | null;
+      contents: {
         id: string;
-        videoId: string | null;
-        artists: string;
-        playlistIDs: string[];
-        favorite: string[];
-      }[]
-    | null
-  >;
-  "Recently Played"?: () => Promise<
-    | {
-        title: string;
+        type: string;
+        content: string;
+      }[];
+    }[];
+  } | null>;
+  "Recently Played": () => Promise<{
+    playlistId?: string;
+    canAddTo?: boolean;
+    data: {
+      title: string;
+      id: string;
+      videoId: string | null;
+      artists: string;
+      playlistIDs: string[];
+      favorite: string[];
+      link: string | null;
+      contents: {
         id: string;
-        videoId: string | null;
-        artists: string;
-        playlistIDs: string[];
-        favorite: string[];
-      }[]
-    | null
-  >;
-  [key: string]: (() => Promise<any[] | null>) | undefined; // Added index signature
+        type: string;
+        content: string;
+      }[];
+    }[];
+  } | null>;
+  [key: string]:
+    | (() => Promise<{
+        playlistId?: string;
+        canAddTo?: boolean;
+        data: any[];
+      } | null>)
+    | undefined; // Added index signature
 };
 
 export const allQuery = [

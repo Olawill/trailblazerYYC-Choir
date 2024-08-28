@@ -1,7 +1,7 @@
 "use client";
 
 import { ListMusic, PlusCircle, Star, X } from "lucide-react";
-import { Album } from "./cc";
+import { Album } from "./music-constants";
 import { cn } from "@/lib/utils";
 import {
   ContextMenu,
@@ -74,6 +74,8 @@ interface AlbumArtworkProps extends React.HTMLAttributes<HTMLDivElement> {
   addToPlaylist?: boolean;
   createPlaylist?: boolean;
   playlists: Playlist[];
+  playlistId?: string;
+  canAddTo?: boolean;
 }
 
 type MusicPlayerHandle = {
@@ -90,6 +92,8 @@ export const AlbumArtWork = ({
   fromLibrary = false,
   addToPlaylist,
   createPlaylist,
+  playlistId,
+  canAddTo,
   playlists,
   className,
   ...props
@@ -294,10 +298,11 @@ export const AlbumArtWork = ({
                   !user ||
                   (user.role !== "USER" && <ContextMenuSeparator />)}
 
-                <ContextMenuItem onClick={handleDrawer}>
-                  Play Next
-                </ContextMenuItem>
-                <ContextMenuItem>Play Later</ContextMenuItem>
+                <ContextMenuItem onClick={handleDrawer}>Play</ContextMenuItem>
+
+                {playlistId && canAddTo == false && (
+                  <ContextMenuItem>Play All</ContextMenuItem>
+                )}
                 <ContextMenuSeparator />
                 {user && user.role && (
                   <ContextMenuItem

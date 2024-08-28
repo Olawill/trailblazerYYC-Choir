@@ -15,6 +15,24 @@ export interface Album {
   }[];
 }
 
+export interface PlaylistQueryData {
+  isLoading: boolean;
+  data: Album[] | null;
+  name: string;
+}
+
+export type AlbumQuery = Omit<Album, "name" | "artist" | "isLiked"> & {
+  artists: string;
+  title: string;
+  favorite: string[];
+};
+
+export interface PlaylistData {
+  playlistId?: string | null;
+  data: AlbumQuery[] | null;
+  canAddTo?: boolean | null;
+}
+
 // export const listenNowAlbums: Album[] = [
 //   {
 //     name: "React Rendezvous",

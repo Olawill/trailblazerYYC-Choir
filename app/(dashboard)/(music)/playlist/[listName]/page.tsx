@@ -12,7 +12,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { convertToSentenceCase } from "@/utils/helper";
 import { genericPlaylistFunction } from "@/utils/constants";
-import { Album } from "@/components/music/cc";
+import { Album } from "@/components/music/music-constants";
 
 const ListPage = ({
   params,
@@ -39,7 +39,7 @@ const ListPage = ({
       (() => getPlaylistMusic(pageHeader as string)),
   });
 
-  const tracks = allTrack?.map((l) => {
+  const tracks = allTrack?.data?.map((l) => {
     return {
       id: l.id,
       name: l.title.split(" - ")[0],
@@ -86,6 +86,8 @@ const ListPage = ({
                   playlists={playlists as Playlist[]}
                   className="w-[310px] md:w-[200px]"
                   aspectRatio="portrait"
+                  playlistId={allTrack?.playlistId as string}
+                  canAddTo={allTrack?.canAddTo as boolean}
                   width={200}
                   height={330}
                 />
