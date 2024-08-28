@@ -59,6 +59,7 @@ import {
 import { Button } from "../ui/button";
 import { useState } from "react";
 import { ScrollArea } from "../ui/scroll-area";
+import { Howl } from "howler";
 import { MusicPlayer } from "./music-player";
 import { YoutubePlayer } from "./youtube-player";
 
@@ -90,6 +91,11 @@ export const AlbumArtWork = ({
   ...props
 }: AlbumArtworkProps) => {
   const user = useCurrentUser();
+
+  const sound = new Howl({
+    src: ["behrakha.mp3"],
+    html5: true,
+  });
 
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -336,7 +342,7 @@ export const AlbumArtWork = ({
 
       {/* MUSIC PLAYER AND LYRICS */}
       <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
-        <DrawerContent className="h-[90%] md:h-4/5 bg-sky-500 border-none">
+        <DrawerContent className="h-[95%] md:h-4/5 bg-sky-500 border-none">
           <DrawerHeader className="text-right">
             <DrawerTitle className="ml-auto -mt-6">
               <DrawerClose asChild>
@@ -440,7 +446,7 @@ export const AlbumArtWork = ({
                 {album.videoId ? (
                   <YoutubePlayer album={album} />
                 ) : (
-                  <MusicPlayer title={album.name} />
+                  <MusicPlayer title={album.name} sound={sound} />
                 )}
               </div>
             </div>
@@ -525,7 +531,7 @@ export const AlbumArtWork = ({
                 {album.videoId ? (
                   <YoutubePlayer album={album} />
                 ) : (
-                  <MusicPlayer title={album.name} />
+                  <MusicPlayer title={album.name} sound={sound} />
                 )}
               </div>
             </ScrollArea>

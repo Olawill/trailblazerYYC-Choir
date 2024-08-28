@@ -13,16 +13,12 @@ import {
 import { Howl } from "howler";
 import { useEffect, useState } from "react";
 
-const sound = new Howl({
-  src: ["tt.mp3"],
-  html5: true,
-});
-
 interface MusicPlayerProps {
   title: string;
+  sound: Howl;
 }
 
-export const MusicPlayer = ({ title }: MusicPlayerProps) => {
+export const MusicPlayer = ({ title, sound }: MusicPlayerProps) => {
   const [playing, setPlaying] = useState(false);
   const [soundId, setSoundId] = useState<number | null>(null);
   const [duration, setDuration] = useState<number>(0);
