@@ -57,7 +57,7 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Button } from "../ui/button";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { ScrollArea } from "../ui/scroll-area";
 import { Howl } from "howler";
 import { MusicPlayer } from "./music-player";
@@ -75,6 +75,10 @@ interface AlbumArtworkProps extends React.HTMLAttributes<HTMLDivElement> {
   createPlaylist?: boolean;
   playlists: Playlist[];
 }
+
+type MusicPlayerHandle = {
+  stop: () => void;
+};
 
 export const AlbumArtWork = ({
   album,
@@ -101,9 +105,17 @@ export const AlbumArtWork = ({
   });
 
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const musicPlayerRef = useRef<MusicPlayerHandle>(null);
 
   const handleDrawer = () => {
     setDrawerOpen((prev) => !prev);
+  };
+
+  const handleDrawerOpenChange = (open: boolean) => {
+    if (!open && musicPlayerRef.current) {
+      musicPlayerRef.current.stop(); // Stop music when drawer closes
+    }
+    setDrawerOpen(open);
   };
 
   const queryClient = useQueryClient();
@@ -344,7 +356,7 @@ export const AlbumArtWork = ({
       </AlertDialog>
 
       {/* MUSIC PLAYER AND LYRICS */}
-      <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
+      <Drawer open={drawerOpen} onOpenChange={handleDrawerOpenChange}>
         <DrawerContent className="h-[95%] md:h-4/5 bg-sky-500 border-none">
           <DrawerHeader className="text-right">
             <DrawerTitle className="ml-auto -mt-6">
@@ -445,11 +457,15 @@ export const AlbumArtWork = ({
                   })}
               </ScrollArea>
 
-              <div className="col-span-1 relative h-[450px] w-full overflow-hidden rounded-md">
+              <div className="col-span-1 relative h-[600px] w-full overflow-hidden rounded-md">
                 {album.videoId ? (
                   <YoutubePlayer album={album} />
                 ) : (
-                  <MusicPlayer title={album.name} sound={sound} />
+                  <MusicPlayer
+                    title={album.name}
+                    sound={sound}
+                    ref={musicPlayerRef}
+                  />
                 )}
               </div>
             </div>
@@ -534,7 +550,11 @@ export const AlbumArtWork = ({
                 {album.videoId ? (
                   <YoutubePlayer album={album} />
                 ) : (
-                  <MusicPlayer title={album.name} sound={sound} />
+                  <MusicPlayer
+                    title={album.name}
+                    sound={sound}
+                    ref={musicPlayerRef}
+                  />
                 )}
               </div>
             </ScrollArea>
