@@ -468,6 +468,7 @@ export const AlbumArtWork = ({
                 ) : (
                   <MusicPlayer
                     title={album.name}
+                    id={album.id as string}
                     sound={sound}
                     ref={musicPlayerRef}
                   />
@@ -557,6 +558,7 @@ export const AlbumArtWork = ({
                 ) : (
                   <MusicPlayer
                     title={album.name}
+                    id={album.id as string}
                     sound={sound}
                     ref={musicPlayerRef}
                   />

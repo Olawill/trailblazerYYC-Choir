@@ -766,3 +766,32 @@ export const getRecentlyPlayed = async () => {
     return { data: [] };
   }
 };
+
+// UPDATE THE LAST TIME MUSIC PLAYED AND TIMES PLAYED
+export const updateMusicTimeAndNumber = async (id: string) => {
+  try {
+    const existingMusic = await prisma.music.findFirst({
+      where: {
+        id,
+      },
+    });
+
+    if (!existingMusic) {
+      return null;
+    }
+
+    const music = await prisma.music.update({
+      where: {
+        id: existingMusic.id,
+      },
+      data: {
+        lastTimePlayed: new Date(),
+        numberOfTimesPlayed: existingMusic.numberOfTimesPlayed + 1,
+      },
+    });
+
+    return music;
+  } catch {
+    return null;
+  }
+};

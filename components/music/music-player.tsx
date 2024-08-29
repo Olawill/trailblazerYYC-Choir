@@ -12,14 +12,16 @@ import {
 } from "lucide-react";
 import { Howl } from "howler";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
+import { updateMusicTimeAndNumber } from "@/data/playlistData";
 
 interface MusicPlayerProps {
+  id: string;
   title: string;
   sound: Howl;
 }
 
 export const MusicPlayer = forwardRef(
-  ({ title, sound }: MusicPlayerProps, ref) => {
+  ({ id, title, sound }: MusicPlayerProps, ref) => {
     const [playing, setPlaying] = useState(false);
     const [soundId, setSoundId] = useState<number | null>(null);
     const [duration, setDuration] = useState<number>(0);
@@ -80,7 +82,7 @@ export const MusicPlayer = forwardRef(
         } else {
           const testId = sound.play(); // Play for the first time
           setSoundId(testId);
-          // setDuration(sound.duration());
+          updateMusicTimeAndNumber(id);
         }
       } else {
         if (soundId) {
