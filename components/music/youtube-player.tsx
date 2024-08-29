@@ -1,42 +1,53 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import {
+  MutableRefObject,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Album } from "./music-constants";
 import Script from "next/script";
 import { updateMusicTimeAndNumber } from "@/data/playlistData";
-import { ScaleLoader } from "react-spinners";
 
 export const YoutubePlayer = ({ album }: { album: Album }) => {
   const [hasPlayed, setHasPlayed] = useState(false);
 
-  const [elapsedTime, setElapsedTime] = useState(0); // Time in seconds
   const [videoDuration, setVideoDuration] = useState(0); // Duration in seconds
   const playerRef = useRef<YT.Player | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const hasPlayedRef = useRef(hasPlayed); // Ref to track hasPlayed
 
-  useEffect(() => {
-    const onYouTubeIframeAPIReady = () => {
+  // Initialize the player
+  const initializePlayer = () => {
+    if (window.YT && window.YT.Player) {
       playerRef.current = new YT.Player(`player-${album.videoId}`, {
         events: {
           onReady: onPlayerReady,
           onStateChange: onPlayerStateChange,
         },
       });
-    };
+    } else {
+      console.error("YouTube API is not loaded.");
+    }
+  };
 
+  useEffect(() => {
     if (
       typeof window.YT === "undefined" ||
       typeof window.YT.Player === "undefined"
     ) {
-      window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
+      window.onYouTubeIframeAPIReady = initializePlayer;
     } else {
-      onYouTubeIframeAPIReady();
+      initializePlayer();
     }
 
     // Clean up interval on unmount
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
+        // intervalRef.current = null;
       }
     };
   }, [album.videoId]);
@@ -52,45 +63,38 @@ export const YoutubePlayer = ({ album }: { album: Album }) => {
     console.log("Player ready!");
   };
 
-  const onPlayerStateChange = (event: YT.OnStateChangeEvent) => {
-    if (event.data === YT.PlayerState.PLAYING && !hasPlayed) {
-      const currentTime = event.target.getCurrentTime();
-
-      // Check if the video is playing from the start (or near the start)
-      if (currentTime < 1) {
-        setHasPlayed(true);
-
-        // Insert your first-time tracking code here
-        updateMusicTimeAndNumber(album.id as string);
+  const onPlayerStateChange = useCallback(
+    (event: YT.OnStateChangeEvent) => {
+      if (!event.target) {
+        console.error("Player event target is missing.");
+        return;
       }
 
-      // Start tracking time if not already tracking
-      if (!intervalRef.current) {
-        intervalRef.current = setInterval(() => {
-          if (playerRef.current) {
-            const currentTime = playerRef.current.getCurrentTime();
-            setElapsedTime(currentTime);
-            // console.log(
-            //   `Elapsed time: ${Math.floor(
-            //     currentTime / 60
-            //   )} minutes and ${Math.floor(currentTime % 60)} seconds`
-            // );
-          }
-        }, 30000); // Update every 30 second
-      }
-    } else if (
-      event.data === YT.PlayerState.PAUSED ||
-      event.data === YT.PlayerState.ENDED
-    ) {
-      // Stop tracking time
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
-    }
-  };
+      const isPlaying = event.data === YT.PlayerState.PLAYING;
+      const isPausedOrEnded =
+        event.data === YT.PlayerState.PAUSED ||
+        event.data === YT.PlayerState.ENDED;
 
-  // console.log(YT.PlayerState);
+      if (isPlaying) {
+        // const currentTime = event.target.getCurrentTime();
+
+        if (!hasPlayedRef.current) {
+          hasPlayedRef.current = true;
+          setHasPlayed(true);
+
+          // Insert your first-time tracking code here
+          updateMusicTimeAndNumber(album.id as string);
+        }
+      } else if (isPausedOrEnded) {
+        // Stop tracking time
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
+        }
+      }
+    },
+    [album.id]
+  );
 
   return (
     <>
@@ -100,12 +104,13 @@ export const YoutubePlayer = ({ album }: { album: Album }) => {
       />
       <iframe
         id={`player-${album.videoId}`}
+        key={album.videoId}
         width={"100%"}
         height={"100%"}
         className="absolute top-0 left-0"
         src={`https://www.youtube.com/embed/${album.videoId}?enablejsapi=1`}
         title={album.name}
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        // allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         loading="lazy"
         allowFullScreen
         referrerPolicy="strict-origin-when-cross-origin"

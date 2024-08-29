@@ -44,13 +44,35 @@ export const MusicPlayer = forwardRef(
       },
     }));
 
+    // useEffect(() => {
+    //   sound.once("load", () => {
+    //     setDuration(sound.duration());
+    //     setVolume(sound.volume());
+    //   });
+
+    //   sound.on("end", () => setPlaying(false));
+    // }, [sound]);
+
     useEffect(() => {
-      sound.once("load", () => {
+      if (!sound) return;
+
+      const handleLoad = () => {
         setDuration(sound.duration());
         setVolume(sound.volume());
-      });
+      };
 
-      sound.on("end", () => setPlaying(false));
+      const handleEnd = () => {
+        setPlaying(false);
+      };
+      sound.once("load", handleLoad);
+
+      sound.on("end", handleEnd);
+
+      // Cleanup
+      return () => {
+        sound.off("end", handleEnd);
+        sound.off("load", handleLoad);
+      };
     }, [sound]);
 
     useEffect(() => {
@@ -65,7 +87,7 @@ export const MusicPlayer = forwardRef(
       }
 
       return () => {
-        if (!(seekTime < duration)) clearInterval(interval);
+        if (interval) clearInterval(interval);
       }; // Cleanup on unmount or when `playing` changes
     }, [playing, isDragging]);
 

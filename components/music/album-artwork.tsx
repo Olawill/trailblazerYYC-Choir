@@ -57,7 +57,7 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Button } from "../ui/button";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ScrollArea } from "../ui/scroll-area";
 import { Howl } from "howler";
 import { MusicPlayer } from "./music-player";
@@ -403,7 +403,7 @@ export const AlbumArtWork = ({
                 />
               </div>
 
-              <div className="text-sm mt-1">
+              <div className="text-sm mt-1 md:w-[280px]">
                 <div className="flex items-center justify-between gap-4">
                   <h3 className="font-medium leading-none">{album.name}</h3>
                   {user && (
@@ -418,7 +418,9 @@ export const AlbumArtWork = ({
                     />
                   )}
                 </div>
-                <p className="text-xs text-gray-300">{album.artist}</p>
+                <p className="text-xs text-gray-300 overflow-hidden">
+                  {album.artist}
+                </p>
               </div>
             </div>
 
