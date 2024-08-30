@@ -610,6 +610,9 @@ export const getTopSongs = async () => {
         playlistIDs: {
           isEmpty: false,
         },
+        numberOfTimesPlayed: {
+          gte: 1,
+        },
       },
       select: {
         id: true,
@@ -631,6 +634,10 @@ export const getTopSongs = async () => {
           },
         },
       },
+      orderBy: {
+        numberOfTimesPlayed: "desc",
+      },
+      take: 10,
     });
 
     const sortedList = list
@@ -692,6 +699,10 @@ export const getRecentlyAdded = async () => {
           },
         },
       },
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: 10,
     });
 
     const modifiedList = list?.map((c) => {
@@ -746,6 +757,10 @@ export const getRecentlyPlayed = async () => {
           },
         },
       },
+      orderBy: {
+        lastTimePlayed: "desc",
+      },
+      take: 10,
     });
 
     const modifiedList = list?.map((c) => {

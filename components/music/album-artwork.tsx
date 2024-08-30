@@ -435,7 +435,7 @@ export const AlbumArtWork = ({
                     if (index < album?.contents?.length! - 1) {
                       return (
                         <div
-                          className="bg-sky-200 text-sm p-2 rounded-sm mb-2"
+                          className="bg-sky-200 dark:bg-background text-sm p-2 rounded-sm mb-2"
                           key={index}
                         >
                           <h4 className="italic uppercase font-semibold text-xs mb-1 bg-gray-300 p-1 rounded-md">
@@ -449,7 +449,7 @@ export const AlbumArtWork = ({
                     } else {
                       return (
                         <div
-                          className="bg-sky-200 text-sm p-2 rounded-sm"
+                          className="bg-sky-200 dark:bg-background text-sm p-2 rounded-sm"
                           key={index}
                         >
                           <h4 className="italic uppercase font-semibold text-xs mb-1 bg-gray-300 p-1 rounded-md">
@@ -526,7 +526,7 @@ export const AlbumArtWork = ({
                   if (index < album?.contents?.length! - 1) {
                     return (
                       <div
-                        className="bg-sky-200 text-sm p-2 rounded-sm mb-2"
+                        className="bg-sky-200 dark:bg-background text-sm p-2 rounded-sm mb-2"
                         key={index}
                       >
                         <h4 className="italic uppercase font-semibold text-xs mb-1 bg-gray-300 p-1 rounded-md">
@@ -540,7 +540,7 @@ export const AlbumArtWork = ({
                   } else {
                     return (
                       <div
-                        className="bg-sky-200 text-sm p-2 rounded-sm"
+                        className="bg-sky-200 dark:bg-background text-sm p-2 rounded-sm"
                         key={index}
                       >
                         <h4 className="italic uppercase font-semibold text-xs mb-1 bg-gray-300 p-1 rounded-md">

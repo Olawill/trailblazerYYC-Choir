@@ -4,6 +4,16 @@ import { deleteMusic, deleteMusicFromPlaylist } from "@/actions/music-update";
 import { updatePlaylist } from "@/actions/playlist";
 import { RoleGate } from "@/components/auth/role-gate";
 import { EditPlaylistForm } from "@/components/music/edit-playlist-form";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -72,6 +82,8 @@ import { z } from "zod";
 
 const ManageMusicPage = () => {
   const qc = useQueryClient();
+
+  const [playlistDeleteAlertOpen, setPlaylistDeleteAlertOpen] = useState(false);
 
   const [isPending, startTransition] = useTransition();
 
@@ -209,6 +221,10 @@ const ManageMusicPage = () => {
 
   const handleTrackDelete = async (musicId: string, playlistId: string) => {
     await DeleteOption({ musicId, playlistId });
+  };
+
+  const handlePlaylistDeleteTrigger = () => {
+    setPlaylistDeleteAlertOpen((prev) => !prev);
   };
 
   return (
@@ -502,14 +518,10 @@ const ManageMusicPage = () => {
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={() => handleDelete(currentList?.id!)}
+                      onClick={handlePlaylistDeleteTrigger}
                       className="w-32 hover:bg-destructive hover:border-none hover:text-white"
                     >
-                      {isPending ? (
-                        <Loader className="w-4 h-4 animate-spin" />
-                      ) : (
-                        "Delete Playlist"
-                      )}
+                      Delete Playlist
                     </Button>
                   </CardFooter>
                 )}
@@ -518,6 +530,39 @@ const ManageMusicPage = () => {
           </div>
         </div>
       </div>
+
+      <AlertDialog
+        open={playlistDeleteAlertOpen}
+        onOpenChange={setPlaylistDeleteAlertOpen}
+      >
+        {/* <AlertDialogTrigger asChild>
+        <Button variant="outline">Show Dialog</Button>
+      </AlertDialogTrigger> */}
+        <AlertDialogContent className="border-none">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <Separator />
+            <AlertDialogDescription className="text-gray-300">
+              This action cannot be undone. This will permanently delete{" "}
+              <span className="font-extrabold italic">{currentList?.name}</span>{" "}
+              playlist and remove all its data.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="w-32">Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="w-32 hover:bg-destructive hover:text-white"
+              onClick={() => handleDelete(currentList?.id!)}
+            >
+              {isPending ? (
+                <Loader className="w-4 h-4 animate-spin" />
+              ) : (
+                "Delete"
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </RoleGate>
   );
 };

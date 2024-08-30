@@ -178,7 +178,7 @@ export const EditPlaylistForm = ({ list }: { list: ListType }) => {
                         role="combobox"
                         disabled={isPending}
                         className={cn(
-                          "w-full justify-between text-wrap",
+                          "w-full justify-between text-wrap line-clamp-2",
                           !field.value && "text-muted-foreground"
                         )}
                       >
