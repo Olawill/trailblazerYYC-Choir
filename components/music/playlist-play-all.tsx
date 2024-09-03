@@ -259,7 +259,114 @@ export const PlaylistPlayAllDrawer = ({
             </div>
 
             {/* MOBILE SCREENS */}
-            <div className="md:hidden space-y-3 cursor pointer px-4 -mt-4"></div>
+            <div className="md:hidden space-y-3 cursor pointer px-4 -mt-4">
+              <h2 className="ml-2 text-2xl font-semibold tracking-tight">
+                {playlistData?.name}
+              </h2>
+              <ScrollArea className="h-[300px] border rounded-md p-2">
+                <div className="flex flex-col gap-2">
+                  {modifiedPlaylistData?.map((item, index) => (
+                    <div
+                      className={`flex gap-4 cursor-pointer hover:bg-background rounded-md p-2 ${
+                        item.id === currentAlbum?.id && "bg-background"
+                      }`}
+                      onClick={() => {
+                        if (musicPlayerRef.current) {
+                          musicPlayerRef.current.stop();
+                        }
+                        setCurrentAlbum(item);
+                      }}
+                      key={index}
+                    >
+                      <div className="relative overflow-hidden h-10 w-10 rounded-full">
+                        <Image
+                          src={item.cover}
+                          alt={item.name}
+                          fill
+                          sizes="100%"
+                          priority
+                          className={cn(
+                            "object-cover transition-all hover:scale-105",
+                            "aspect-[3/4]"
+                          )}
+                        />
+                      </div>
+                      <div className="flex-1 flex justify-between">
+                        <div className="flex-1 space-y-1 text-sm mt-2">
+                          <h3 className="font-medium leading-none">
+                            {item.name}
+                          </h3>
+                          <p className="text-xs text-gray-300">{item.artist}</p>
+                        </div>
+                        {user && (
+                          <Star
+                            className={`h-5 w-5 cursor-pointer mt-2 ${
+                              item.isLiked ? "text-red-500" : "text-gray-300"
+                            }`}
+                            fill={item.isLiked ? "red" : "transparent"}
+                            onClick={() =>
+                              handleClick(user?.id as string, item.id as string)
+                            }
+                          />
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+
+              <ScrollArea className="h-[500px] border rounded-md p-2">
+                <h2 className="italic uppercase font-semibold text-sm mb-2">
+                  Lyrics
+                </h2>
+                {currentAlbum &&
+                  currentAlbum.contents &&
+                  currentAlbum?.contents?.map((content, index) => {
+                    if (index < currentAlbum?.contents?.length! - 1) {
+                      return (
+                        <div
+                          className="bg-sky-200 dark:bg-background text-sm p-2 rounded-sm mb-2"
+                          key={index}
+                        >
+                          <h4 className="italic uppercase font-semibold text-xs mb-1 bg-gray-300 p-1 rounded-md">
+                            {content?.type as string}
+                          </h4>
+                          <p className="whitespace-pre-wrap">
+                            {content?.content as string}
+                          </p>
+                        </div>
+                      );
+                    } else {
+                      return (
+                        <div
+                          className="bg-sky-200 dark:bg-background text-sm p-2 rounded-sm"
+                          key={index}
+                        >
+                          <h4 className="italic uppercase font-semibold text-xs mb-1 bg-gray-300 p-1 rounded-md">
+                            {content?.type as string}
+                          </h4>
+                          <p className="whitespace-pre-wrap">
+                            {content?.content as string}
+                          </p>
+                        </div>
+                      );
+                    }
+                  })}
+
+                <div className="relative h-72 w-full overflow-hidden rounded-md mt-2">
+                  {currentAlbum?.videoId ? (
+                    <YoutubePlayer album={currentAlbum} />
+                  ) : (
+                    <MusicPlayer
+                      title={currentAlbum?.name as string}
+                      id={currentAlbum?.id as string}
+                      sound={sound}
+                      ref={musicPlayerRef}
+                    />
+                  )}
+                </div>
+              </ScrollArea>
+            </div>
           </DrawerContent>
         </Drawer>
       )}
