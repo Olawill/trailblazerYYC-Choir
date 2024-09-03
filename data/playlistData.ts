@@ -810,3 +810,42 @@ export const updateMusicTimeAndNumber = async (id: string) => {
     return null;
   }
 };
+
+// GET ALL PLAYLIST MUSIC AND INFO
+export const getPlaylistInfo = async (playlistId: string) => {
+  try {
+    const allPlaylistMusic = await prisma.playlist.findUnique({
+      where: {
+        id: playlistId,
+      },
+      select: {
+        name: true,
+        music: {
+          select: {
+            id: true,
+            title: true,
+            videoId: true,
+            favorite: true,
+            authors: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+            contents: {
+              select: {
+                id: true,
+                type: true,
+                content: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return allPlaylistMusic;
+  } catch {
+    return null;
+  }
+};

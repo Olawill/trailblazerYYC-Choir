@@ -3,6 +3,7 @@ import {
   getRecentlyPlayed,
   getTopSongs,
 } from "@/data/playlistData";
+import { Howl } from "howler";
 
 export type PlaylistFunction = {
   "Top Songs": () => Promise<{
@@ -82,6 +83,7 @@ export const allQuery = [
   "library",
   "listMusic",
   "listTracks",
+  "allPlaylistTracks",
 ];
 
 export const genericPlaylistFunction: PlaylistFunction = {
@@ -89,5 +91,13 @@ export const genericPlaylistFunction: PlaylistFunction = {
   "Recently Added": () => getRecentlyAdded(),
   "Recently Played": () => getRecentlyPlayed(),
 };
+
+export const sound = new Howl({
+  // src: ["behrakha.mp3"],
+  src: [
+    "https://res.cloudinary.com/dy5p79uwl/video/upload/v1724853630/yyc/nw4dgwl7lexrphevhpis.mp3",
+  ],
+  html5: true,
+});
 
 export const DUE = 10;

@@ -51,17 +51,15 @@ import {
   DrawerClose,
   DrawerContent,
   DrawerDescription,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
 } from "@/components/ui/drawer";
-import { Button } from "../ui/button";
-import { useEffect, useRef, useState } from "react";
-import { ScrollArea } from "../ui/scroll-area";
-import { Howl } from "howler";
+import { Button } from "@/components/ui/button";
+import { useRef, useState } from "react";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { MusicPlayer } from "./music-player";
 import { YoutubePlayer } from "./youtube-player";
+import { Howl } from "howler";
 
 interface AlbumArtworkProps extends React.HTMLAttributes<HTMLDivElement> {
   album: Album;
@@ -109,6 +107,7 @@ export const AlbumArtWork = ({
   });
 
   const [drawerOpen, setDrawerOpen] = useState(false);
+
   const musicPlayerRef = useRef<MusicPlayerHandle>(null);
 
   const handleDrawer = () => {
@@ -300,9 +299,6 @@ export const AlbumArtWork = ({
 
                 <ContextMenuItem onClick={handleDrawer}>Play</ContextMenuItem>
 
-                {playlistId && canAddTo == false && (
-                  <ContextMenuItem>Play All</ContextMenuItem>
-                )}
                 <ContextMenuSeparator />
                 {user && user.role && (
                   <ContextMenuItem

@@ -110,7 +110,7 @@ export const YoutubePlayer = ({ album }: { album: Album }) => {
         className="absolute top-0 left-0"
         src={`https://www.youtube.com/embed/${album.videoId}?enablejsapi=1`}
         title={album.name}
-        // allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         loading="lazy"
         allowFullScreen
         referrerPolicy="strict-origin-when-cross-origin"
