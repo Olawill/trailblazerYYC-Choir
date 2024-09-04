@@ -849,3 +849,41 @@ export const getPlaylistInfo = async (playlistId: string) => {
     return null;
   }
 };
+
+// GET MUSIC INFO BY MUSIC ID
+export const getMusicInfo = async (musicId: string) => {
+  try {
+    const musicDetails = await prisma.music.findUnique({
+      where: {
+        id: musicId,
+      },
+      select: {
+        title: true,
+        link: true,
+        playlists: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        authors: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        contents: {
+          select: {
+            id: true,
+            type: true,
+            content: true,
+          },
+        },
+      },
+    });
+
+    return musicDetails;
+  } catch {
+    return null;
+  }
+};

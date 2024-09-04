@@ -145,6 +145,7 @@ export const PlaylistManagerSchema = z.object({
 });
 
 export const VerseChorusSchema = z.object({
+  id: z.optional(z.string()),
   type: z.enum(["Verse", "Chorus", "Bridge"]),
   content: z.string().min(1, {
     message: "Content must not be empty",

@@ -13,10 +13,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { FormControl } from "@/components/ui/form";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MinusCircle, PlusCircle } from "lucide-react";
+import { MinusCircle, MoveDown, MoveUp, PlusCircle } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Input } from "../ui/input";
 
 interface ContentProps {
+  id?: string;
   type: "Verse" | "Chorus" | "Bridge";
   content: string;
 }
@@ -31,7 +33,7 @@ export const MusicContent = ({
   reload,
 }: MusicContentProps) => {
   const { control } = useFormContext();
-  const { append } = useFieldArray({
+  const { append, replace } = useFieldArray({
     control,
     name: "contents",
   });
@@ -46,16 +48,76 @@ export const MusicContent = ({
     setContentState((prev) => prev.slice(0, -1)); // Default values
   };
 
+  // const handleContentMove = (index: number, direction: "up" | "down") => {
+  //   const newContentState = [...contentState];
+  //   if (
+  //     (index < 0 && direction === "up") ||
+  //     (index === contentState.length - 1 && direction === "down")
+  //   )
+  //     return;
+
+  //   const [elementAtIndex] = newContentState.splice(index, 1);
+
+  //   // Insert the element at the new position
+  //   const newIndex = direction === "up" ? index - 1 : index + 1;
+  //   newContentState.splice(newIndex, 0, elementAtIndex);
+
+  //   // setContentState(newContentState);
+  //   // Update the field array with the new order
+  //   replace(newContentState);
+  // };
+
   useEffect(() => {
-    if (reload) setContentState(initialContents);
+    if (reload) {
+      setContentState(initialContents);
+      replace(initialContents);
+    }
   }, [reload]);
 
   return (
     <ScrollArea className="h-[300px] px-1">
       {contentState.map((field, index) => (
         <div key={index} className="space-y-4">
-          <Label htmlFor={`content[${index}].type`} className="text-xs">
-            Type
+          {field.id && (
+            <Controller
+              name={`content[${index}].id`}
+              control={control}
+              defaultValue={field.id}
+              render={({ field: controllerField }) => (
+                <Input type="hidden" {...controllerField} />
+              )}
+            />
+          )}
+          <Label
+            htmlFor={`content[${index}].type`}
+            className="text-xs flex items-center justify-between"
+          >
+            <span>Type</span>
+            {/* <div className="flex justify-end items-center gap-x-2">
+              {index !== 0 && (
+                <Button
+                  type="button"
+                  size="icon"
+                  aria-label="move up"
+                  className="bg-background border rounded-full text-gray-500 dark:text-gray-300 focus-visible:ring-px hover:bg-transparent"
+                  onClick={() => handleContentMove(index, "up")}
+                >
+                  <MoveUp className="h-4 w-4" />
+                </Button>
+              )}
+
+              {index !== contentState.length - 1 && (
+                <Button
+                  type="button"
+                  size="icon"
+                  aria-label="move down"
+                  className="bg-background border rounded-full text-gray-500 dark:text-gray-300 focus-visible:ring-px hover:bg-transparent"
+                  onClick={() => handleContentMove(index, "down")}
+                >
+                  <MoveDown className="h-4 w-4" />
+                </Button>
+              )}
+            </div> */}
           </Label>
           <Controller
             name={`content[${index}].type`}

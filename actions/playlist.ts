@@ -307,3 +307,142 @@ export const updatePlaylist = async (
     return { error: "Something went wrong. Please try again!" };
   }
 };
+
+export const editMusic = async (
+  musicId: string,
+  values: z.infer<typeof NewMusicSchema>
+) => {
+  const validatedFields = NewMusicSchema.safeParse(values);
+
+  if (!validatedFields.success) {
+    return { error: "Invalid data!" };
+  }
+
+  const { title, link, playlistIds, authorIds, content } = validatedFields.data;
+
+  const user = await currentUser();
+
+  if (!user) {
+    return { error: "You are not authorized to perform this action" };
+  }
+
+  const hasPermission = user.role !== "USER";
+
+  if (!hasPermission) {
+    return { error: "Unauthorized" };
+  }
+
+  try {
+    const videoId = link ? link?.split("?")[0].split("/").slice(-1)[0] : "";
+
+    const existingTitle = await prisma.music.findFirst({
+      where: {
+        title,
+      },
+    });
+
+    let modifiedTitle: string = "";
+
+    if (existingTitle) {
+      const author = await prisma.author.findFirst({
+        where: {
+          id: authorIds[0],
+        },
+        select: {
+          name: true,
+        },
+      });
+      modifiedTitle = `${title} - ${author?.name}`;
+    } else {
+      modifiedTitle = title;
+    }
+
+    const updatedMusic = await prisma.music.update({
+      where: {
+        id: musicId,
+      },
+      data: {
+        title: modifiedTitle,
+        link,
+        videoId: videoId,
+        authorIDs: authorIds,
+        playlistIDs: playlistIds,
+      },
+    });
+
+    // Add the content to contents table
+    for (const c of content) {
+      if (c.id) {
+        await prisma.content.update({
+          where: { id: c.id },
+          data: {
+            content: c.content,
+            type: c.type,
+            order: content.indexOf(c) + 1,
+            musicId: updatedMusic.id,
+          },
+        });
+      } else {
+        await prisma.content.create({
+          data: {
+            content: c.content,
+            type: c.type,
+            order: content.indexOf(c) + 1,
+            musicId: updatedMusic.id,
+          },
+        });
+      }
+    }
+
+    //Update the playlist and authors table
+    for (const id of playlistIds) {
+      // Fetch the current musicIDs for the playlist
+      const playlist = await prisma.playlist.findUnique({
+        where: { id },
+        select: { musicIDs: true },
+      });
+
+      // Check if updatedMusic.id is already in musicIDs
+      if (playlist && !playlist.musicIDs.includes(updatedMusic.id)) {
+        // Update playlist only if updatedMusic.id is not present
+        await prisma.playlist.update({
+          where: { id },
+          data: {
+            musicIDs: {
+              push: updatedMusic.id,
+            },
+          },
+        });
+      }
+    }
+
+    for (const id of authorIds) {
+      // Fetch the current musicIDs for the author
+      const author = await prisma.author.findUnique({
+        where: { id },
+        select: { musicIDs: true },
+      });
+
+      // Check if updatedMusic.id is already in musicIDs
+      if (author && !author.musicIDs.includes(updatedMusic.id)) {
+        // Update playlist only if updatedMusic.id is not present
+        await prisma.author.update({
+          where: {
+            id,
+          },
+          data: {
+            musicIDs: {
+              push: updatedMusic.id,
+            },
+          },
+        });
+      }
+    }
+
+    return { success: "Music updated!" };
+  } catch (err) {
+    // Handle errors appropriately
+    console.log("error", err);
+    return { error: "Something went wrong. Please try again!" };
+  }
+};

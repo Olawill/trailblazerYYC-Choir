@@ -3,7 +3,9 @@
 import { deleteMusic, deleteMusicFromPlaylist } from "@/actions/music-update";
 import { updatePlaylist } from "@/actions/playlist";
 import { RoleGate } from "@/components/auth/role-gate";
+import { EditMusicForm } from "@/components/music/edit-music-form";
 import { EditPlaylistForm } from "@/components/music/edit-playlist-form";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -103,6 +105,9 @@ const ManageMusicPage = () => {
   );
 
   const [selectedItem, setSelectedItem] = useState<MusicType | null>(null);
+
+  const [trackIdToEdit, setTrackIdToEdit] = useState<string | null>(null);
+  const [editTrackOpen, setEditTrackOpen] = useState(false);
 
   const handleOpenDialog = (item: MusicType) => {
     setSelectedItem(item);
@@ -482,6 +487,10 @@ const ManageMusicPage = () => {
                                         size="icon"
                                         variant="ghost"
                                         className="hover:bg-emerald-400 hover:text-white"
+                                        onClick={() => {
+                                          setTrackIdToEdit(c.id);
+                                          setEditTrackOpen(true);
+                                        }}
                                       >
                                         <FilePen className="w-5 h-5" />
                                         <span className="sr-only">Edit</span>
@@ -638,6 +647,24 @@ const ManageMusicPage = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {trackIdToEdit && (
+        <Dialog open={editTrackOpen} onOpenChange={setEditTrackOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Edit Music </DialogTitle>
+              <DialogDescription>
+                Edit music. Click save when you&apos;re done.
+              </DialogDescription>
+            </DialogHeader>
+            <Separator className="my-2" />
+            <EditMusicForm
+              musicId={trackIdToEdit}
+              setEditTrackOpen={setEditTrackOpen}
+            />
+          </DialogContent>
+        </Dialog>
+      )}
     </RoleGate>
   );
 };

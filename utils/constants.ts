@@ -84,6 +84,7 @@ export const allQuery = [
   "listMusic",
   "listTracks",
   "allPlaylistTracks",
+  "editMusic",
 ];
 
 export const genericPlaylistFunction: PlaylistFunction = {
