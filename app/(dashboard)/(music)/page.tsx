@@ -1,9 +1,7 @@
 "use client";
 
 import { AlbumArtWork } from "@/components/music/album-artwork";
-import {
-  PlaylistData,
-} from "@/components/music/music-constants";
+import { PlaylistData } from "@/components/music/music-constants";
 import { PlaylistPlayAllDrawer } from "@/components/music/playlist-play-all";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -27,7 +25,7 @@ import Link from "next/link";
 import { Suspense, useState } from "react";
 
 export default function Home() {
-  const user = useCurrentUser()
+  const user = useCurrentUser();
 
   const [playlistDrawerOpen, setPlaylistDrawerOpen] = useState(false);
   const [currentPlaylistId, setCurrentPlaylistId] = useState<string | null>(
@@ -205,7 +203,8 @@ export default function Home() {
                           height={330}
                         />
                       ))}
-                    {(!modlistenNow || modlistenNow?.data?.length === 0) && (
+                    {(!modlistenNow.data ||
+                      modlistenNow?.data?.length === 0) && (
                       <div className="w-full italic text-center text-base text-gray-300 border rounded-md p-2">
                         🎵 The &apos;Listen Now&apos; playlist is a bit too
                         quiet — looks like it&apos;s taking a nap! 🎵

@@ -128,20 +128,26 @@ export const NewMusicForm = () => {
         }
 
         if (data?.success) {
-          form.reset();
+          // Reset the form
+          form.reset({
+            title: "",
+            link: "", // Set default value here
+            playlistIds: [],
+            authorIds: [],
+            content: [],
+          });
           setSuccess(data?.success);
           setFormSubmitted(true);
 
           setListName([]);
           setAuthorNames([]);
           form.setValue("content", []);
+          form.setValue("link", "");
 
           queryClient.invalidateQueries({
             predicate: (query) =>
               allQuery.includes(query.queryKey[0] as string),
           });
-
-          console.log(form.getValues());
         }
 
         if (!data) {
