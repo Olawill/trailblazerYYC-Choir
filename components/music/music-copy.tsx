@@ -28,20 +28,30 @@ export const MusicCopy = ({ link }: { link: string }) => {
   const Icon = isCopied ? CheckCheck : Clipboard;
 
   return (
-    <div className="px-1 border rounded-sm flex items-center justify-between">
-      <Input
-        defaultValue={link}
-        className="focus-visible:ring-px border-none"
-        ref={inputRef}
-      />
-      <Badge
-        variant={isCopied ? "success" : "default"}
-        className="py-2 mr-1 cursor-pointer"
-        onClick={copy}
-      >
-        <Icon className="w-3 h-3 mr-1" />
-        <span>{isCopied ? "Copied" : "Copy"}</span>
-      </Badge>
+    <div
+      className={`px-1 border rounded-sm flex items-center ${
+        link ? "justify-between" : "justify-center italic font-medium"
+      }`}
+    >
+      {link ? (
+        <>
+          <Input
+            defaultValue={link}
+            className="focus-visible:ring-px border-none"
+            ref={inputRef}
+          />
+          <Badge
+            variant={isCopied ? "success" : "default"}
+            className="py-2 mr-1 cursor-pointer"
+            onClick={copy}
+          >
+            <Icon className="w-3 h-3 mr-1" />
+            <span>{isCopied ? "Copied" : "Copy"}</span>
+          </Badge>
+        </>
+      ) : (
+        "No URL available for this album"
+      )}
     </div>
   );
 };
