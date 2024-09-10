@@ -56,7 +56,7 @@ const ListPage = ({
       name: l.title.split(" - ")[0],
       cover: l.videoId
         ? `https://img.youtube.com/vi/${l.videoId}/0.jpg`
-        : "/noWallpaper.jpg",
+        : "/noWall.jpg",
       videoId: l.videoId,
       artist: l.artists,
       isLiked: user ? l.favorite.includes(user?.id as string) : false,

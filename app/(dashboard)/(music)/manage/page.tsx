@@ -463,7 +463,7 @@ const ManageMusicPage = () => {
                                             src={
                                               c.videoId
                                                 ? `https://img.youtube.com/vi/${c.videoId}/0.jpg`
-                                                : "/noWallpaper.jpg"
+                                                : "/noWall.jpg"
                                             }
                                             alt="music-image"
                                             width={32}
