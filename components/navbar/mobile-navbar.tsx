@@ -63,6 +63,7 @@ const MobileNavbar = () => {
           <SheetTrigger asChild>
             <Button variant="ghost" className="hover:bg-transparent">
               <Menu className="w-6 h-6" />
+              <span className="sr-onyl">Menu Button</span>
             </Button>
           </SheetTrigger>
           <SheetContent
