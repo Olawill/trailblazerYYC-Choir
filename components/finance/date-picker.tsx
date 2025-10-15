@@ -3,7 +3,6 @@
 import { addDays, format } from "date-fns";
 import { DateRange } from "react-day-picker";
 
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -11,8 +10,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useState } from "react";
+import { cn } from "@/lib/utils";
 import { CalendarIcon } from "lucide-react";
+import { useState } from "react";
 
 export function DatePickerWithRange({
   className,
@@ -30,7 +30,7 @@ export function DatePickerWithRange({
             id="date"
             variant={"outline"}
             className={cn(
-              "w-[300px] justify-start text-left font-normal bg-sky-200 dark:bg-background ml-auto",
+              "w-[300px] justify-start text-left font-normal bg-sky-900 dark:bg-background/50 ml-auto",
               !date && "text-muted-foreground"
             )}
           >
@@ -50,11 +50,11 @@ export function DatePickerWithRange({
           </Button>
         </PopoverTrigger>
         <PopoverContent
-          className="w-auto p-0 bg-sky-200 dark:bg-background"
+          className="w-auto p-0 bg-sky-900 dark:bg-background/50"
           align="end"
         >
           <Calendar
-            initialFocus
+            autoFocus
             mode="range"
             defaultMonth={date?.from}
             selected={date}

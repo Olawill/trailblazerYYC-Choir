@@ -9,21 +9,21 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
+import { recentActivity } from "@/actions/finance";
 import { RoleGate } from "@/components/auth/role-gate";
-import { UserRole } from "@prisma/client";
-import TotalRevenue from "@/components/finance/total-revenue";
-import TotalExpense from "@/components/finance/total-expense";
-import TotalMembers from "@/components/finance/total-members";
 import ActiveMembers from "@/components/finance/active-members";
+import { DatePickerWithRange } from "@/components/finance/date-picker";
 import Overview from "@/components/finance/overview";
 import RecentActivity from "@/components/finance/recent-activity";
+import TotalExpense from "@/components/finance/total-expense";
+import TotalMembers from "@/components/finance/total-members";
+import TotalRevenue from "@/components/finance/total-revenue";
+import { Skeleton } from "@/components/ui/skeleton";
+import { UserRole } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
-import { recentActivity } from "@/actions/finance";
-import { BeatLoader } from "react-spinners";
-import { DatePickerWithRange } from "@/components/finance/date-picker";
 import { useTheme } from "next-themes";
 import { Suspense } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
+import { BeatLoader } from "react-spinners";
 
 export type RecentActivityProps = {
   amount: number;
@@ -109,7 +109,7 @@ const FinancePage = () => {
           </div>
 
           <div className="grid gap-4 grid-cols-1 lg:grid-cols-2 xl:grid-cols-7">
-            <Card className="col-span-4 bg-sky-200 dark:bg-background">
+            <Card className="col-span-4 bg-sky-900 dark:bg-background/50">
               <CardHeader>
                 <CardTitle>Overview</CardTitle>
               </CardHeader>
@@ -128,7 +128,7 @@ const FinancePage = () => {
               </CardContent>
             </Card>
 
-            <Card className="col-span-4 lg:col-span-3 bg-sky-200 dark:bg-background">
+            <Card className="col-span-4 lg:col-span-3 bg-sky-900 dark:bg-background/50">
               <CardHeader className="p-6 pl-2">
                 <CardTitle>Recent Activity</CardTitle>
                 <CardDescription>

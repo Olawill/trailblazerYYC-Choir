@@ -1,14 +1,14 @@
 import { allExpense, allPayments } from "@/actions/finance";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useQuery } from "@tanstack/react-query";
-import { DollarSign, Info, Loader2 } from "lucide-react";
 import { formatted } from "@/components/members/columns";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useQuery } from "@tanstack/react-query";
+import { DollarSign, Info, Loader2 } from "lucide-react";
 
 const TotalExpense = () => {
   let balance: number = 0;
@@ -28,7 +28,7 @@ const TotalExpense = () => {
   }
 
   return (
-    <Card className="bg-sky-200 dark:bg-background">
+    <Card className="bg-sky-900 dark:bg-background/50">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium">Total Expense</CardTitle>
         <DollarSign className="h-4 w-4 text-muted-foreground" />

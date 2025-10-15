@@ -1,30 +1,26 @@
 "use client";
 
 import { AlbumArtWork } from "@/components/music/album-artwork";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { getAllPlay, getPlaylistMusic } from "@/data/playlistData";
 import { Playlist } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
-import { Suspense, useState } from "react";
+import { Suspense, use, useState } from "react";
 
-import { AlertCircle, Play } from "lucide-react";
+import { PlaylistPlayAllDrawer } from "@/components/music/playlist-play-all";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { convertToSentenceCase } from "@/utils/helper";
 import { genericPlaylistFunction } from "@/utils/constants";
-import { PlaylistPlayAllDrawer } from "@/components/music/playlist-play-all";
+import { convertToSentenceCase } from "@/utils/helper";
+import { AlertCircle, Play } from "lucide-react";
 
-const ListPage = ({
-  params,
-}: {
-  params: {
-    listName: string;
-  };
-}) => {
-  const pageHeader = convertToSentenceCase(
-    params.listName.replaceAll("_", " ")
-  );
+type Params = Promise<{ listName: string }>;
+
+const ListPage = (props: { params: Params }) => {
+  const listName = use(props.params).listName;
+
+  const pageHeader = convertToSentenceCase(listName.replaceAll("_", " "));
 
   const user = useCurrentUser();
 
@@ -82,7 +78,7 @@ const ListPage = ({
                   handlePlaylistDrawer(allTrack.playlistId as string)
                 }
               >
-                <Play className="w-4 h-4" />
+                <Play className="size-4 mr-2" />
                 <span className="hidden md:inline-block">Play All</span>
               </Button>
             )}

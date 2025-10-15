@@ -1,10 +1,10 @@
-import { Resend } from "resend";
-import nodemailer from "nodemailer";
-import { render } from "@react-email/render";
 import { auth } from "@/auth";
-import TrailblazerUserEmail from "@/emails/verification";
 import TrailBlazerResetPasswordEmail from "@/emails/password-reset";
 import TrailBlazerVerifyEmail from "@/emails/two-factor";
+import TrailblazerUserEmail from "@/emails/verification";
+import { render } from "@react-email/render";
+import nodemailer from "nodemailer";
+import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -42,7 +42,7 @@ export const sendVerificationEmail = async (email: string, token: string) => {
     from: "Trailblazer Admin <trailblazeryyc@gmail.com>",
     to: email,
     subject: "Confirm your email",
-    html: render(
+    html: await render(
       TrailblazerUserEmail({
         username: session?.user.name as string,
         inviteLink: confirmLink,
@@ -68,7 +68,7 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
     from: "Trailblazer Admin <trailblazeryyc@gmail.com>",
     to: email,
     subject: "Reset your password",
-    html: render(
+    html: await render(
       TrailBlazerResetPasswordEmail({
         userFirstname: "",
         resetPasswordLink: resetLink,
@@ -91,7 +91,7 @@ export const sendTwofactorTokenEmail = async (email: string, token: string) => {
     from: "Trailblazer Admin <trailblazeryyc@gmail.com>",
     to: email,
     subject: "2FA Code",
-    html: render(
+    html: await render(
       TrailBlazerVerifyEmail({
         verificationCode: token,
       })

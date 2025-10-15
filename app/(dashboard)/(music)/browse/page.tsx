@@ -1,28 +1,24 @@
 "use client";
 
 import { AlbumArtWork } from "@/components/music/album-artwork";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   getAllMusicList,
   getAllPlay,
   getMusicListForSearchTerm,
 } from "@/data/playlistData";
+import { useCurrentUser } from "@/hooks/use-current-user";
 import { Playlist } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
-import { Suspense } from "react";
-import { BrowseSearch } from "./_components/browse-search";
 import { AlertCircle } from "lucide-react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { useCurrentUser } from "@/hooks/use-current-user";
+import { Suspense, use } from "react";
+import { BrowseSearch } from "./_components/browse-search";
 
-const BrowsePage = ({
-  searchParams,
-}: {
-  searchParams?: {
-    query?: string;
-  };
-}) => {
-  const searchQuery = searchParams?.query;
+type SearchParams = Promise<{ query?: string }>;
+
+const BrowsePage = (props: { searchParams: SearchParams }) => {
+  const searchQuery = use(props.searchParams)?.query;
 
   const user = useCurrentUser();
 

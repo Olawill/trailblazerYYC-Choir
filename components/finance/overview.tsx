@@ -1,16 +1,14 @@
 "use client";
 
+import { OverviewProps } from "@/app/(dashboard)/finance/page";
+import { CreditCard, HandCoins } from "lucide-react";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 import {
   ChartConfig,
   ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "../ui/chart";
-import { CreditCard, HandCoins } from "lucide-react";
-import { OverviewProps } from "@/app/(dashboard)/finance/page";
 
 // const data = [
 //   {
@@ -105,7 +103,7 @@ const Overview = ({ data }: OverviewComponentProps) => {
           <ChartTooltip
             content={
               <ChartTooltipContent
-                className="w-[180px] bg-sky-100 dark:bg-background"
+                className="w-[180px] bg-sky-900 dark:bg-background/50"
                 labelKey="overview"
                 valueLabel="$"
               />

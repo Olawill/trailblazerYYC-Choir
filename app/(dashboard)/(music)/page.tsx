@@ -282,7 +282,7 @@ export default function Home() {
                                   )
                                 }
                               >
-                                <Play className="w-4 h-4" />
+                                <Play className="size-4 mr-2" />
                                 <span className="hidden md:inline-block">
                                   Play All
                                 </span>

@@ -10,11 +10,11 @@ import {
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-import { CircleUserRound, LogOut, Wrench } from "lucide-react";
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { LogoutButton } from "./logout-button";
+import { CircleUserRound, LogOut, Wrench } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction } from "react";
+import { LogoutButton } from "./logout-button";
 
 type UserButtonProp = {
   setMenuOpen?: Dispatch<SetStateAction<boolean>>;
@@ -35,7 +35,7 @@ const UserButton = ({ setMenuOpen }: UserButtonProp) => {
       <DropdownMenuTrigger className="border-px outline-none">
         <Avatar className="relative">
           <AvatarImage src={user?.image || ""} alt="avatar" />
-          <AvatarFallback className="bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-sky-400 to-blue-800">
+          <AvatarFallback className="bg-radial from-sky-400 from-0% to-blue-800 to-100%">
             <CircleUserRound className="text-white" />
           </AvatarFallback>
         </Avatar>
@@ -44,7 +44,7 @@ const UserButton = ({ setMenuOpen }: UserButtonProp) => {
         <DropdownMenuItem className="font-semibold flex gap-2">
           <Avatar className="relative">
             <AvatarImage src={user?.image || ""} alt="avatar" />
-            <AvatarFallback className="bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-sky-400 to-blue-800">
+            <AvatarFallback className="bg-radial from-sky-400 from-0% to-blue-800 to-100%">
               <CircleUserRound className="text-white" />
             </AvatarFallback>
           </Avatar>
