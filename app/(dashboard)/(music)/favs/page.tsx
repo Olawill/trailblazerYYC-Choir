@@ -1,28 +1,24 @@
 "use client";
 
-import { useCurrentUser } from "@/hooks/use-current-user";
-import { BrowseSearch } from "../browse/_components/browse-search";
+import { AlbumArtWork } from "@/components/music/album-artwork";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   getAllPlay,
   getFavListForSearchTerm,
   getFavPlaylistMusic,
 } from "@/data/playlistData";
-import { useQuery } from "@tanstack/react-query";
-import BrowsePage from "../browse/page";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
-import { Suspense } from "react";
-import { AlbumArtWork } from "@/components/music/album-artwork";
+import { useCurrentUser } from "@/hooks/use-current-user";
 import { Playlist } from "@prisma/client";
+import { useQuery } from "@tanstack/react-query";
+import { AlertCircle } from "lucide-react";
+import { Suspense, use } from "react";
+import { BrowseSearch } from "../browse/_components/browse-search";
+import BrowsePage from "../browse/page";
 
-const FavsPage = ({
-  searchParams,
-}: {
-  searchParams?: {
-    query?: string;
-  };
-}) => {
-  const searchQuery = searchParams?.query;
+type SearchParams = Promise<{ query?: string }>;
+
+const FavsPage = (props: { searchParams: SearchParams }) => {
+  const searchQuery = use(props.searchParams)?.query;
 
   const user = useCurrentUser();
 

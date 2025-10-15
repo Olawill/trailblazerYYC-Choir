@@ -228,7 +228,7 @@ export const AlbumArtWork = ({
                     className={cn(
                       "object-cover transition-all hover:scale-105",
                       aspectRatio === "portrait"
-                        ? "aspect-[3/4]"
+                        ? "aspect-3/4"
                         : "aspect-square"
                     )}
                   />
@@ -393,7 +393,7 @@ export const AlbumArtWork = ({
                   className={cn(
                     "object-cover transition-all hover:scale-105",
                     aspectRatio === "portrait"
-                      ? "aspect-[3/4]"
+                      ? "aspect-3/4"
                       : "aspect-square"
                   )}
                 />
@@ -488,7 +488,7 @@ export const AlbumArtWork = ({
                   className={cn(
                     "object-cover transition-all hover:scale-105",
                     aspectRatio === "portrait"
-                      ? "aspect-[3/4]"
+                      ? "aspect-3/4"
                       : "aspect-square"
                   )}
                 />

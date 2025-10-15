@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 html,
 body,
@@ -8,87 +6,149 @@ body,
   height: 100%;
 }
 
-  @layer base {
-    :root {
-      --background: 0 0% 100%;
-      --foreground: 222.2 84% 4.9%;
+@theme {
+  /* Container configuration */
+  --container-center: true;
+  --container-padding: 2rem;
+  --container-screen-2xl: 1400px;
 
-      --card: 0 0% 100%;
-      --card-foreground: 222.2 84% 4.9%;
+  /* Border radius */
+  --radius: 0.5rem;
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
 
-      --popover: 0 0% 100%;
-      --popover-foreground: 222.2 84% 4.9%;
+  /* Light mode colors */
+  --color-background: oklch(100% 0 0);
+  --color-foreground: oklch(27.1% 0.055 254.6);
 
-      --primary: 222.2 47.4% 11.2%;
-      --primary-foreground: 210 40% 98%;
+  --color-card: oklch(100% 0 0);
+  --color-card-foreground: oklch(27.1% 0.055 254.6);
 
-      --secondary: 210 40% 96.1%;
-      --secondary-foreground: 222.2 47.4% 11.2%;
+  --color-popover: oklch(100% 0 0);
+  --color-popover-foreground: oklch(27.1% 0.055 254.6);
 
-      --muted: 210 40% 96.1%;
-      --muted-foreground: 215.4 16.3% 46.9%;
+  --color-primary: oklch(31.5% 0.039 254.6);
+  --color-primary-foreground: oklch(97.8% 0.003 247.9);
 
-      --accent: 210 40% 96.1%;
-      --accent-foreground: 222.2 47.4% 11.2%;
+  --color-secondary: oklch(95.9% 0.003 247.9);
+  --color-secondary-foreground: oklch(31.5% 0.039 254.6);
 
-      --destructive: 0 84.2% 60.2%;
-      --destructive-foreground: 210 40% 98%;
+  --color-muted: oklch(95.9% 0.003 247.9);
+  --color-muted-foreground: oklch(57.6% 0.013 253.6);
 
-      --border: 214.3 31.8% 91.4%;
-      --input: 214.3 31.8% 91.4%;
-      --ring: 222.2 84% 4.9%;
+  --color-accent: oklch(95.9% 0.003 247.9);
+  --color-accent-foreground: oklch(31.5% 0.039 254.6);
 
-      --radius: 0.5rem;
+  --color-destructive: oklch(62.8% 0.228 29.2);
+  --color-destructive-foreground: oklch(97.8% 0.003 247.9);
 
-      --chart-1: 25 34% 28%;
-      --chart-2: 26 36% 34%;
-      --chart-3: 28 40% 40%;
-      --chart-4: 31 41% 48%;
-      --chart-5: 35 43% 53%;
-    }
+  --color-border: oklch(90.6% 0.008 255.5);
+  --color-input: oklch(90.6% 0.008 255.5);
+  --color-ring: oklch(27.1% 0.055 254.6);
 
-    .dark {
-      --background: 222.2 84% 4.9%;
-      --foreground: 210 40% 98%;
+  --color-chart-1: oklch(40% 0.062 38);
+  --color-chart-2: oklch(46% 0.068 38);
+  --color-chart-3: oklch(52% 0.082 40);
+  --color-chart-4: oklch(58% 0.091 45);
+  --color-chart-5: oklch(63% 0.095 52);
 
-      --card: 222.2 84% 4.9%;
-      --card-foreground: 210 40% 98%;
+  /* Accordion animations from tailwindcss-animate */
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+}
 
-      --popover: 222.2 84% 4.9%;
-      --popover-foreground: 210 40% 98%;
-
-      --primary: 210 40% 98%;
-      --primary-foreground: 222.2 47.4% 11.2%;
-
-      --secondary: 217.2 32.6% 17.5%;
-      --secondary-foreground: 210 40% 98%;
-
-      --muted: 217.2 32.6% 17.5%;
-      --muted-foreground: 215 20.2% 65.1%;
-
-      --accent: 217.2 32.6% 17.5%;
-      --accent-foreground: 210 40% 98%;
-
-      --destructive: 0 62.8% 30.6%;
-      --destructive-foreground: 210 40% 98%;
-
-      --border: 217.2 32.6% 17.5%;
-      --input: 217.2 32.6% 17.5%;
-      --ring: 212.7 26.8% 83.9%;
-
-      --chart-1: 359 2% 90%;
-      --chart-2: 240 1% 74%;
-      --chart-3: 240 1% 58%;
-      --chart-4: 240 1% 42%;
-      --chart-5: 240 2% 26%;
-    }
+/* Accordion keyframes */
+@keyframes accordion-down {
+  from {
+    height: 0;
   }
-
-  @layer base {
-    * {
-      @apply border-border;
-    }
-    body {
-      @apply bg-background text-foreground;
-    }
+  to {
+    height: var(--radix-accordion-content-height);
   }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  @theme {
+    /* Dark mode colors */
+    --color-background: oklch(27.1% 0.055 254.6);
+    --color-foreground: oklch(97.8% 0.003 247.9);
+
+    --color-card: oklch(27.1% 0.055 254.6);
+    --color-card-foreground: oklch(97.8% 0.003 247.9);
+
+    --color-popover: oklch(27.1% 0.055 254.6);
+    --color-popover-foreground: oklch(97.8% 0.003 247.9);
+
+    --color-primary: oklch(97.8% 0.003 247.9);
+    --color-primary-foreground: oklch(31.5% 0.039 254.6);
+
+    --color-secondary: oklch(35.5% 0.024 254.1);
+    --color-secondary-foreground: oklch(97.8% 0.003 247.9);
+
+    --color-muted: oklch(35.5% 0.024 254.1);
+    --color-muted-foreground: oklch(70.9% 0.013 253.9);
+
+    --color-accent: oklch(35.5% 0.024 254.1);
+    --color-accent-foreground: oklch(97.8% 0.003 247.9);
+
+    --color-destructive: oklch(43.2% 0.166 29.7);
+    --color-destructive-foreground: oklch(97.8% 0.003 247.9);
+
+    --color-border: oklch(35.5% 0.024 254.1);
+    --color-input: oklch(35.5% 0.024 254.1);
+    --color-ring: oklch(84.3% 0.014 252.4);
+
+    --color-chart-1: oklch(88% 0.004 240);
+    --color-chart-2: oklch(73% 0.002 240);
+    --color-chart-3: oklch(59% 0.002 240);
+    --color-chart-4: oklch(45% 0.002 240);
+    --color-chart-5: oklch(35% 0.004 240);
+  }
+}
+
+/* Manual dark mode class support */
+.dark {
+  --color-background: oklch(27.1% 0.055 254.6);
+  --color-foreground: oklch(97.8% 0.003 247.9);
+
+  --color-card: oklch(27.1% 0.055 254.6);
+  --color-card-foreground: oklch(97.8% 0.003 247.9);
+
+  --color-popover: oklch(27.1% 0.055 254.6);
+  --color-popover-foreground: oklch(97.8% 0.003 247.9);
+
+  --color-primary: oklch(97.8% 0.003 247.9);
+  --color-primary-foreground: oklch(31.5% 0.039 254.6);
+
+  --color-secondary: oklch(35.5% 0.024 254.1);
+  --color-secondary-foreground: oklch(97.8% 0.003 247.9);
+
+  --color-muted: oklch(35.5% 0.024 254.1);
+  --color-muted-foreground: oklch(70.9% 0.013 253.9);
+
+  --color-accent: oklch(35.5% 0.024 254.1);
+  --color-accent-foreground: oklch(97.8% 0.003 247.9);
+
+  --color-destructive: oklch(43.2% 0.166 29.7);
+  --color-destructive-foreground: oklch(97.8% 0.003 247.9);
+
+  --color-border: oklch(35.5% 0.024 254.1);
+  --color-input: oklch(35.5% 0.024 254.1);
+  --color-ring: oklch(84.3% 0.014 252.4);
+
+  --color-chart-1: oklch(88% 0.004 240);
+  --color-chart-2: oklch(73% 0.002 240);
+  --color-chart-3: oklch(59% 0.002 240);
+  --color-chart-4: oklch(45% 0.002 240);
+  --color-chart-5: oklch(35% 0.004 240);
+}

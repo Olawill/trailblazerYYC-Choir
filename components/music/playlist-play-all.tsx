@@ -169,7 +169,7 @@ export const PlaylistPlayAllDrawer = ({
                             priority
                             className={cn(
                               "object-cover transition-all hover:scale-105",
-                              "aspect-[3/4]"
+                              "aspect-3/4"
                             )}
                           />
                         </div>
@@ -287,7 +287,7 @@ export const PlaylistPlayAllDrawer = ({
                           priority
                           className={cn(
                             "object-cover transition-all hover:scale-105",
-                            "aspect-[3/4]"
+                            "aspect-3/4"
                           )}
                         />
                       </div>

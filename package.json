@@ -67,6 +67,7 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.14",
     "@types/howler": "^2.2.12",
     "@types/node": "^24",
     "@types/nodemailer": "^7.0.2",

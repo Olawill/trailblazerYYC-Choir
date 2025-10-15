@@ -92,7 +92,7 @@ export const UserSchema = z.object({
 export type Member = z.infer<typeof MemberSchema>;
 
 export const PaymentSchema = z.object({
-  amount: z.coerce.number().min(1, {
+  amount: z.number().min(1, {
     message: "Amount must be greater than $1",
   }),
   name: z.string().min(4),
@@ -100,7 +100,7 @@ export const PaymentSchema = z.object({
 });
 
 export const ExpenseSchema = z.object({
-  amount: z.coerce.number().min(0.01, {
+  amount: z.number().min(0.01, {
     message: "Amount must be greater than $0",
   }),
   description: z.string().min(4),
@@ -119,7 +119,7 @@ export const NewMemberSchema = z.object({
   email: z.string().optional(),
   joined_since: z.date(),
   status: z.enum(["active", "inactive"]),
-  amount_paid: z.coerce.number().min(0),
+  amount_paid: z.number().min(0),
 });
 
 export const NewPlaylistSchema = z.object({

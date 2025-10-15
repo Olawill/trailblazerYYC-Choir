@@ -1,8 +1,8 @@
 "use client";
 
-import { Plus } from "lucide-react";
+import { LoginForm } from "@/components/auth/login-form";
+import NewMemberForm from "@/components/members/new-member/new-member-form";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import {
   Dialog,
   DialogContent,
@@ -11,9 +11,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Separator } from "@/components/ui/separator";
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { LoginForm } from "@/components/auth/login-form";
-import NewMemberForm from "@/components/members/new-member/new-member-form";
+import { Plus } from "lucide-react";
 import { NewMusicForm } from "./new-music-form";
 
 // import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -41,7 +41,7 @@ export const Header = ({ label, action }: HeaderProps) => {
               </Button>
             </DialogTrigger>
             {user ? (
-              <DialogContent className="">
+              <DialogContent>
                 <DialogHeader>
                   <DialogTitle>New {label}</DialogTitle>
                   <DialogDescription>
@@ -54,6 +54,12 @@ export const Header = ({ label, action }: HeaderProps) => {
               </DialogContent>
             ) : (
               <DialogContent className="p-0 w-auto bg-transparent border-none">
+                <DialogHeader className="sr-only">
+                  <DialogTitle>Login Form</DialogTitle>
+                  <DialogDescription>
+                    Login to your account here.
+                  </DialogDescription>
+                </DialogHeader>
                 <LoginForm />
               </DialogContent>
             )}

@@ -1,10 +1,14 @@
-import NextAuth from "next-auth";
 import authConfig from "@/auth.config";
 import { PrismaAdapter } from "@auth/prisma-adapter";
+import NextAuth from "next-auth";
+import Credentials from "next-auth/providers/credentials";
+import Google from "next-auth/providers/google";
 
-import { prisma } from "@/lib/client";
-import { getUserById } from "@/data/user";
 import { getTwofactorConfirmationByUserId } from "@/data/two-factor-confirmation";
+import { getUserByEmail, getUserById } from "@/data/user";
+import { prisma } from "@/lib/client";
+import { LoginSchema } from "@/schemas";
+import { comparePassword } from "@/utils/helper";
 import { UserRole } from "@prisma/client";
 import { getAccountByUserId } from "./data/account";
 
@@ -14,10 +18,48 @@ export const {
   signIn,
   signOut,
 } = NextAuth({
-  pages: {
-    signIn: "/auth/login",
-    error: "/auth/error",
-  },
+  ...authConfig,
+  adapter: PrismaAdapter(prisma),
+  session: { strategy: "jwt" },
+  providers: [
+    Google({
+      clientId: process.env.AUTH_GOOGLE_ID,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET,
+    }),
+    Credentials({
+      async authorize(credentials) {
+        try {
+          const validatedFields = LoginSchema.safeParse(credentials);
+          if (!validatedFields.success) {
+            throw new Error("Invalid credentials format");
+          }
+
+          const { email, password } = validatedFields.data;
+          const user = await getUserByEmail(email);
+
+          if (!user || !user.hashedPassword) {
+            throw new Error("User not found or password not set");
+          }
+
+          const passwordsMatch = await comparePassword(
+            password,
+            user.hashedPassword
+          );
+
+          if (!passwordsMatch) {
+            throw new Error("Incorrect password");
+          }
+
+          // Authentication successful
+          return user;
+        } catch (error: any) {
+          // Handle errors or log them
+          console.error("Authentication error:", error.message);
+          return null;
+        }
+      },
+    }),
+  ],
   events: {
     async linkAccount({ user }) {
       await prisma.user.update({
@@ -92,7 +134,4 @@ export const {
       return token;
     },
   },
-  adapter: PrismaAdapter(prisma),
-  session: { strategy: "jwt" },
-  ...authConfig,
 });
