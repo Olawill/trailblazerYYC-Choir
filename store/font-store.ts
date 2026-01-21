@@ -1,16 +1,24 @@
-import { extractFontFamily, getDefaultWeights } from "@/utils/fonts";
+import {
+  extractFontFamily,
+  FONT_CATEGORIES,
+  getDefaultWeights,
+} from "@/utils/fonts";
 import { loadGoogleFont } from "@/utils/fonts/google-fonts";
 import { create } from "zustand";
 
 type ThemeMode = "dark" | "light";
 
+export type CategoryKey = "all" | keyof typeof FONT_CATEGORIES;
+
 interface ThemeState {
   mode: ThemeMode;
   font: string;
+  fontCategory: CategoryKey;
   setFont: (font: string) => void;
 
   toggleMode: () => void;
   setMode: (mode: ThemeMode) => void;
+  setFontCategory: (category: CategoryKey) => void;
 
   applyTheme: () => void;
 
@@ -25,33 +33,39 @@ interface ThemeState {
 const getInitialSetting = (): {
   mode: ThemeMode;
   fonts: Record<string, string>;
+  category: CategoryKey;
 } => {
   if (typeof window === "undefined") {
-    return { mode: "light", fonts: { sans: "" } };
+    return { mode: "light", fonts: { sans: "" }, category: "all" };
   }
 
   try {
     const stored = localStorage.getItem("editor-storage");
 
-    if (!stored) return { mode: "light", fonts: { sans: "" } };
+    if (!stored) return { mode: "light", fonts: { sans: "" }, category: "all" };
 
     const parsed = stored ? JSON.parse(stored) : null;
     const themeState = parsed?.state?.themeState;
 
     if (themeState?.mode) {
-      return { mode: themeState.mode, fonts: themeState.fonts };
+      return {
+        mode: themeState.mode,
+        fonts: themeState.fonts,
+        category: themeState.category,
+      };
     }
   } catch (error) {
     console.error("Failed to parse stored theme:", error);
   }
 
-  return { mode: "light", fonts: { sans: "" } };
+  return { mode: "light", fonts: { sans: "" }, category: "all" };
 };
 
 export const useFontStore = create<ThemeState>((set, get) => {
-  const { mode, fonts } = getInitialSetting();
+  const { mode, fonts, category } = getInitialSetting();
   return {
     mode: mode || "light",
+    fontCategory: category || "all",
     hydrated: false,
     font: fonts.sans || "Default",
     currentFonts: {
@@ -72,6 +86,11 @@ export const useFontStore = create<ThemeState>((set, get) => {
       if (get().hydrated) get().applyTheme();
     },
 
+    setFontCategory: (fontCategory) => {
+      set({ fontCategory });
+      if (get().hydrated) get().applyTheme();
+    },
+
     setFont: (font) => {
       set({ font });
       if (get().hydrated) get().applyTheme();
@@ -86,7 +105,7 @@ export const useFontStore = create<ThemeState>((set, get) => {
     applyTheme: () => {
       if (!get().hydrated) return;
 
-      const { mode, font } = get();
+      const { mode, font, fontCategory } = get();
       const root = document.documentElement;
 
       const currentFonts = { sans: font };
@@ -118,6 +137,7 @@ export const useFontStore = create<ThemeState>((set, get) => {
             themeState: {
               mode,
               fonts: currentFonts,
+              category: fontCategory,
             },
           },
         }),

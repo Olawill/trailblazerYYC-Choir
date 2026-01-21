@@ -1,5 +1,6 @@
 "use client";
 
+import { InfiniteScrollContainer } from "@/components/infinite-scroll-container";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -9,6 +10,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
+  CommandSeparator,
 } from "@/components/ui/command";
 import {
   Form,
@@ -25,11 +27,20 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useGoogleFonts } from "@/hooks/use-google-fonts";
 import { cn } from "@/lib/utils";
-import { useFontStore } from "@/store/font-store";
+import { CategoryKey, useFontStore } from "@/store/font-store";
+import { FONT_CATEGORIES, getDefaultWeights } from "@/utils/fonts";
+import { loadGoogleFont } from "@/utils/fonts/google-fonts";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CheckCheckIcon, ChevronsUpDownIcon } from "lucide-react";
+import { CheckCheckIcon, ChevronsUpDownIcon, Loader2Icon } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -56,7 +67,8 @@ const defaultValues: Partial<AppearanceFormValues> = {
 
 export function AppearanceForm() {
   const { setTheme } = useTheme();
-  const { setMode, setFont, font, hydrated } = useFontStore();
+  const { setMode, setFont, font, fontCategory, setFontCategory, hydrated } =
+    useFontStore();
 
   const [open, setOpen] = useState(false);
 
@@ -65,7 +77,24 @@ export function AppearanceForm() {
     defaultValues,
   });
 
-  const { data } = useGoogleFonts();
+  const {
+    data: fontResponse,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isFetching,
+  } = useGoogleFonts(fontCategory);
+
+  const data = fontResponse?.pages.flatMap((p) => p.items) ?? [];
+
+  const categories = [
+    { value: "all", label: "All" },
+    ...Object.entries(FONT_CATEGORIES).map(([key, value]) => ({
+      value: key,
+      label: value.label,
+    })),
+  ];
 
   useEffect(() => {
     if (hydrated) {
@@ -82,6 +111,11 @@ export function AppearanceForm() {
 
     toast.success("Font and Theme updated successfully");
   }
+
+  const loadFontDynamically = (font: string) => {
+    const weights = getDefaultWeights(["400", "500", "600", "700"]);
+    loadGoogleFont(font, weights);
+  };
 
   if (!hydrated) {
     return (
@@ -107,52 +141,109 @@ export function AppearanceForm() {
                     <Button
                       role="combobox"
                       aria-expanded={open}
-                      className="w-[280px] justify-between"
+                      className="w-[280px] justify-between overflow-hidden"
                       variant="outline"
                     >
-                      {(field.value || font) ?? "Select a font"}
+                      <span className="truncate">
+                        {(field.value || font) ?? "Select a font"}
+                      </span>
                       <ChevronsUpDownIcon className="ml-auto size-4 opacity-50" />
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
+                <PopoverContent
+                  className="max-w-[320px] md:max-w-2xl p-0"
+                  align="start"
+                >
                   <Command value={field.value || font}>
                     <CommandInput
                       placeholder="Search font family"
                       className="h-9"
                     />
                     <CommandList>
-                      <CommandEmpty>No fonts found.</CommandEmpty>
+                      {!isLoading && !data && (
+                        <CommandEmpty>No fonts found.</CommandEmpty>
+                      )}
                       <CommandGroup>
-                        {(data ? ["Default", ...data] : ["Default"])?.map(
-                          (font, i) => (
-                            <CommandItem
-                              key={i}
-                              value={font}
-                              onSelect={(currentValue) => {
-                                field.onChange(currentValue);
-                                setFont(currentValue);
-                                setOpen(false);
-                              }}
-                            >
-                              <span
-                                style={{
-                                  fontFamily: `${font}, ui-serif`,
+                        <Select
+                          value={fontCategory}
+                          onValueChange={(currentValue) => {
+                            setFontCategory(currentValue as CategoryKey);
+                          }}
+                        >
+                          <SelectTrigger className="w-full">
+                            <SelectValue />
+                          </SelectTrigger>
+
+                          <SelectContent>
+                            {categories.map((category) => (
+                              <SelectItem
+                                key={category.value}
+                                value={category.value}
+                              >
+                                {category.label} Fonts
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </CommandGroup>
+
+                      <CommandSeparator />
+
+                      <CommandGroup>
+                        {isLoading && !data && (
+                          <div className="text-muted-foreground flex items-center justify-center gap-2">
+                            <Loader2Icon className="animate-spin size-4" />
+                            <span className="text-xs">Loading fonts...</span>
+                          </div>
+                        )}
+                        <InfiniteScrollContainer
+                          className="space-y-1"
+                          onBottomReached={() =>
+                            hasNextPage && !isFetching && fetchNextPage()
+                          }
+                        >
+                          {data &&
+                            data.length > 0 &&
+                            ["Default", ...data].map((font, i) => (
+                              <CommandItem
+                                key={i}
+                                value={font}
+                                onSelect={(currentValue) => {
+                                  field.onChange(currentValue);
+                                  setFont(currentValue);
+                                  setOpen(false);
                                 }}
                               >
-                                {font}
+                                <span
+                                  ref={() => loadFontDynamically(font)}
+                                  style={{
+                                    fontFamily: `${font}, ui-serif`,
+                                  }}
+                                  className="truncate line-clamp-1"
+                                >
+                                  {font}
+                                </span>
+                                <CheckCheckIcon
+                                  className={cn(
+                                    "ml-auto size-4",
+                                    field.value === font
+                                      ? "opacity-100"
+                                      : "opacity-0",
+                                  )}
+                                />
+                              </CommandItem>
+                            ))}
+
+                          {isFetchingNextPage && (
+                            <div className="flex items-center justify-center text-muted-foreground">
+                              <Loader2Icon className="size-4 animate-spin" />{" "}
+                              <span className="text-xs">
+                                Loading more fonts
                               </span>
-                              <CheckCheckIcon
-                                className={cn(
-                                  "ml-auto size-4",
-                                  field.value === font
-                                    ? "opacity-100"
-                                    : "opacity-0",
-                                )}
-                              />
-                            </CommandItem>
-                          ),
-                        )}
+                            </div>
+                          )}
+                        </InfiniteScrollContainer>
                       </CommandGroup>
                     </CommandList>
                   </Command>

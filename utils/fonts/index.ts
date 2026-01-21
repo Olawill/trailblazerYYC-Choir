@@ -185,7 +185,6 @@ export function extractFontFamily(fontFamilyValue: string): string | null {
   const firstFont = fontFamilyValue.split(",")[0].trim(); // Remove quotes if present
   const cleanFont = firstFont.replace(/['"]/g, ""); // Skip system fonts
   if (SYSTEM_FONTS.includes(cleanFont.toLowerCase())) return null;
-  console.log({ cleanFont });
   return cleanFont;
 }
 
@@ -218,7 +217,6 @@ export function getDefaultWeights(variants: string[]): string[] {
     ...selectedWeights,
     ...availableWeights.filter((w) => !selectedWeights.includes(w)),
   ].slice(0, 4);
-  console.log({ finalWeights }); // Sort weights numerically for Google Fonts API requirement
 
   return finalWeights.sort((a, b) => parseInt(a) - parseInt(b));
 }

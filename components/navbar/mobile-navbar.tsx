@@ -1,19 +1,11 @@
 "use client";
 
-import { LogIn, LogOut, Menu, X } from "lucide-react";
+import { LogIn, LogOut, Menu } from "lucide-react";
 
-import { cn } from "@/lib/utils";
-import { Poppins } from "next/font/google";
-import Link from "next/link";
-import { useState } from "react";
-import { menus } from "@/data/menus";
-import { useSession } from "next-auth/react";
-import { Button } from "@/components/ui/button";
-import { publicRoutes } from "@/routes";
-import { usePathname, useRouter } from "next/navigation";
-import UserButton from "@/components/auth/user-button";
 import LoginButton from "@/components/auth/login-button";
 import { LogoutButton } from "@/components/auth/logout-button";
+import UserButton from "@/components/auth/user-button";
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -22,6 +14,14 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { menus } from "@/data/menus";
+import { cn } from "@/lib/utils";
+import { publicRoutes } from "@/routes";
+import { useSession } from "next-auth/react";
+import { Poppins } from "next/font/google";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
 import { Separator } from "../ui/separator";
 
 const poppins = Poppins({
@@ -72,14 +72,14 @@ const MobileNavbar = () => {
           >
             <SheetHeader>
               <SheetTitle>
-                <h1
+                <span
                   className={cn(
                     "text-2xl text-center font-semibold",
-                    poppins.className
+                    poppins.className,
                   )}
                 >
                   TrailBlazer YYC 🎶
-                </h1>
+                </span>
               </SheetTitle>
               <SheetDescription className="sr-only">
                 Mobile Nav Bar
@@ -120,7 +120,7 @@ const MobileNavbar = () => {
                       {menu.label}
                     </Link>
                   )
-                )
+                ),
               )}
 
               {session.status === "authenticated" ? (
