@@ -20,11 +20,13 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
     onChange(result.info.secure_url);
   };
 
+  const placeholderUrl = `https://placehold.co/600x400?text=NA`;
+
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-center gap-4">
         {value.map((url, index) => (
-          <div key={index} className="relative w-[200px] h-[200px]">
+          <div key={index} className="relative w-full h-[200px]">
             <div className="absolute top-0 right-0 z-10">
               <Button
                 type="button"
@@ -36,10 +38,11 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
               </Button>
             </div>
             <Image
-              src={url}
+              src={placeholderUrl}
               alt="profile-image"
               fill
               sizes="100%"
+              unoptimized
               className="object-cover rounded-lg"
             />
           </div>

@@ -1,13 +1,19 @@
 import { auth } from "@/auth";
+import { DynamicFontLoader } from "@/components/dynamic-font-loader";
+import { FontInitializer } from "@/components/font-initializer";
 import { ThemeProvider } from "@/components/theme-provider/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import Providers from "@/providers/providers";
 import type { Metadata } from "next";
 import { SessionProvider } from "next-auth/react";
-import { Inter } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const poppins = Poppins({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  weight: ["400", "500", "600", "700"],
+});
 
 export const metadata: Metadata = {
   title: "Trailblazer YYC",
@@ -35,7 +41,18 @@ export default async function RootLayout({
   return (
     <SessionProvider session={session}>
       <html lang="en" suppressHydrationWarning>
-        <body className={inter.className}>
+        <head>
+          <DynamicFontLoader />
+
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link
+            rel="preconnect"
+            href="https://fonts.gstatic.com"
+            crossOrigin="anonymous"
+          />
+        </head>
+        <body className={poppins.variable}>
+          <FontInitializer />
           <Toaster richColors />
           <ThemeProvider
             attribute="class"

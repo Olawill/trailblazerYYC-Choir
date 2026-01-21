@@ -37,9 +37,7 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
         <aside className="lg:w-1/5">
           <SidebarNav items={sidebarNavItems} />
         </aside>
-        <div
-          className={`flex-1 lg:max-w-6xl dark:bg-gray-700 bg-transparent border py-4 px-12 rounded-md`}
-        >
+        <div className="w-full max-w-6xl mx-auto dark:bg-gray-700 bg-transparent border py-4 px-6 lg:px-12 rounded-md">
           {children}
         </div>
       </div>

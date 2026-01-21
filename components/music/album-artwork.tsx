@@ -1,8 +1,5 @@
 "use client";
 
-import { ListMusic, PlusCircle, Star, X } from "lucide-react";
-import { Album } from "./music-constants";
-import { cn } from "@/lib/utils";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -13,7 +10,6 @@ import {
   ContextMenuSubTrigger,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
-import Image from "next/image";
 import {
   Dialog,
   DialogContent,
@@ -23,11 +19,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
+import { ListMusic, PlusCircle, Star, X } from "lucide-react";
+import Image from "next/image";
+import { Album } from "./music-constants";
 import { NewPlaylistForm } from "./new-playlist-form";
 
-import { Playlist } from "@prisma/client";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useCurrentUser } from "@/hooks/use-current-user";
 import {
   addMusicToLibrary,
   addMusicToPlaylist,
@@ -35,8 +32,7 @@ import {
   deleteMusic,
   deleteMusicFromLibrary,
 } from "@/actions/music-update";
-import { allQuery } from "@/utils/constants";
-import { toast } from "sonner";
+import { MusicCopy } from "@/components/music/music-copy";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -45,7 +41,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { MusicCopy } from "@/components/music/music-copy";
+import { Button } from "@/components/ui/button";
 import {
   Drawer,
   DrawerClose,
@@ -54,12 +50,16 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
-import { Button } from "@/components/ui/button";
-import { useRef, useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useCurrentUser } from "@/hooks/use-current-user";
+import { allQuery } from "@/utils/constants";
+import { Playlist } from "@prisma/client";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Howl } from "howler";
+import { useRef, useState } from "react";
+import { toast } from "sonner";
 import { MusicPlayer } from "./music-player";
 import { YoutubePlayer } from "./youtube-player";
-import { Howl } from "howler";
 
 interface AlbumArtworkProps extends React.HTMLAttributes<HTMLDivElement> {
   album: Album;
@@ -168,7 +168,7 @@ export const AlbumArtWork = ({
     },
     onError: () => {
       toast.error(
-        deleteData?.error || "Something went wrong. Please try again!"
+        deleteData?.error || "Something went wrong. Please try again!",
       );
     },
   });
@@ -182,7 +182,7 @@ export const AlbumArtWork = ({
         predicate: (query) => allQuery.includes(query.queryKey[0] as string),
       });
       toast.success(
-        addData?.success || "Music added to playlist successfully!"
+        addData?.success || "Music added to playlist successfully!",
       );
     },
     onError: () => {
@@ -216,7 +216,7 @@ export const AlbumArtWork = ({
                 <div
                   className={cn(
                     "relative overflow-hidden rounded-md",
-                    `h-[${height}px] w-full sm:w-[220px] md:w-[${width}px]`
+                    `h-[${height}px] w-full sm:w-[220px] md:w-[${width}px]`,
                   )}
                 >
                   <Image
@@ -229,7 +229,7 @@ export const AlbumArtWork = ({
                       "object-cover transition-all hover:scale-105",
                       aspectRatio === "portrait"
                         ? "aspect-3/4"
-                        : "aspect-square"
+                        : "aspect-square",
                     )}
                   />
                 </div>
@@ -281,14 +281,14 @@ export const AlbumArtWork = ({
                               onClick={() =>
                                 handleAddToPlaylist(
                                   playlist.id,
-                                  album.id as string
+                                  album.id as string,
                                 )
                               }
                             >
                               <ListMusic className="mr-2 h-4 w-4" />
                               {playlist.name}
                             </ContextMenuItem>
-                          )
+                          ),
                       )}
                   </ContextMenuSubContent>
                 </ContextMenuSub>
@@ -323,7 +323,7 @@ export const AlbumArtWork = ({
                 )}
               </ContextMenuContent>
             </ContextMenu>
-            <div className="space-y-1 text-sm">
+            <div className="space-y-1 text-sm mt-2">
               <h3 className="font-medium leading-none">{album.name}</h3>
               <p className="text-xs text-gray-300">{album.artist}</p>
             </div>
@@ -381,7 +381,7 @@ export const AlbumArtWork = ({
               <div
                 className={cn(
                   "relative overflow-hidden rounded-md",
-                  `h-[${height}px] md:w-[280px] mt-3`
+                  `h-[${height}px] md:w-[280px] mt-3`,
                 )}
               >
                 <Image
@@ -392,9 +392,7 @@ export const AlbumArtWork = ({
                   priority
                   className={cn(
                     "object-cover transition-all hover:scale-105",
-                    aspectRatio === "portrait"
-                      ? "aspect-3/4"
-                      : "aspect-square"
+                    aspectRatio === "portrait" ? "aspect-3/4" : "aspect-square",
                   )}
                 />
               </div>
@@ -487,9 +485,7 @@ export const AlbumArtWork = ({
                   priority
                   className={cn(
                     "object-cover transition-all hover:scale-105",
-                    aspectRatio === "portrait"
-                      ? "aspect-3/4"
-                      : "aspect-square"
+                    aspectRatio === "portrait" ? "aspect-3/4" : "aspect-square",
                   )}
                 />
               </div>

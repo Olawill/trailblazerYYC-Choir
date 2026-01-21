@@ -18,6 +18,8 @@ body,
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
 
+  --font-sans: var(--font-sans);
+
   /* Light mode colors */
   --color-background: oklch(100% 0 0);
   --color-foreground: oklch(27.1% 0.055 254.6);
@@ -79,6 +81,8 @@ body,
 
 @media (prefers-color-scheme: dark) {
   @theme {
+    --font-sans: var(--font-sans);
+
     /* Dark mode colors */
     --color-background: oklch(27.1% 0.055 254.6);
     --color-foreground: oklch(97.8% 0.003 247.9);
@@ -118,6 +122,8 @@ body,
 
 /* Manual dark mode class support */
 .dark {
+  --font-sans: var(--font-sans);
+
   --color-background: oklch(27.1% 0.055 254.6);
   --color-foreground: oklch(97.8% 0.003 247.9);
 
