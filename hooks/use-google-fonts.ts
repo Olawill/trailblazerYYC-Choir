@@ -23,6 +23,7 @@ export const useGoogleFonts = (category: string) => {
     initialPageParam: 0,
     // ✅ 30 days
     staleTime: 1000 * 60 * 60 * 24 * 30,
+    gcTime: Infinity,
 
     // ❌ do NOT refetch on focus / reconnect
     refetchOnWindowFocus: false,
