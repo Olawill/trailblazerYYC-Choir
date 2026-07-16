@@ -2,48 +2,48 @@
 
 import * as z from "zod";
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { PaymentSchema } from "@/schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 
 import {
   Form,
-  FormLabel,
-  FormField,
-  FormItem,
-  FormMessage,
   FormControl,
   FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
-import { useTransition, useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { CalendarDays, CheckIcon, ChevronsUpDown, Loader2 } from "lucide-react";
+import { useEffect, useState, useTransition } from "react";
 
+import { payment } from "@/actions/expense";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-import {
-  CommandInput,
-  CommandEmpty,
-  CommandGroup,
-  CommandItem,
-  CommandList,
-  Command,
-} from "@/components/ui/command";
 import { getMembers } from "@/data/members";
-import { Member } from "@prisma/client";
-import { payment } from "@/actions/expense";
-import { format } from "date-fns";
-import { Calendar } from "@/components/ui/calendar";
+import { cn } from "@/lib/utils";
 import { allQuery } from "@/utils/constants";
+import { Member } from "@prisma/client";
 import { useQueryClient } from "@tanstack/react-query";
+import { format } from "date-fns";
 
 export const PaymentForm = () => {
   const [isPending, startTransition] = useTransition();
@@ -131,7 +131,7 @@ export const PaymentForm = () => {
                           role="combobox"
                           className={cn(
                             "w-full justify-between",
-                            !field.value && "text-muted-foreground"
+                            !field.value && "text-muted-foreground",
                           )}
                         >
                           {field.value ? field.value : "Select a member"}
@@ -165,7 +165,7 @@ export const PaymentForm = () => {
                                       "ml-auto h-4 w-4",
                                       d.name === field.value
                                         ? "opacity-100"
-                                        : "opacity-0"
+                                        : "opacity-0",
                                     )}
                                   />
                                 </CommandItem>
@@ -222,7 +222,7 @@ export const PaymentForm = () => {
                           variant={"outline"}
                           className={cn(
                             "w-full pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground"
+                            !field.value && "text-muted-foreground",
                           )}
                         >
                           {field.value ? (
@@ -245,7 +245,6 @@ export const PaymentForm = () => {
                         disabled={(date) =>
                           date > new Date() || date < new Date("1900-01-01")
                         }
-                        initialFocus
                       />
                     </PopoverContent>
                   </Popover>

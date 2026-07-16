@@ -193,7 +193,7 @@ export const ExpenseForm = () => {
                             role="combobox"
                             className={cn(
                               "w-full justify-between",
-                              !field.value && "text-muted-foreground"
+                              !field.value && "text-muted-foreground",
                             )}
                           >
                             {field.value ? field.value : "Select a category"}
@@ -219,7 +219,7 @@ export const ExpenseForm = () => {
                                     onSelect={() => {
                                       form.setValue(
                                         "category",
-                                        d.category as string
+                                        d.category as string,
                                       );
                                       setOpen(false);
                                     }}
@@ -230,7 +230,7 @@ export const ExpenseForm = () => {
                                         "ml-auto h-4 w-4",
                                         d.category === field.value
                                           ? "opacity-100"
-                                          : "opacity-0"
+                                          : "opacity-0",
                                       )}
                                     />
                                   </CommandItem>
@@ -349,7 +349,7 @@ export const ExpenseForm = () => {
                           variant={"outline"}
                           className={cn(
                             "w-full pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground"
+                            !field.value && "text-muted-foreground",
                           )}
                         >
                           {field.value ? (
@@ -372,7 +372,6 @@ export const ExpenseForm = () => {
                         disabled={(date) =>
                           date > new Date() || date < new Date("1900-01-01")
                         }
-                        initialFocus
                       />
                     </PopoverContent>
                   </Popover>

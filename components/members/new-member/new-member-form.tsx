@@ -197,7 +197,7 @@ const NewMemberForm = ({ member }: { member?: InitialDataProp }) => {
                         variant={"outline"}
                         className={cn(
                           "w-full pl-3 text-left font-normal",
-                          !field.value && "text-muted-foreground"
+                          !field.value && "text-muted-foreground",
                         )}
                       >
                         {field.value ? (
@@ -220,7 +220,6 @@ const NewMemberForm = ({ member }: { member?: InitialDataProp }) => {
                       disabled={(date) =>
                         date > new Date() || date < new Date("1900-01-01")
                       }
-                      initialFocus
                     />
                   </PopoverContent>
                 </Popover>
